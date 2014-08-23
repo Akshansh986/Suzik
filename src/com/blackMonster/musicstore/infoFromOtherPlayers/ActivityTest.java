@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.blackMonster.musicstore.SendMyMusic;
+import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.R;
 
 public class ActivityTest extends Activity {

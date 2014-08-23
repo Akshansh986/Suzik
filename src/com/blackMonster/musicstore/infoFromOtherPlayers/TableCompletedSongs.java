@@ -1,5 +1,7 @@
 package com.blackMonster.musicstore.infoFromOtherPlayers;
 
+import com.blackMonster.suzik.DbHelper;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

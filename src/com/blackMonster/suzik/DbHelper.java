@@ -1,5 +1,7 @@
-package com.blackMonster.musicstore.infoFromOtherPlayers;
+package com.blackMonster.suzik;
 
+import com.blackMonster.musicstore.infoFromOtherPlayers.TableCompletedSongs;
+import com.blackMonster.musicstore.infoFromOtherPlayers.TablePausedSongs;
 import com.blackMonster.musicstore.infoFromOtherPlayers.testing.TableAllPlayed;
 import com.blackMonster.musicstore.infoFromOtherPlayers.testing.TableUserSelectedCompleted;
 
@@ -12,11 +14,10 @@ import android.util.Log;
 public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = "DbHelper";
-	public static final String DB_NAME = "music.db";
+	public static final String DB_NAME = "suzik.db";
 	public static final int DB_VERSION = 1;
 
 	private static DbHelper dInstance = null;
-	private  Context context = null;
 
 	public static DbHelper getInstance(Context cont) {
 		if (dInstance == null) {
@@ -30,7 +31,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	private DbHelper(Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
 		// Log.d(TAG, "constructor start");
-		this.context = context;
 		// Log.d(TAG, "DbHelper");
 		// Log.d(TAG, "constructor end");
 	}

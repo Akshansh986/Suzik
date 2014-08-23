@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.blackMonster.musicstore.infoFromOtherPlayers.DbHelper;
+import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.R;
 
 public class ActivityUserSelectedCompleted extends Activity {

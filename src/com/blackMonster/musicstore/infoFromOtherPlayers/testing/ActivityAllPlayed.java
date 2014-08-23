@@ -18,8 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.blackMonster.musicstore.infoFromOtherPlayers.DbHelper;
 import com.blackMonster.musicstore.infoFromOtherPlayers.Song;
+import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.R;
 
 public class ActivityAllPlayed extends Activity implements

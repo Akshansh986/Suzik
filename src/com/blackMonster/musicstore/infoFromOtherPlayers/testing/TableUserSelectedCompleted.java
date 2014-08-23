@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.blackMonster.musicstore.infoFromOtherPlayers.DbHelper;
 import com.blackMonster.musicstore.infoFromOtherPlayers.Song;
+import com.blackMonster.suzik.DbHelper;
 
 public class TableUserSelectedCompleted {
 	public static final String TABLE = "USER_SELECTED_COMPLETED";
