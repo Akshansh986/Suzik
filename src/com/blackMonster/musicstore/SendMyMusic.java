@@ -3,7 +3,9 @@ package com.blackMonster.musicstore;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -51,7 +53,7 @@ public class SendMyMusic {
 		final String[] projection = new String[] {
 				MediaStore.Audio.Media.DISPLAY_NAME,
 				MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST,
-				MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.DURATION };
+				MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media._ID};
 		final String sortOrder = MediaStore.Audio.AudioColumns.TITLE
 				+ " COLLATE LOCALIZED ASC";
 		Cursor cursor = null;
@@ -77,9 +79,13 @@ public class SendMyMusic {
 					GSC.songAlbum = cursor.getString(3);
 					
 					long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+					
+					long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+
+					
 
 					songs.add(GSC);
-					Log.d("searching ", GSC.songTitle + "   " + GSC.songArtist + "  " + duration);
+					Log.d("searching ", id + "  " + GSC.songTitle + "   " + GSC.songArtist + "  " + duration );
 					cursor.moveToNext();
 				}
 			}
@@ -107,6 +113,12 @@ public class SendMyMusic {
 			Log.d("sdf", "  " + ab);
 		}
 
+	}
+	
+	private static String getReadableDate(long seconds) {
+		 SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");
+		 Date date = new Date(seconds * 1000);
+		 return sdf.format(date);
 	}
 
 	public static void sendSongsInfo(Context context) {

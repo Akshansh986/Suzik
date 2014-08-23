@@ -34,6 +34,11 @@
         </service>
 
         <activity android:name="com.blackMonster.musicstore.infoFromOtherPlayers.ActivityTest" >
+              <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
            
         </activity>
 
@@ -76,11 +81,7 @@
      
         
          <activity android:name="com.blackMonster.musicstore.infoFromOtherPlayers.testing.ActivityAllPlayed">
-               <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+             
         </activity>
         
           <activity android:name="com.blackMonster.musicstore.infoFromOtherPlayers.testing.ActivityUserSelectedCompleted">
