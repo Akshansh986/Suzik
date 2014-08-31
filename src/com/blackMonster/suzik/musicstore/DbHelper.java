@@ -1,9 +1,4 @@
-package com.blackMonster.suzik;
-
-import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.TableCompletedSongs;
-import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.TablePausedSongs;
-import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.TableAllPlayed;
-import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.TableUserSelectedCompleted;
+package com.blackMonster.suzik.musicstore;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,10 +9,11 @@ import android.util.Log;
 public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = "DbHelper";
-	public static final String DB_NAME = "suzik.db";
+	public static final String DB_NAME = "musicInfo.db";
 	public static final int DB_VERSION = 1;
 
 	private static DbHelper dInstance = null;
+	private static Context context = null;
 
 	public static DbHelper getInstance(Context cont) {
 		if (dInstance == null) {
@@ -31,17 +27,15 @@ public class DbHelper extends SQLiteOpenHelper {
 	private DbHelper(Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
 		// Log.d(TAG, "constructor start");
+		this.context = context;
 		// Log.d(TAG, "DbHelper");
 		// Log.d(TAG, "constructor end");
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		TablePausedSongs.createTable(db);
-		TableCompletedSongs.createTable(db);
-		
-		TableAllPlayed.createTable(db);
-		TableUserSelectedCompleted.createTable(db);
+		Database.TableNOSongID.createTable(db);
+		Database.TableSongsInfo.createTable(db);
 	}
 
 	@Override

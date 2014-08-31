@@ -18,7 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.blackMonster.musicstore.Database;
+import com.blackMonster.suzik.musicstore.Database;
 
 public class ActivityFriends extends ListActivity {
 	MyAdapter adapter;

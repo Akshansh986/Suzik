@@ -12,10 +12,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import com.blackMonster.contacts.ContactspublicFunctions;
-import com.blackMonster.contacts.ServiceSendMyContacts;
-import com.blackMonster.musicstore.MusicStoreManager;
-import com.blackMonster.musicstore.SendMyMusic;
+import com.blackMonster.suzik.musicstore.MusicStoreManager;
+import com.blackMonster.suzik.musicstore.SendMyMusic;
+import com.blackMonster.suzik.sync.contacts.ServiceSendMyContacts;
 
 public class ActivitySignup extends Activity {
 	private static final String TAG = "ActivitySignup";
@@ -35,8 +34,18 @@ public class ActivitySignup extends Activity {
 	public void buttonSubmit(View v) {
 		myNumber = ((EditText) findViewById(R.id.signup_number))
 				.getEditableText().toString().trim();
-		myNumber = ContactspublicFunctions.getNumberWithCountryCode(myNumber);
+		
+		
+		
+		
+		//myNumber = ContactspublicFunctions.getNumberWithCountryCode(myNumber);
 
+		
+		
+		
+		
+		
+		
 		Log.d(TAG, "buttonSubmit" + myNumber);
 		startService(ServiceSendMyContacts.getIntent(myNumber, this));
 

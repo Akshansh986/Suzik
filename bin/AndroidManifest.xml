@@ -27,14 +27,8 @@
         </activity>
         <activity android:name="com.blackMonster.suzik.ActivitySongsList" >
         </activity>
-        <activity android:name="com.blackMonster.suzik.MainActivity" >
-        </activity>
-
-        <service android:name="com.blackMonster.contacts.ServiceSendMyContacts" >
-        </service>
-
-        <activity android:name="com.blackMonster.musicstore.infoFromOtherPlayers.ActivityTest" >
-              <intent-filter>
+        <activity android:name="com.blackMonster.suzik.ui.MainActivity" >
+             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -42,15 +36,22 @@
            
         </activity>
 
+        <service android:name="com.blackMonster.suzik.sync.contacts.ServiceSendMyContacts" >
+        </service>
+
+        <activity android:name="com.blackMonster.suzik.musicstore.infoFromOtherPlayers.ActivityTest" >
+             
+        </activity>
+
         <receiver
-            android:name="com.blackMonster.musicstore.infoFromOtherPlayers.BroadcastMetaChange"
+            android:name="com.blackMonster.suzik.musicstore.infoFromOtherPlayers.BroadcastMetaChange"
             android:exported="true" >
             <intent-filter>
                 <action android:name="com.android.music.metachanged" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.blackMonster.musicstore.infoFromOtherPlayers.BroadcastPlaystateChage"
+            android:name="com.blackMonster.suzik.musicstore.infoFromOtherPlayers.BroadcastPlaystateChage"
             android:exported="true" >
             <intent-filter>
                 <action android:name="com.android.music.playstatechanged" />
@@ -62,7 +63,7 @@
         
         
         <receiver
-            android:name="com.blackMonster.musicstore.infoFromOtherPlayers.BroadcastMediaStoreChanged"
+            android:name="com.blackMonster.suzik.musicstore.infoFromOtherPlayers.BroadcastMediaStoreChanged"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_SCANNER_FINISHED" />
@@ -80,15 +81,15 @@
         </receiver>
      
         
-         <activity android:name="com.blackMonster.musicstore.infoFromOtherPlayers.testing.ActivityAllPlayed">
+         <activity android:name="com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.ActivityAllPlayed">
              
         </activity>
         
-          <activity android:name="com.blackMonster.musicstore.infoFromOtherPlayers.testing.ActivityUserSelectedCompleted">
+          <activity android:name="com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.ActivityUserSelectedCompleted">
              
         </activity>
         
-           <activity android:name="com.blackMonster.musicstore.infoFromOtherPlayers.testing.ActivityProgramSelectedCompleted">
+           <activity android:name="com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.ActivityProgramSelectedCompleted">
              
         </activity>
     </application>

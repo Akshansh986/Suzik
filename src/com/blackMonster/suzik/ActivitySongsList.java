@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.blackMonster.musicstore.FetchFriendsMusic.MusicInfo;
-import com.blackMonster.musicstore.MusicStoreManager;
+import com.blackMonster.suzik.musicstore.MusicStoreManager;
+import com.blackMonster.suzik.musicstore.FetchFriendsMusic.MusicInfo;
 
 public class ActivitySongsList extends ListActivity {
 	public static final String U_ID = "uid";
