@@ -1,17 +1,13 @@
 package com.blackMonster.suzik.sync.music;
 
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import static com.blackMonster.suzik.util.LogUtils.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.widget.Toast;
-
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.blackMonster.suzik.AppConfig;
@@ -92,7 +88,7 @@ public class ServerHelper {
 	}
 	
 	static boolean postAddedSongs(List<AndroidData> addedSongs) throws JSONException, InterruptedException, ExecutionException {
-		//if (true) return true;
+		if (true) return true;
 		boolean result = false;
 		JSONObject addedSongsJson = JsonHelper.AddedSong.toJson(addedSongs);
 		LOGD("srverhelop", "josn received");

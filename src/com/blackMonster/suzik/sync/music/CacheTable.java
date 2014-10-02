@@ -67,6 +67,7 @@ class CacheTable {
 					cachedDataSet.add(new CacheData(id, song, fp));
 				else
 					LOGE(TAG, "Song no found");
+				cursor.moveToNext();
 
 			}
 

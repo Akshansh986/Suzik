@@ -102,6 +102,9 @@ public class InAapSongTable {
 					inAppSongDataSet.add(new InAppSongData(id, song, fp, link, location));
 				else
 					LOGE(TAG, "Song no found");
+				
+				
+				cursor.moveToNext();
 
 			}
 

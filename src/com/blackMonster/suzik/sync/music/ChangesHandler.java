@@ -20,6 +20,7 @@ class ChangesHandler {
 	private List<CacheData> modifiedSongs = new ArrayList<CacheTable.CacheData>();
 
 	private Context context;
+	
 
 	ChangesHandler(List<AndroidData> androidDataList,
 			List<CacheData> cacheDataList, Context context) throws InterruptedException {

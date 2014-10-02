@@ -25,8 +25,13 @@ public class SongsSyncer {
 		ChangesHandler changes = new ChangesHandler(androidDataList, cacheDataList,context);
 		LOGD(TAG,"changes done");
 
-	//	for (AndroidData son : changes.getAddedSongs())
-	//		CacheTable.insert(new , context)
+		/*
+		int count=0;
+		for (AndroidData son : changes.getAddedSongs()) {
+			QueueAddedSongs.remove(son.getfPrint(), context);
+			CacheTable.insert(new CacheData(count++, son.getSong(), son.getfPrint()) , context);
+		}
+		if (true ) return false;*/
 		
 		handleModifiedSongs(changes.getModifiedSongs(), context);
 		handleAddedSongsIfAlreadyInAppSong(changes.getAddedSongs(),context);

@@ -36,6 +36,9 @@ public class AndroidHelper {
 
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
+				String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
+				if (title.equals("<unknown>") || title.equals("")) 
+					LOGD("AndroidHelper","title unknown");
 				Song song = new Song(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)),
 						cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)),
 						cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)),
