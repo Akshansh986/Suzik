@@ -19,7 +19,8 @@ class Fingerprinter{
 	private static final String TAG = "Fingerprinter";
 	private GNConfig config;
 	private List<AndroidData> songList;
-	private CountDownLatch doneSignal;
+	private CountDownLatch startSignal, doneSignal;
+
 	
 	private List<AndroidData> fpErrorSong = new ArrayList<AndroidHelper.AndroidData>();
 	
@@ -31,6 +32,7 @@ class Fingerprinter{
 
 	void addFingerPrint() throws InterruptedException {
 		doneSignal = new CountDownLatch(songList.size());
+		startSignal = new CountDownLatch(1);
 
 		for (AndroidData song : songList) {
 			FingerPrintResultReady rr = new FingerPrintResultReady(song);
@@ -38,7 +40,7 @@ class Fingerprinter{
 			GNOperations.fingerprintMIDFileFromFile(rr, config, song.getLocation());
 			LOGD(TAG,song.getLocation());
 		}	
-		
+		startSignal.countDown();
 		doneSignal.await();	
 
 		
@@ -52,6 +54,13 @@ class Fingerprinter{
 		}
 		@Override
 		public void GNResultReady(GNFingerprintResult result) {
+			
+			try {
+				startSignal.await();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			doneSignal.countDown();
 			
 			if (result == null) {

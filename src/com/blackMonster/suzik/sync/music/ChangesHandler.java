@@ -12,14 +12,15 @@ import com.blackMonster.suzik.sync.music.AndroidHelper.AndroidData;
 import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 
 class ChangesHandler {
-	private HashMap<Song, AndroidData> androidDataMap;
-	private HashMap<Song, CacheData> cacheDataMap;
+	private HashMap<CompareParams, AndroidData> androidDataMap;
+	private HashMap<CompareParams, CacheData> cacheDataMap;
 
 	private List<AndroidData> addedSongs = new ArrayList<AndroidHelper.AndroidData>();
 	private List<CacheData> deletedSongs = new ArrayList<CacheTable.CacheData>();
 	private List<CacheData> modifiedSongs = new ArrayList<CacheTable.CacheData>();
 
 	private Context context;
+
 	
 
 	ChangesHandler(List<AndroidData> androidDataList,
@@ -36,16 +37,24 @@ class ChangesHandler {
 	}
 
 	private void setModifiedSongs() {
+		List<AndroidData> tempAddedSong = new ArrayList<AndroidHelper.AndroidData>();
+		List<CacheData> tempDeletedSong = new ArrayList<CacheTable.CacheData>();
+		
 		for (AndroidData added : addedSongs) {
 			for (CacheData deleted : deletedSongs) {
 				if (added.getfPrint().equals(deleted.getfPrint())) {
-					modifiedSongs.add(new CacheData(deleted.getId(), added.getSong(), added.getfPrint()));
-					addedSongs.remove(added);
-					deletedSongs.remove(deleted);
+					modifiedSongs.add(new CacheData(deleted.getId(), added.getSong(), added.getfPrint(), added.getFileName()));
+					//addedSongs.remove(added);
+					tempAddedSong.add(added);
+					//deletedSongs.remove(deleted);
+					tempDeletedSong.add(deleted);
 					break;
 				}
 			}
 		}
+		
+		addedSongs.removeAll(tempAddedSong);
+		deletedSongs.removeAll(tempDeletedSong);
 
 	}
 
@@ -54,37 +63,37 @@ class ChangesHandler {
 		new Fingerprinter(context, songList).addFingerPrint();
 	}
 
-	private HashMap<Song, CacheData> cacheDataListToHashMap(
+	private HashMap<CompareParams, CacheData> cacheDataListToHashMap(
 			List<CacheData> cacheDataSet) {
-		HashMap<Song, CacheData> map = new HashMap<Song, CacheData>();
+		HashMap<CompareParams, CacheData> map = new HashMap<CompareParams, CacheData>();
 
 		for (CacheData data : cacheDataSet) {
-			map.put(data.getSong(), data);
+			map.put(new CompareParams(data.getSong(), data.getFileName()), data);
 		}
 
 		return map;
 	}
 
-	private HashMap<Song, AndroidData> androidDataListToHashMap(
+	private HashMap<CompareParams, AndroidData> androidDataListToHashMap(
 			List<AndroidData> androidDataSet) {
-		HashMap<Song, AndroidData> map = new HashMap<Song, AndroidHelper.AndroidData>();
+		HashMap<CompareParams, AndroidData> map = new HashMap<CompareParams, AndroidHelper.AndroidData>();
 
 		for (AndroidData data : androidDataSet) {
-			map.put(data.getSong(), data);
+			map.put(new CompareParams(data.getSong(), data.getFileName()), data);
 		}
 
 		return map;
 	}
 
 	private void setAddedSongs() {
-		for (Map.Entry<Song, AndroidData> entry : androidDataMap.entrySet()) {
+		for (Map.Entry<CompareParams, AndroidData> entry : androidDataMap.entrySet()) {
 			if (!cacheDataMap.containsKey(entry.getKey()))
 				addedSongs.add(entry.getValue());
 		}
 	}
 
 	private void setDeletedSongs() {
-		for (Map.Entry<Song, CacheData> entry : cacheDataMap.entrySet()) {
+		for (Map.Entry<CompareParams, CacheData> entry : cacheDataMap.entrySet()) {
 			if (!androidDataMap.containsKey(entry.getKey()))
 				deletedSongs.add(entry.getValue());
 		}
@@ -102,6 +111,56 @@ class ChangesHandler {
 		return modifiedSongs;
 	}
 
+	
+	private class CompareParams {
+		private Song song;
+		private String fileName;
+		
+		 CompareParams(Song song, String fileName) {
+			super();
+			this.song = song;
+			this.fileName = fileName;
+		}
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result
+					+ ((fileName == null) ? 0 : fileName.hashCode());
+			result = prime * result + ((song == null) ? 0 : song.hashCode());
+			return result;
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			CompareParams other = (CompareParams) obj;
+			if (!getOuterType().equals(other.getOuterType()))
+				return false;
+			if (fileName == null) {
+				if (other.fileName != null)
+					return false;
+			} else if (!fileName.equals(other.fileName))
+				return false;
+			if (song == null) {
+				if (other.song != null)
+					return false;
+			} else if (!song.equals(other.song))
+				return false;
+			return true;
+		}
+		private ChangesHandler getOuterType() {
+			return ChangesHandler.this;
+		}
+		
+		
+		  
+	}
 	
 
 }

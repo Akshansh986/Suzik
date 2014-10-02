@@ -19,13 +19,15 @@ class CacheTable {
 	private static final String TAG = "CacheTable";
 	private static final String C_ID = "id";
 	private static final String C_FPRINT = "fPrint";
+	private static final String C_FILENAME = "fileName";
+
 	private static final String TABLE = "MusicCacheTable";
 
 	static void createTable(SQLiteDatabase db) {
 		String sql = String
 				.format("create table %s"
-						+ "(%s INTEGER primary key,%s text, FOREIGN KEY (%s) REFERENCES %s (%s) )",
-						TABLE, C_ID, C_FPRINT, C_ID, AllSongsTable.TABLE,
+						+ "(%s INTEGER primary key,%s text,%s text, FOREIGN KEY (%s) REFERENCES %s (%s) )",
+						TABLE, C_ID, C_FPRINT,C_FILENAME, C_ID, AllSongsTable.TABLE,
 						AllSongsTable.C_ID);
 		db.execSQL(sql);
 	}
@@ -34,6 +36,7 @@ class CacheTable {
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
 		Song song = AllSongsTable.getSong(id, context);
 		String fp = null;
+		String fileName = null;
 		CacheData cacheData = null;
 		if (song != null) {
 			Cursor cursor = db.query(TABLE, null, C_ID + "='" + id +"'", null, null,
@@ -42,7 +45,9 @@ class CacheTable {
 			if (cursor != null) {
 				if (cursor.moveToFirst()) {
 					fp = cursor.getString(cursor.getColumnIndex(C_FPRINT));
-					cacheData = new CacheData(id, song, fp);
+					fileName = cursor.getString(cursor.getColumnIndex(C_FILENAME));
+					
+					cacheData = new CacheData(id, song, fp, fileName);
 				}
 				cursor.close();
 			}
@@ -63,8 +68,10 @@ class CacheTable {
 				long id = cursor.getLong(cursor.getColumnIndex(C_ID));
 				Song song = AllSongsTable.getSong(id, context);
 				String fp = cursor.getString(cursor.getColumnIndex(C_FPRINT));
+				String fileName = cursor.getString(cursor.getColumnIndex(C_FILENAME));
+
 				if (song != null)
-					cachedDataSet.add(new CacheData(id, song, fp));
+					cachedDataSet.add(new CacheData(id, song, fp, fileName));
 				else
 					LOGE(TAG, "Song no found");
 				cursor.moveToNext();
@@ -87,6 +94,7 @@ class CacheTable {
 		ContentValues values = new ContentValues();
 		values.put(C_ID, cacheData.getId());
 		values.put(C_FPRINT, cacheData.getfPrint());
+		values.put(C_FILENAME, cacheData.getFileName());
 		db.insert(TABLE, null, values);
 	}
 	
@@ -106,6 +114,7 @@ class CacheTable {
 
 		ContentValues values = new ContentValues();
 		values.put(C_FPRINT, newCacheData.getfPrint());
+		values.put(C_FILENAME, newCacheData.getFileName());
 		if (db.update(TABLE, values, C_ID + "='" + newCacheData.getId() + "'", null) > 0) {
 			return AllSongsTable.update(newCacheData.getId(),
 					newCacheData.getSong(), context);
@@ -125,12 +134,14 @@ class CacheTable {
 		private long id;
 		private Song song;
 		private String fPrint;
+		private String fileName;
 
-		CacheData(long id, Song song, String fPrint) {
+		CacheData(long id, Song song, String fPrint, String fileName) {
 			super();
 			this.id = id;
 			this.song = song;
 			this.fPrint = fPrint;
+			this.fileName = fileName;
 		}
 
 		long getId() {
@@ -143,6 +154,10 @@ class CacheTable {
 
 		Song getSong() {
 			return song;
+		}
+		
+		String getFileName() {
+			return fileName;
 		}
 
 		void setSong(Song song) {

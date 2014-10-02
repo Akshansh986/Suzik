@@ -18,12 +18,14 @@ class QueueAddedSongs {
 	private static final String C_ALBUM = "album";
 	private static final String C_DURATION = "duration";
 	private static final String C_FPRINT = "fprint";
+	private static final String C_FILENAME = "fileName";
+
 	
 	private static final String TABLE = "QueueAddedSongs";
 
 	static void createTable(SQLiteDatabase db) {
-		String sql = String.format("create table %s" + "(%s text, %s text, %s text, %s INTEGER, %s text)",
-				TABLE, C_TITLE,C_ARTIST, C_ALBUM, C_DURATION, C_FPRINT);
+		String sql = String.format("create table %s" + "(%s text, %s text, %s text, %s text, %s INTEGER, %s text)",
+				TABLE,C_FILENAME, C_TITLE,C_ARTIST, C_ALBUM, C_DURATION, C_FPRINT);
 		db.execSQL(sql);
 	}
 	
@@ -49,7 +51,7 @@ class QueueAddedSongs {
 
 	
 
-	static boolean insert(Song song,String fPrint, Context context) {
+	static boolean insert(Song song,String fPrint,String fileName, Context context) {
 		LOGD(TABLE, "insert");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
@@ -60,6 +62,7 @@ class QueueAddedSongs {
 		values.put(C_ALBUM, song.getAlbum());
 		values.put(C_DURATION, song.getDuration());
 		values.put(C_FPRINT, fPrint);
+		values.put(C_FILENAME, fileName);
 		return db.insert(TABLE, null, values) > -1;
 		
 	}

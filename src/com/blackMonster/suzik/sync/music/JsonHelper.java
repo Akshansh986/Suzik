@@ -13,38 +13,32 @@ import com.blackMonster.suzik.util.ServerUtils;
 
 public class JsonHelper {
 	private static final String TAG = "music.JsonHelper";
-	
+
 	static class DeletedSong {
-	private static final String P_DELETED_SONGS = "songs";
-	private static final String P_MODULE_DELETED_SONGS = "deletedSongs";
+		private static final String P_DELETED_SONGS = "songs";
+		private static final String P_MODULE_DELETED_SONGS = "deletedSongs";
 
-	
-	static JSONObject toJson(List<Long> ids)
-			throws JSONException {
+		static JSONObject toJson(List<Long> ids) throws JSONException {
+
+			JSONObject root = new JSONObject();
+
+			root.put(P_DELETED_SONGS, ids);
+			ServerUtils.addEssentialParamToJson(root, P_MODULE_DELETED_SONGS);
+
+			Log.d(TAG, root.toString());
+			return root;
+		}
 		
-		JSONObject root = new JSONObject();
-					
-		root.put(P_DELETED_SONGS, ids);
-		ServerUtils.addEssentialParamToJson(root,P_MODULE_DELETED_SONGS);
+		
 
-		Log.d(TAG, root.toString());
-		return root;
 	}
-	
-	}
-	
-	
-	
-	
-	
+
 	static class AddedSong {
-		
+
 		private static final String P_SONGS_ARRAY = "songData";
 		private static final String P_MODULE = "music";
 		private static final String P_CMD = "cmd";
 		private static final String P_CMD_VALUE = "add";
-
-		
 
 		private static final String P_FINGERPRINT = "fp";
 		private static final String P_FILENAME = "fileName";
@@ -53,27 +47,23 @@ public class JsonHelper {
 		private static final String P_ARTIST = "artist";
 		private static final String P_DURATION = "duration";
 
-	
-		
-		static JSONObject toJson(List<AndroidData> songs)
-				throws JSONException {
+		static JSONObject toJson(List<AndroidData> songs) throws JSONException {
 			JSONObject root = new JSONObject();
 			JSONArray songArray = new JSONArray();
 
 			for (AndroidData song : songs) {
 				songArray.put(getSingleObject(song));
 			}
-			
+
 			root.put(P_SONGS_ARRAY, songArray);
 			root.put(P_CMD, P_CMD_VALUE);
 			ServerUtils.addEssentialParamToJson(root, P_MODULE);
 			Log.d(TAG, root.toString());
 			return root;
 		}
-		
+
 		private static JSONObject getSingleObject(AndroidData song)
 				throws JSONException {
-
 
 			JSONObject obj = new JSONObject();
 			obj.put(P_FINGERPRINT, song.getfPrint());
@@ -85,8 +75,7 @@ public class JsonHelper {
 			return obj;
 
 		}
-				
+
 	}
-	
-	
+
 }
