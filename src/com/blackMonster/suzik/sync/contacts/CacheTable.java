@@ -17,7 +17,7 @@ import com.blackMonster.suzik.sync.contacts.model.Contact;
 class CacheTable {
 	private static final String TAG = "CacheTable";
 	private static final String C_PHONE_NO = "PHONE_NO";
-	private static final String TABLE = "CacheTable";
+	private static final String TABLE = "ContactsCacheTable";
 
 	static void createTable(SQLiteDatabase db) {
 		String sql = String.format("create table %s" + "(%s text primary key)",

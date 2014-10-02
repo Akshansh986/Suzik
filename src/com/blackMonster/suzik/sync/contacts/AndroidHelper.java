@@ -27,7 +27,7 @@ public class AndroidHelper {
 	public static HashSet<Contact> getMyContacts(Context context) throws Exception {
 	ContentResolver cr = context.getApplicationContext()
 				.getContentResolver();
-	HashSet<Contact> contactList = new HashSet<Contact>();;
+	HashSet<Contact> contactList = new HashSet<Contact>();
 
 		LOGD(TAG, "In getMycontacts");
 		String phoneNumber;

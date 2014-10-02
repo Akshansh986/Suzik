@@ -2,26 +2,13 @@ package com.blackMonster.suzik;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
-
-import com.blackMonster.suzik.musicstore.MusicStoreManager;
-import com.blackMonster.suzik.musicstore.SendMyMusic;
-import com.blackMonster.suzik.sync.contacts.ServiceSendMyContacts;
 
 public class ActivitySignup extends Activity {
 	private static final String TAG = "ActivitySignup";
 
 	AlertDialog dialog = null;
 	String myNumber;
-
+/*
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "onCreate");
@@ -141,6 +128,6 @@ public class ActivitySignup extends Activity {
 	
 	private Activity getActivity() {
 		return this;
-	}
+	}*/
 
 }

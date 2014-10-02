@@ -4,6 +4,7 @@ import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.TableCompletedSong
 import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.TablePausedSongs;
 import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.TableAllPlayed;
 import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.TableUserSelectedCompleted;
+import com.blackMonster.suzik.sync.music.SyncMusicCreateTable;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,7 +29,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		return dInstance;
 	}
 
-	private DbHelper(Context context) {
+	public DbHelper(Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
 		// Log.d(TAG, "constructor start");
 		// Log.d(TAG, "DbHelper");
@@ -42,6 +43,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 		TableAllPlayed.createTable(db);
 		TableUserSelectedCompleted.createTable(db);
+		
+		SyncMusicCreateTable.createAll(db);
 	}
 
 	@Override
