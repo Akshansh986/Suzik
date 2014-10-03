@@ -1,6 +1,10 @@
 package com.blackMonster.suzik.sync.music;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -29,40 +33,62 @@ class QueueAddedSongs {
 		db.execSQL(sql);
 	}
 	
-	static Song search(String fPrint, Context context) {
+	static QueueData search(String fPrint, Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
-		Song ans = null;
-
+		QueueData queueData = null;
 		Cursor cursor = db.query(TABLE, null, C_FPRINT + "='" + fPrint + "'" , null, null, null, null);
 
 		if (cursor != null) {
 			if (cursor.moveToFirst()) {
-				ans = new Song(cursor.getString(cursor
+				Song song = new Song(cursor.getString(cursor
 						.getColumnIndex(C_TITLE)), cursor.getString(cursor
 						.getColumnIndex(C_ARTIST)), cursor.getString(cursor
 						.getColumnIndex(C_ALBUM)), cursor.getLong(cursor
 						.getColumnIndex(C_DURATION)));
+			queueData = new QueueData(song, fPrint, cursor.getString(cursor.getColumnIndex(C_FILENAME)));
+				
 			}
 			cursor.close();
 		}
 
-		return ans;
+		return queueData;
 	}
+	
+	static List<String> getAllFprints(Context context) {
+		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
+
+		List<String> allFp = null;
+		Cursor cursor = db.query(TABLE, null,null, null, null, null, null);
+		
+		if (cursor != null) {
+			allFp = new ArrayList<String>();
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				allFp.add(cursor.getString(cursor.getColumnIndex(C_FPRINT)));
+ 				cursor.moveToNext();
+			}
+			cursor.close();
+		}
+
+		return allFp;
+	}
+	
+	
 
 	
 
-	static boolean insert(Song song,String fPrint,String fileName, Context context) {
+	static boolean insert(QueueData data, Context context) {
 		LOGD(TABLE, "insert");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 
-		values.put(C_TITLE, song.getTitle());
-		values.put(C_ARTIST, song.getArtist());
-		values.put(C_ALBUM, song.getAlbum());
-		values.put(C_DURATION, song.getDuration());
-		values.put(C_FPRINT, fPrint);
-		values.put(C_FILENAME, fileName);
+		values.put(C_TITLE, data.getSong().getTitle());
+		values.put(C_ARTIST, data.getSong().getArtist());
+		values.put(C_ALBUM, data.getSong().getAlbum());
+		values.put(C_DURATION, data.getSong().getDuration());
+		values.put(C_FPRINT, data.getfPrint());
+		values.put(C_FILENAME, data.getFileName());
 		return db.insert(TABLE, null, values) > -1;
 		
 	}
@@ -70,6 +96,11 @@ class QueueAddedSongs {
 	static boolean remove(String fPrint, Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 		return db.delete(TABLE, C_FPRINT + "='" + fPrint + "'", null) > 0;
+	}
+	
+	static boolean clearAll(Context context) {
+		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
+		return db.delete(TABLE, null, null) > 0;
 	}
 
 	static boolean isEmpty(Context context) {
@@ -90,6 +121,40 @@ class QueueAddedSongs {
 		}
 
 		return result;
+	}
+	
+	static class QueueData {
+		private Song song;
+		private String fPrint;
+		private String fileName;
+
+		QueueData(Song song, String fPrint, String fileName) {
+			super();
+			this.song = song;
+			this.fPrint = fPrint;
+			this.fileName = fileName;
+		}
+
+		Song getSong() {
+			return song;
+		}
+		
+		String getFileName() {
+			return fileName;
+		}
+
+		void setSong(Song song) {
+			this.song = song;
+		}
+
+		String getfPrint() {
+			return fPrint;
+		}
+
+		void setfPrint(String fPrint) {
+			this.fPrint = fPrint;
+		}
+
 	}
 
 }

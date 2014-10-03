@@ -1,17 +1,19 @@
 package com.blackMonster.suzik.sync.music;
 
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.json.JSONException;
 
-import static com.blackMonster.suzik.util.LogUtils.*;
 import android.content.Context;
 
 import com.blackMonster.suzik.sync.music.AndroidHelper.AndroidData;
 import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
+import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;
 
 public class SongsSyncer {
 	private static final String TAG = "SongsSyncer";
@@ -20,6 +22,20 @@ public class SongsSyncer {
 	public static boolean startSync(Context context) throws Exception {
 		List<AndroidData> androidDataList = AndroidHelper.getAllMySongs(context);
 		LOGD(TAG," " + androidDataList.size());
+		
+		/*
+		List<String> a = new ArrayList<String>();
+		a.add("heelo");
+		a.add("my");
+		a.add("name");
+		JsonHelper.AddedSongsQueue.toJson(androidDataList);
+		
+		*/
+		
+		
+		
+		
+		
 		List<CacheData> cacheDataList = CacheTable.getAllData(context);
 		LOGD(TAG," " + cacheDataList.size());
 		ChangesHandler changes = new ChangesHandler(androidDataList, cacheDataList,context);
@@ -57,7 +73,7 @@ public class SongsSyncer {
 	private static void moveAddedSongsToQueue(List<AndroidData> addedSongs,Context context) {
 		for (AndroidData song : addedSongs) {
 			LOGD(TAG,"Moving to queue : " + song.toString());
-			QueueAddedSongs.insert(song.getSong(), song.getfPrint(),song.getFileName(),context);
+			QueueAddedSongs.insert(new QueueData(song.getSong(), song.getfPrint(),song.getFileName()),context);
 		}
 		
 	}

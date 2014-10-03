@@ -1,5 +1,6 @@
 package com.blackMonster.suzik.sync.music;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -32,6 +33,8 @@ public class JsonHelper {
 		
 
 	}
+	
+	
 
 	static class AddedSong {
 
@@ -77,5 +80,52 @@ public class JsonHelper {
 		}
 
 	}
+	
+	
+	static class AddedSongsQueue {
+		private static final String P_MAIN_TAG = "fingerPrints";
+		private static final String P_MODULE_ADDED_SONG_STATUS = "addedSongsStatus";
+		
+		private static final String P_R_MAIN_TAG= "response";
+		private static final String P_R_FPRINT= "fPrint";
+		private static final String P_R_ID= "id";
+
+
+
+
+		public static JSONObject toJson(List<String> fPrints) throws JSONException {
+			JSONObject root = new JSONObject();
+
+			root.put(P_MAIN_TAG, fPrints);
+			ServerUtils.addEssentialParamToJson(root, P_MODULE_ADDED_SONG_STATUS);
+
+			Log.d(TAG, root.toString());
+			return root;
+
+		}
+
+		public static HashMap<String, Long> parseResponse(JSONObject response) throws JSONException {
+			   
+			HashMap<String, Long> result = new HashMap<String, Long>();
+			JSONArray responseArray = response.getJSONArray(P_R_MAIN_TAG);
+			   
+	            for (int i = 0; i < responseArray.length(); i++) {
+	                JSONObject responseObj = (JSONObject) responseArray.get(i);
+	 
+	                result.put(responseObj.getString(P_R_FPRINT), responseObj.getLong(P_R_ID));
+	            }
+	            
+	            
+	            return result;
+			
+		}
+
+	
+	
+	
+	
+	}
+	
+
 
 }

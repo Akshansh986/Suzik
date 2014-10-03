@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 public class MainPrefs {
 	public static final String PREFS_NAME = "MainPrefs";
 	public static final String MY_NO = "MY_NO";
-
+	public static final String UNIDENTIFIABLE_SONG_ID_MAX = "UNIDENTIFIABLE_SONG_ID_MAX";
 
 	
 	private static SharedPreferences prefs=null;
@@ -31,6 +31,17 @@ public class MainPrefs {
 	public static String getMyNo(Context context) {
 		initPrefInstance(context);
 		return prefs.getString(MY_NO, "123");
+	}
+	
+	public static void setUnIndetifiableSongId(int id,Context context) {
+		initPrefInstance(context);
+		prefs.edit().putInt(UNIDENTIFIABLE_SONG_ID_MAX, id).commit();
+	}
+	
+
+	public static int getUnIdentifiableSongId(Context context) {
+		initPrefInstance(context);
+		return prefs.getInt(UNIDENTIFIABLE_SONG_ID_MAX, 0);
 	}
 	
 	
