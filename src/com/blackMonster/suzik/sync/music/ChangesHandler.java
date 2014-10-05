@@ -21,6 +21,9 @@ class ChangesHandler {
 
 	private Context context;
 
+	boolean noChanges() {
+		return addedSongs.isEmpty() && deletedSongs.isEmpty() && modifiedSongs.isEmpty();
+	}
 	
 
 	ChangesHandler(List<AndroidData> androidDataList,

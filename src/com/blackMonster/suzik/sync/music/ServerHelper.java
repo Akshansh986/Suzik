@@ -19,7 +19,7 @@ import com.blackMonster.suzik.sync.music.AndroidHelper.AndroidData;
 
 public class ServerHelper {
 
-	static boolean postDeletedSongs(List<Long> ids) throws JSONException,
+	static HashMap<Long, Integer> postDeletedSongs(List<Long> ids) throws JSONException,
 			InterruptedException, ExecutionException {
 
 		JSONObject deletedSongs = JsonHelper.DeletedSong.toJson(ids);
@@ -31,10 +31,8 @@ public class ServerHelper {
 
 		try {
 			JSONObject response = future.get();
-
-			// Map<Long, Integer> res;
-			// JsonHelper.DeletedSong.responseTo
-
+			return JsonHelper.DeletedSong.parseResponse(response);
+		
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			throw e;
@@ -43,12 +41,13 @@ public class ServerHelper {
 			throw e;
 		}
 
-		return true;
 	}
 
 	static boolean postAddedSongs(List<AndroidData> addedSongs)
 			throws JSONException, InterruptedException, ExecutionException {
-		// if (true) return true;
+		 if (true) return true;
+		 
+		if (addedSongs.isEmpty()) return true;
 		boolean result = false;
 		JSONObject addedSongsJson = JsonHelper.AddedSong.toJson(addedSongs);
 		LOGD("srverhelop", "josn received");

@@ -82,6 +82,7 @@
         </activity>
         <activity android:name="com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.ActivityProgramSelectedCompleted" >
         </activity>
+     
     </application>
 
 </manifest>

@@ -12,21 +12,19 @@ import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;
 
-class AddedSongsResponseHandler {
+public class AddedSongsResponseHandler {
 
-	static boolean perFormSync(Context context) {
+
+	public static boolean performSync(Context context) throws JSONException, InterruptedException, ExecutionException {
 
 		if (QueueAddedSongs.isEmpty(context))
 			return true;
 
 		HashMap<String, Long> fPrintIdMap;
 		
-		try {
+		
 			fPrintIdMap = getQueueStatusFromServer(context);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+		
 
 		if (fPrintIdMap.size() > 0) {
 
@@ -52,10 +50,15 @@ class AddedSongsResponseHandler {
 		else
 		{
 			QueueAddedSongs.clearAll(context);
-			//
+			//SongsSyncer.syncNow(context);  //test this
 		}
 
 		return true;
+	}
+
+	private static void createAlarm() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private static long getNewSongId(Context context) {
@@ -64,11 +67,7 @@ class AddedSongsResponseHandler {
 		return id;
 	}
 
-	private static void createAlarm() {
-		// TODO Auto-generated method stub
-
-	}
-
+	
 	private static HashMap<String, Long> getQueueStatusFromServer(
 			Context context) throws JSONException, InterruptedException,
 			ExecutionException {

@@ -3,7 +3,9 @@ package com.blackMonster.suzik.sync.music;
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.json.JSONException;
@@ -17,29 +19,18 @@ import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;
 
 public class SongsSyncer {
 	private static final String TAG = "SongsSyncer";
+
 	
-	
-	public static boolean startSync(Context context) throws Exception {
+	public static boolean startSync(Context context) throws Exception  {
 		List<AndroidData> androidDataList = AndroidHelper.getAllMySongs(context);
 		LOGD(TAG," " + androidDataList.size());
-		
-		/*
-		List<String> a = new ArrayList<String>();
-		a.add("heelo");
-		a.add("my");
-		a.add("name");
-		JsonHelper.AddedSongsQueue.toJson(androidDataList);
-		
-		*/
-		
-		
-		
-		
 		
 		List<CacheData> cacheDataList = CacheTable.getAllData(context);
 		LOGD(TAG," " + cacheDataList.size());
 		ChangesHandler changes = new ChangesHandler(androidDataList, cacheDataList,context);
 		LOGD(TAG,"changes done");
+		
+		if (changes.noChanges()) return true;
 
 	/*	
 		int count=0;
@@ -54,17 +45,19 @@ public class SongsSyncer {
 		handleAddedSongsIfAlreadyInAppSong(changes.getAddedSongs(),context);
 		removeSongsIfAlreadyInQueue(changes.getAddedSongs(), context);   //checked
 		
-		if (postDeletedSongs(changes.getDeletedSongs())== false) return false;    ///incomplete
+		if (handleDeletedSongs(changes.getDeletedSongs(), context) == false) return false;   
 		
 		if (ServerHelper.postAddedSongs(changes.getAddedSongs()) == false ) return false;
 		
 		moveAddedSongsToQueue(changes.getAddedSongs(),context);
-		createAlarm();
+		if (!QueueAddedSongs.isEmpty(context)) createAlarm(context);
+		
+		LOGD(TAG,"All done");
 		return true;
 	}
 
 
-	private static void createAlarm() {
+	private static void createAlarm(Context context) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -79,12 +72,29 @@ public class SongsSyncer {
 	}
 
 
-	private static boolean postDeletedSongs(List<CacheData> deletedSongs) throws JSONException, InterruptedException, ExecutionException {
+	private static boolean handleDeletedSongs(List<CacheData> deletedSongs,Context context) throws JSONException, InterruptedException, ExecutionException {
+		if (true) return true;
+		
+		if (deletedSongs.isEmpty()) return true;
 		List<Long> ids = new ArrayList<Long>();
 		for (CacheData data : deletedSongs) {
 			ids.add(data.getId());
 		}
-		return ServerHelper.postDeletedSongs(ids);
+		HashMap<Long, Integer> idStatus = ServerHelper.postDeletedSongs(ids);
+		
+		boolean res = true;
+		
+		for (Map.Entry<Long, Integer> entry : idStatus.entrySet()) {
+			if (entry.getValue() == 0) {
+				res = false;
+			}
+			else {
+				CacheTable.remove(entry.getKey(), context);
+			}
+		
+		}
+		
+		return res;
 		
 	}
 

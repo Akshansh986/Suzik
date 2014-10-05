@@ -73,6 +73,18 @@ class QueueAddedSongs {
 		return allFp;
 	}
 	
+	static int getRowCount(Context context) {
+		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
+
+		Cursor cursor = db.query(TABLE, null,null, null, null, null, null);
+		
+		if (cursor!=null) {
+			return cursor.getCount();
+		}
+		else
+			return 0;
+	}
+	
 	
 
 	

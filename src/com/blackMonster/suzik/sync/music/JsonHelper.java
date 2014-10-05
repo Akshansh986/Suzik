@@ -19,6 +19,15 @@ public class JsonHelper {
 		private static final String P_DELETED_SONGS = "songs";
 		private static final String P_MODULE_DELETED_SONGS = "deletedSongs";
 
+		private static final String P_R_MAIN_TAG = "songs";
+		private static final String P_R_ID = "id";
+		private static final String P_R_STATUS = "status";
+
+
+		
+
+
+
 		static JSONObject toJson(List<Long> ids) throws JSONException {
 
 			JSONObject root = new JSONObject();
@@ -28,6 +37,23 @@ public class JsonHelper {
 
 			Log.d(TAG, root.toString());
 			return root;
+		}
+		
+		//Hash-Map feature is not use, use different data structure to optimize it.
+		public static HashMap<Long, Integer> parseResponse(JSONObject response) throws JSONException {
+			   
+			HashMap<Long, Integer> idStatus = new HashMap<Long, Integer>();
+			JSONArray responseArray = response.getJSONArray(P_R_MAIN_TAG);
+			   
+	            for (int i = 0; i < responseArray.length(); i++) {
+	                JSONObject responseObj = (JSONObject) responseArray.get(i);
+	 
+	                idStatus.put(responseObj.getLong(P_R_ID), responseObj.getInt(P_R_STATUS));
+	            }
+	            
+	            
+	            return idStatus;
+			
 		}
 		
 		
