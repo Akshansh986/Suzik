@@ -20,6 +20,16 @@ public class MainPrefs {
 	}
 	
 	
+	public static void setCallOnNetAvailable(String caller, boolean value, Context context){
+		initPrefInstance(context);
+		prefs.edit().putBoolean(caller, value).commit();
+	}
+	
+	public static boolean shouldCallOnNetAvailable(String caller,Context context){
+		initPrefInstance(context);
+		return prefs.getBoolean(caller, false);
+	}
+
 	
 	
 	public static void setMyNo(String number,Context context) {

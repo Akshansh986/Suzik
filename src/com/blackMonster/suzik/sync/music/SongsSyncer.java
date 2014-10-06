@@ -10,28 +10,29 @@ import java.util.concurrent.ExecutionException;
 
 import org.json.JSONException;
 
-import android.content.Context;
-
+import com.blackMonster.suzik.sync.Syncer;
 import com.blackMonster.suzik.sync.music.AndroidHelper.AndroidData;
 import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
 import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;
 
-public class SongsSyncer {
+public class SongsSyncer extends Syncer {
 	private static final String TAG = "SongsSyncer";
 
 	
-	public static boolean startSync(Context context) throws Exception  {
-		List<AndroidData> androidDataList = AndroidHelper.getAllMySongs(context);
+	@Override
+	public synchronized boolean onPerformSync() throws Exception {
+		LOGD(TAG,"performing Sync");
+
+		List<AndroidData> androidDataList = AndroidHelper.getAllMySongs(this);
 		LOGD(TAG," " + androidDataList.size());
 		
-		List<CacheData> cacheDataList = CacheTable.getAllData(context);
+		List<CacheData> cacheDataList = CacheTable.getAllData(this);
 		LOGD(TAG," " + cacheDataList.size());
-		ChangesHandler changes = new ChangesHandler(androidDataList, cacheDataList,context);
+		ChangesHandler changes = new ChangesHandler(androidDataList, cacheDataList,this);
 		LOGD(TAG,"changes done");
 		
 		if (changes.noChanges()) return true;
-
 	/*	
 		int count=0;
 		for (AndroidData son : changes.getAddedSongs()) {
@@ -41,38 +42,34 @@ public class SongsSyncer {
 		if (true ) return false;
 	*/
 		
-		handleModifiedSongs(changes.getModifiedSongs(), context);
-		handleAddedSongsIfAlreadyInAppSong(changes.getAddedSongs(),context);
-		removeSongsIfAlreadyInQueue(changes.getAddedSongs(), context);   //checked
+		handleModifiedSongs(changes.getModifiedSongs());
+		handleAddedSongsIfAlreadyInAppSong(changes.getAddedSongs());
+		removeSongsIfAlreadyInQueue(changes.getAddedSongs());   //checked
 		
-		if (handleDeletedSongs(changes.getDeletedSongs(), context) == false) return false;   
+		if (handleDeletedSongs(changes.getDeletedSongs()) == false) return false;   
 		
 		if (ServerHelper.postAddedSongs(changes.getAddedSongs()) == false ) return false;
 		
-		moveAddedSongsToQueue(changes.getAddedSongs(),context);
-		if (!QueueAddedSongs.isEmpty(context)) createAlarm(context);
+		moveAddedSongsToQueue(changes.getAddedSongs());
+		if (!QueueAddedSongs.isEmpty(this)) AddedSongsResponseHandler.futureCall(this);
 		
 		LOGD(TAG,"All done");
 		return true;
 	}
 
 
-	private static void createAlarm(Context context) {
-		// TODO Auto-generated method stub
-		
-	}
 
 
-	private static void moveAddedSongsToQueue(List<AndroidData> addedSongs,Context context) {
+	private  void moveAddedSongsToQueue(List<AndroidData> addedSongs) {
 		for (AndroidData song : addedSongs) {
 			LOGD(TAG,"Moving to queue : " + song.toString());
-			QueueAddedSongs.insert(new QueueData(song.getSong(), song.getfPrint(),song.getFileName()),context);
+			QueueAddedSongs.insert(new QueueData(song.getSong(), song.getfPrint(),song.getFileName()),this);
 		}
 		
 	}
 
 
-	private static boolean handleDeletedSongs(List<CacheData> deletedSongs,Context context) throws JSONException, InterruptedException, ExecutionException {
+	private  boolean handleDeletedSongs(List<CacheData> deletedSongs) throws JSONException, InterruptedException, ExecutionException {
 		if (true) return true;
 		
 		if (deletedSongs.isEmpty()) return true;
@@ -89,7 +86,7 @@ public class SongsSyncer {
 				res = false;
 			}
 			else {
-				CacheTable.remove(entry.getKey(), context);
+				CacheTable.remove(entry.getKey(), this);
 			}
 		
 		}
@@ -99,31 +96,31 @@ public class SongsSyncer {
 	}
 
 
-	private static void removeSongsIfAlreadyInQueue(List<AndroidData> addedSongs, Context context) {
-		if (QueueAddedSongs.isEmpty(context)) return;
+	private  void removeSongsIfAlreadyInQueue(List<AndroidData> addedSongs) {
+		if (QueueAddedSongs.isEmpty(this)) return;
 		List<AndroidData> removed = new ArrayList<AndroidHelper.AndroidData>();
 		for (AndroidData added : addedSongs) {
 				LOGD(TAG,"removing already in queue : " + added.getSong().toString());
-				if (QueueAddedSongs.search(added.getfPrint(), context) !=  null)
+				if (QueueAddedSongs.search(added.getfPrint(), this) !=  null)
 					removed.add(added);
 		}
 		addedSongs.removeAll(removed);
 	}
 
 
-	private static void handleAddedSongsIfAlreadyInAppSong(
-			List<AndroidData> addedSongs, Context context) {
+	private void handleAddedSongsIfAlreadyInAppSong(
+			List<AndroidData> addedSongs) {
 
 		List<AndroidData> removed = new ArrayList<AndroidHelper.AndroidData>();
 		
 		for (AndroidData song : addedSongs) {
 			
-			InAppSongData inAppSong = InAapSongTable.getData(song.getfPrint(), context);
+			InAppSongData inAppSong = InAapSongTable.getData(song.getfPrint(), this);
 
 			if (inAppSong != null) {
 				LOGD(TAG,"handling in app " + inAppSong.toString());
-				InAapSongTable.remove(inAppSong.getId(), context);
-				CacheTable.insert(new CacheData(inAppSong.getId(), inAppSong.getSong(), inAppSong.getfPrint(),song.getFileName()), context);
+				InAapSongTable.remove(inAppSong.getId(), this);
+				CacheTable.insert(new CacheData(inAppSong.getId(), inAppSong.getSong(), inAppSong.getfPrint(),song.getFileName()), this);
 				//addedSongs.remove(song);         //debug check this
 				removed.add(song);
 			}
@@ -135,14 +132,16 @@ public class SongsSyncer {
 	}
 
 
-	private static void handleModifiedSongs(List<CacheData> modifiedSongs,
-			Context context) {
+	private void handleModifiedSongs(List<CacheData> modifiedSongs	) {
 
 		for (CacheData modified : modifiedSongs) {
 			LOGD(TAG,"Updating : " + modified.toString());
-			CacheTable.update(modified, context);
+			CacheTable.update(modified, this);
 		}
 
 	}
+
+
+	
 
 }

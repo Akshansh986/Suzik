@@ -16,8 +16,13 @@ import com.android.volley.toolbox.RequestFuture;
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.sync.music.AndroidHelper.AndroidData;
+import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
 
 public class ServerHelper {
+	
+	
+	
+	
 
 	static HashMap<Long, Integer> postDeletedSongs(List<Long> ids) throws JSONException,
 			InterruptedException, ExecutionException {
@@ -29,18 +34,9 @@ public class ServerHelper {
 				deletedSongs, future, future);
 		AppController.getInstance().addToRequestQueue(request);
 
-		try {
 			JSONObject response = future.get();
 			return JsonHelper.DeletedSong.parseResponse(response);
-		
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			throw e;
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-			throw e;
-		}
-
+	
 	}
 
 	static boolean postAddedSongs(List<AndroidData> addedSongs)
@@ -61,7 +57,7 @@ public class ServerHelper {
 			LOGD("serverHeloper", "added song sending");
 			JSONObject response = future.get();
 			LOGD("SErverheloper", "response : " + response.toString());
-			result = true;
+			return JsonHelper.AddedSong.parseResponse(response);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			throw e;
@@ -70,7 +66,6 @@ public class ServerHelper {
 			throw e;
 		}
 
-		return result;
 
 	}
 
@@ -91,6 +86,20 @@ public class ServerHelper {
 				.parseResponse(response);
 		return parsedResponse;
 
+	}
+
+	public static List<InAppSongData> getAllMySongs(Context context) throws InterruptedException, ExecutionException, JSONException {
+		JSONObject credintials = JsonHelper.ServerAllSongs.getCredentials();
+
+		RequestFuture<JSONObject> future = RequestFuture.newFuture();
+		JsonObjectRequest request = new JsonObjectRequest(AppConfig.MAIN_URL,
+				credintials, future, future);
+		AppController.getInstance().addToRequestQueue(request);
+
+		JSONObject response = future.get();
+		List<InAppSongData> parsedResponse = JsonHelper.ServerAllSongs.parseResponse(response);
+		return parsedResponse;
+		
 	}
 
 }

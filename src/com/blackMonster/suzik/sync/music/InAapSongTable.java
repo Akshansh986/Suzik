@@ -4,6 +4,7 @@ import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import static com.blackMonster.suzik.util.LogUtils.LOGE;
 
 import java.util.HashSet;
+import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -128,6 +129,14 @@ public class InAapSongTable {
 		values.put(C_LOCATION, inAppSongData.getLocation());
 		
 		db.insert(TABLE, null, values);
+	}
+	
+	public static void insert(List<InAppSongData> inAppSongData, Context context) {
+		LOGD(TABLE, "Bulk insert");
+		
+		for (InAppSongData data : inAppSongData) {
+			insert(data, context);
+		}
 	}
 
 	public static boolean update(InAppSongData newInAppSongData, Context context) {

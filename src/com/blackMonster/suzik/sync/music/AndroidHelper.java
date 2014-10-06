@@ -13,6 +13,8 @@ import android.provider.MediaStore;
 import com.blackMonster.suzik.musicstore.module.Song;
 
 public class AndroidHelper {
+	public static Uri URI = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
 
 	public static List<AndroidData> getAllMySongs(Context context)
 			throws Exception {
@@ -27,9 +29,8 @@ public class AndroidHelper {
 				+ " COLLATE LOCALIZED ASC";
 		Cursor cursor = null;
 		try {
-			Uri uri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
-			cursor = context.getContentResolver().query(uri, projection,
+			cursor = context.getContentResolver().query(URI, projection,
 					selection, null, sortOrder);
 
 			androidDataSet = new ArrayList<AndroidData>();
