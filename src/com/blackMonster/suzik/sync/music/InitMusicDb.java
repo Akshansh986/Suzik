@@ -28,6 +28,7 @@ public class InitMusicDb extends IntentService {
 				try {
 					init();
 				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 
@@ -36,8 +37,12 @@ public class InitMusicDb extends IntentService {
 
 	private void init() {
 		try {
+			LOGD(TAG,"starting init music db");
+
 			List<InAppSongData> songList = ServerHelper.getAllMySongs(this);
+			LOGD(TAG,"server done");
 			InAapSongTable.insert(songList, this);
+			LOGD(TAG,"in app insert complete");
 			startService(new Intent(this, SongsSyncer.class));
 		} catch (InterruptedException e) {
 			e.printStackTrace();

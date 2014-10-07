@@ -70,7 +70,7 @@ public class SongsSyncer extends Syncer {
 
 
 	private  boolean handleDeletedSongs(List<CacheData> deletedSongs) throws JSONException, InterruptedException, ExecutionException {
-		if (true) return true;
+		//if (true) return true;
 		
 		if (deletedSongs.isEmpty()) return true;
 		List<Long> ids = new ArrayList<Long>();

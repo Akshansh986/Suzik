@@ -18,9 +18,11 @@ import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.sync.music.AndroidHelper.AndroidData;
 import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
 
+
+
 public class ServerHelper {
 	
-	
+	public static final String TAG ="ServerHelper";
 	
 	
 
@@ -41,7 +43,7 @@ public class ServerHelper {
 
 	static boolean postAddedSongs(List<AndroidData> addedSongs)
 			throws JSONException, InterruptedException, ExecutionException {
-		 if (true) return true;
+		 //if (true) return true;
 		 
 		if (addedSongs.isEmpty()) return true;
 		boolean result = false;
@@ -82,6 +84,7 @@ public class ServerHelper {
 		AppController.getInstance().addToRequestQueue(request);
 
 		JSONObject response = future.get();
+		LOGD(TAG,response.toString());
 		HashMap<String, Long> parsedResponse = JsonHelper.AddedSongsQueue
 				.parseResponse(response);
 		return parsedResponse;

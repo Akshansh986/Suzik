@@ -1,5 +1,5 @@
 package com.blackMonster.suzik.sync.music;
-
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -16,15 +16,17 @@ import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;
 
 public class AddedSongsResponseHandler extends Syncer {
-
+private static final  String TAG = "AddedSongsResponseHandler";
 	@Override
 	public synchronized boolean onPerformSync() throws Exception {
+	
 		if (QueueAddedSongs.isEmpty(this))
 			return true;
 
 		HashMap<String, Long> fPrintIdMap;
-
+		LOGD(TAG,"going to contact server");
 		fPrintIdMap = getQueueStatusFromServer();
+		LOGD(TAG,"server response and json parsing done");
 
 		if (fPrintIdMap.size() > 0) {
 

@@ -1,5 +1,5 @@
 package com.blackMonster.suzik.sync.music;
-
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
 
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.music.AndroidHelper.AndroidData;
@@ -18,7 +17,7 @@ import com.blackMonster.suzik.util.ServerUtils;
 public class JsonHelper {
 	private static final String TAG = "music.JsonHelper";
 
-	static class DeletedSong {
+	 static class DeletedSong {
 		private static final String P_DELETED_SONGS = "ids";
 		private static final String P_MODULE_DELETED_SONGS = "music";
 		private static final String P_CMD_VALUE = "delete";
@@ -28,14 +27,21 @@ public class JsonHelper {
 		private static final String P_R_ID = "id";
 		private static final String P_R_STATUS = "status";
 
-		static JSONObject toJson(List<Long> ids) throws JSONException {
+		 static JSONObject toJson(List<Long> ids) throws JSONException {
 
 			JSONObject root = new JSONObject();
+			JSONArray array = new JSONArray();
 
-			root.put(P_DELETED_SONGS, ids);
+			for (long id : ids) {
+				//root.put(P_DELETED_SONGS, id);
+				array.put(id);
+				}
+			root.put(P_DELETED_SONGS, array);
+			
+			
 			ServerUtils.addEssentialParamToJson(root, P_MODULE_DELETED_SONGS,P_CMD_VALUE);
 
-			Log.d(TAG, root.toString());
+			LOGD(TAG, root.toString());
 			return root;
 		}
 
@@ -89,7 +95,7 @@ public class JsonHelper {
 
 			root.put(P_SONGS_ARRAY, songArray);
 			ServerUtils.addEssentialParamToJson(root, P_MODULE, P_CMD_VALUE);
-			Log.d(TAG, root.toString());
+			LOGD(TAG, root.toString());
 			return root;
 		}
 
@@ -131,12 +137,18 @@ public class JsonHelper {
 		public static JSONObject toJson(List<String> fPrints)
 				throws JSONException {
 			JSONObject root = new JSONObject();
+			JSONArray array = new JSONArray();
+			
+			for (String fprint : fPrints) {
+				array.put(fprint);
+				}
+			root.put(P_MAIN_TAG, array);
 
-			root.put(P_MAIN_TAG, fPrints);
+			//root.put(P_MAIN_TAG, fPrints);
 			ServerUtils.addEssentialParamToJson(root,
 					P_MODULE_ADDED_SONG_STATUS,P_CMD);
 
-			Log.d(TAG, root.toString());
+			LOGD(TAG, root.toString());
 			return root;
 
 		}
@@ -177,7 +189,7 @@ public class JsonHelper {
 		public static JSONObject getCredentials() throws JSONException {
 			JSONObject root = new JSONObject();
 			ServerUtils.addEssentialParamToJson(root, P_MODULE, P_CMD);
-			Log.d(TAG, root.toString());
+			LOGD(TAG, root.toString());
 			return root;
 
 		}
