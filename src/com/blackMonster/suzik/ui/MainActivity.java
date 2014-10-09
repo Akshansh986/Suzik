@@ -3,7 +3,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.blackMonster.suzik.sync.music.SongsSyncer;
+import com.blackMonster.suzik.sync.ContentObserverService;
+import com.blackMonster.suzik.sync.music.InitMusicDb;
 
 public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
@@ -17,15 +18,15 @@ public class MainActivity extends Activity {
 		//if (ContentObserverService.musicObserver == null) LOGD(TAG,"null");
 		//else
 		//	LOGD(TAG,"not null");
-		//startService(new Intent(this, ContentObserverService.class));
+		startService(new Intent(this, ContentObserverService.class));
 		//startService(new Intent(this, ContentObserverService.class));
 		
-		//startService(new Intent(this, InitMusicDb.class));
+		startService(new Intent(this, InitMusicDb.class));
 		
 		
 	//startService(new Intent(this, AddedSongsResponseHandler.class));
 
-		startService(new Intent(this, SongsSyncer.class));
+	//startService(new Intent(this, SongsSyncer.class));
 
 		//new DbHelper(this.getApplicationContext());
 	/*	new Thread() {

@@ -81,7 +81,7 @@ public class SongsSyncer extends Syncer {
 		boolean res = true;
 		
 		for (Map.Entry<Long, Integer> entry : idStatus.entrySet()) {
-			if (entry.getValue() == 0) {
+			if (entry.getValue() == JsonHelper.DeletedSong.RESPONSE_SQL_ERROR) {
 				res = false;
 			}
 			else {

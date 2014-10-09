@@ -26,6 +26,12 @@ public class JsonHelper {
 		private static final String P_R_MAIN_TAG = "songData";
 		private static final String P_R_ID = "id";
 		private static final String P_R_STATUS = "status";
+		
+		public static final int RESPONSE_OK = 1;
+		public static final int RESPONSE_SQL_ERROR = 0;
+		public static final int RESPONSE_NOT_IN_DB = 2;
+
+
 
 		 static JSONObject toJson(List<Long> ids) throws JSONException {
 

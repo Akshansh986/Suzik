@@ -32,6 +32,7 @@ class Fingerprinter{
 
 	void addFingerPrint() throws InterruptedException {
 		doneSignal = new CountDownLatch(songList.size());
+		LOGD(TAG,"No of done signal " + songList.size());
 		startSignal = new CountDownLatch(1);
 
 		for (AndroidData song : songList) {
@@ -61,17 +62,18 @@ class Fingerprinter{
 				e.printStackTrace();
 			}
 			
-			doneSignal.countDown();
-			
+					
 			if (result == null) {
 				LOGE(TAG,"null");
 				onError();
+				doneSignal.countDown();
 				return;
 			}
 			
 			if (result.isFingerprintingFailure()) {
 				LOGE(TAG,"fingerprint failure");
 				onError();
+				doneSignal.countDown();
 				return;
 			}
 
@@ -79,12 +81,13 @@ class Fingerprinter{
 			if (fingerPrint == null) {
 				LOGE(TAG,"Null fingerprint");
 				onError();
+				doneSignal.countDown();
 				return;
 			}
 			
 			LOGD(TAG, fingerPrint);
 			androidSong.setfPrint(fingerPrint);
-
+			doneSignal.countDown();
 		}
 		
 		private void onError() {
