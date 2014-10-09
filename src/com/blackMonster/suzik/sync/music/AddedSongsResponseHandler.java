@@ -29,17 +29,26 @@ private static final  String TAG = "AddedSongsResponseHandler";
 		LOGD(TAG,"server response and json parsing done");
 
 		if (fPrintIdMap.size() > 0) {
+			LOGD(TAG,"replied " + fPrintIdMap.size());
 
 			for (Map.Entry<String, Long> entry : fPrintIdMap.entrySet()) {
 
 				long id = entry.getValue();
-				if (id == 0)
+				if (id == 0) {
 					id = getNewSongId();
+					LOGD(TAG,"id 0 for " + entry.getKey());
+
+					
+				}
 				QueueData qData = QueueAddedSongs.search(entry.getKey(), this);
+				
+				LOGD(TAG,"inserting " + qData.getFileName() + " to cachel table");
 
 				CacheTable.insert(
 						new CacheData(id, qData.getSong(), qData.getfPrint(),
 								qData.getFileName()), this);
+				LOGD(TAG,"removing from queue");
+
 				QueueAddedSongs.remove(entry.getKey(), this);
 
 			}
@@ -48,6 +57,7 @@ private static final  String TAG = "AddedSongsResponseHandler";
 				futureCall(this);
 			}
 		} else {
+			LOGD(TAG,"reply size zero");
 			QueueAddedSongs.clearAll(this);
 			// SongsSyncer.syncNow(context); //test this
 			startService(new Intent(this, SongsSyncer.class));

@@ -2,7 +2,6 @@ package com.blackMonster.suzik.sync;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
@@ -12,13 +11,9 @@ import com.blackMonster.suzik.sync.music.ObserverMusic;
 
 public class ContentObserverService extends Service{
 	private static final String TAG = "ContentObserverService";
-	public static ObserverMusic musicObserver=null ;
+	private static ObserverMusic musicObserver=null ;
 	
-	private static ContentObserverService instance = null;
-	public static void startService(Context context) {
-		
-		
-	}
+	
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {

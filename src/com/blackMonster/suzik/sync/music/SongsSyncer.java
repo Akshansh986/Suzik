@@ -45,7 +45,6 @@ public class SongsSyncer extends Syncer {
 		handleModifiedSongs(changes.getModifiedSongs());
 		handleAddedSongsIfAlreadyInAppSong(changes.getAddedSongs());
 		removeSongsIfAlreadyInQueue(changes.getAddedSongs());   //checked
-		
 		if (handleDeletedSongs(changes.getDeletedSongs()) == false) return false;   
 		
 		if (ServerHelper.postAddedSongs(changes.getAddedSongs()) == false ) return false;
