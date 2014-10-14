@@ -43,7 +43,7 @@ public abstract class Syncer extends IntentService{
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		
-		LOGD(TAG,"onHandleIntent " + getClassName());
+		LOGD(TAG,"onHandleIntent " + getCurrentClassName());
 	
 		new Thread() {
 			public void run() {
@@ -61,21 +61,21 @@ public abstract class Syncer extends IntentService{
 
 		if (!NetworkUtils.isInternetAvailable(this)) {
 			LOGD(TAG,"Net not available");
-			MainPrefs.setCallOnNetAvailable(getClassName(), true, this);
+			MainPrefs.setCallOnNetAvailable(getCurrentClassName(), true, this);
 			return;
 		}
 		
 		try {
-			LOGD(TAG,"calling : " + getClassName());
+			LOGD(TAG,"calling : " + getCurrentClassName());
 
 			if (onPerformSync() == false) {
-			LOGD(TAG,"failedSync " + getClassName());
+			LOGD(TAG,"failedSync " + getCurrentClassName());
 			callFuture(AppConfig.SYNCER_TIME_RETRY_MS);	
 			}
 			
 		} catch (Exception e1) {
 			e1.printStackTrace();
-			LOGD(TAG,"failedSync " + getClassName());
+			LOGD(TAG,"failedSync " + getCurrentClassName());
 			callFuture(AppConfig.SYNCER_TIME_RETRY_MS);	
 
 		}
@@ -114,7 +114,7 @@ public abstract class Syncer extends IntentService{
 	public  abstract  boolean onPerformSync() throws Exception;
 
 	
-	public String getClassName() {
+	public String getCurrentClassName() {
 		return getClass().getSimpleName();
 	}
 
