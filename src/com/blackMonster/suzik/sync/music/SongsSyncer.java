@@ -1,6 +1,6 @@
 package com.blackMonster.suzik.sync.music;
 
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,15 +22,17 @@ public class SongsSyncer extends Syncer {
 	
 	@Override
 	public synchronized boolean onPerformSync() throws Exception {
-		LOGD(TAG,"performing Sync");
+		LOGI(TAG,"performing Sync");
 
 		List<AndroidData> androidDataList = AndroidHelper.getAllMySongs(this);
-		LOGD(TAG," " + androidDataList.size());
+		LOGD(TAG,"android size " + androidDataList.size());
 		
 		List<CacheData> cacheDataList = CacheTable.getAllData(this);
-		LOGD(TAG," " + cacheDataList.size());
+		LOGD(TAG,"cache table size " + cacheDataList.size());
 		ChangesHandler changes = new ChangesHandler(androidDataList, cacheDataList,this);
 		LOGD(TAG,"changes done");
+		LOGD(TAG,"added : " + changes.getAddedSongs().size() + " removed : " + changes.getDeletedSongs().size() + 
+				" modified : " + changes.getModifiedSongs().size());
 		
 		if (changes.noChanges()) return true;
 	/*	
@@ -43,16 +45,30 @@ public class SongsSyncer extends Syncer {
 	*/
 		
 		handleModifiedSongs(changes.getModifiedSongs());
+		LOGI(TAG,"modified song handle done");
+	
 		handleAddedSongsIfAlreadyInAppSong(changes.getAddedSongs());
+		LOGI(TAG,"handleAddedSongsIfAlreadyInAppSong done");
+
+		
 		removeSongsIfAlreadyInQueue(changes.getAddedSongs());   //checked
-		if (handleDeletedSongs(changes.getDeletedSongs()) == false) return false;   
+		LOGI(TAG,"removeSongsIfAlreadyInQueue done");
+
+		
+		if (handleDeletedSongs(changes.getDeletedSongs()) == false) return false; 
+		LOGI(TAG,"delete songs done");
+
 		
 		if (ServerHelper.postAddedSongs(changes.getAddedSongs()) == false ) return false;
+		LOGI(TAG,"post added songs done");
+
 		
 		moveAddedSongsToQueue(changes.getAddedSongs());
+		LOGI(TAG,"move to queue done");
+
 		if (!QueueAddedSongs.isEmpty(this)) AddedSongsResponseHandler.futureCall(this);
 		
-		LOGD(TAG,"All done");
+		LOGI(TAG,"All done");
 		return true;
 	}
 

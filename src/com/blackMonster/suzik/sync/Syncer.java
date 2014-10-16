@@ -13,6 +13,7 @@ import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.sync.music.AddedSongsResponseHandler;
 import com.blackMonster.suzik.sync.music.SongsSyncer;
 import com.blackMonster.suzik.util.NetworkUtils;
+import com.crashlytics.android.Crashlytics;
 
 //
 /**
@@ -50,6 +51,8 @@ public abstract class Syncer extends IntentService{
 				try {
 					syncNow();
 				} catch (Exception e) {
+					e.printStackTrace();
+					Crashlytics.logException(e);
 				}
 			}
 			
@@ -76,6 +79,8 @@ public abstract class Syncer extends IntentService{
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			LOGD(TAG,"failedSync " + getCurrentClassName());
+			Crashlytics.logException(e1);
+
 			callFuture(AppConfig.SYNCER_TIME_RETRY_MS);	
 
 		}

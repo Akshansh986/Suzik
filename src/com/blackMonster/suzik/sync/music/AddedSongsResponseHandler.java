@@ -1,5 +1,7 @@
 package com.blackMonster.suzik.sync.music;
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.LOGI;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -19,7 +21,8 @@ public class AddedSongsResponseHandler extends Syncer {
 private static final  String TAG = "AddedSongsResponseHandler";
 	@Override
 	public synchronized boolean onPerformSync() throws Exception {
-	
+		LOGI(TAG,"onPerformSync start");
+
 		if (QueueAddedSongs.isEmpty(this))
 			return true;
 
@@ -62,6 +65,7 @@ private static final  String TAG = "AddedSongsResponseHandler";
 			// SongsSyncer.syncNow(context); //test this
 			startService(new Intent(this, SongsSyncer.class));
 		}
+		LOGI(TAG,"onperformSync done");
 
 		return true;
 	}

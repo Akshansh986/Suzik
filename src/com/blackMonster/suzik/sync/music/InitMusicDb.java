@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutionException;
 import org.json.JSONException;
 
 import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
+import com.crashlytics.android.Crashlytics;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -22,13 +23,13 @@ public class InitMusicDb extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		LOGD(TAG, "onHandleIntent ");
-
 		new Thread() {
 			public void run() {
 				try {
 					init();
 				} catch (Exception e) {
 					e.printStackTrace();
+					Crashlytics.logException(e);
 				}
 			}
 
@@ -46,10 +47,16 @@ public class InitMusicDb extends IntentService {
 			startService(new Intent(this, SongsSyncer.class));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+			Crashlytics.logException(e);
+
 		} catch (ExecutionException e) {
 			e.printStackTrace();
+			Crashlytics.logException(e);
+
 		} catch (JSONException e) {
 			e.printStackTrace();
+			Crashlytics.logException(e);
+
 		}
 
 	}

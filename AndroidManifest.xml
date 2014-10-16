@@ -103,6 +103,7 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="f7c01fc5ad082280f803db6619586f6bc8c5a4f3"/>
     </application>
 
 </manifest>

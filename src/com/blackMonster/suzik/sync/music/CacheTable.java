@@ -172,6 +172,14 @@ class CacheTable {
 			this.fPrint = fPrint;
 		}
 
+		@Override
+		public String toString() {
+			return "CacheData [id=" + id + ", song=" + song + ", fPrint="
+					+ fPrint + ", fileName=" + fileName + "]";
+		}
+		
+		
+
 	}
 
 }

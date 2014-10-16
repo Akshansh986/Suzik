@@ -107,7 +107,9 @@ class QueueAddedSongs {
 	
 	static boolean remove(String fPrint, Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
-		return db.delete(TABLE, C_FPRINT + "='" + fPrint + "'", null) > 0;
+		int res = db.delete(TABLE, C_FPRINT + "='" + fPrint + "'", null);
+		LOGD(TAG,"Deleted rows: " + res +" for : " + fPrint);
+		return res>0;
 	}
 	
 	static boolean clearAll(Context context) {
