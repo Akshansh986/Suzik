@@ -20,7 +20,7 @@ import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
 
 
 
-public class ServerHelper {
+ class ServerHelper {
 	
 	public static final String TAG ="ServerHelper";
 	
@@ -91,7 +91,7 @@ public class ServerHelper {
 
 	}
 
-	public static List<InAppSongData> getAllMySongs(Context context) throws InterruptedException, ExecutionException, JSONException {
+	 static List<InAppSongData> getAllMySongs(Context context) throws InterruptedException, ExecutionException, JSONException {
 		JSONObject credintials = JsonHelper.ServerAllSongs.getCredentials();
 
 		RequestFuture<JSONObject> future = RequestFuture.newFuture();

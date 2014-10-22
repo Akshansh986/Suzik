@@ -19,4 +19,41 @@ public class ContactChanges {
 	public int getAction() {
 		return action;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + action;
+		result = prime * result + ((contact == null) ? 0 : contact.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ContactChanges other = (ContactChanges) obj;
+		if (action != other.action)
+			return false;
+		if (contact == null) {
+			if (other.contact != null)
+				return false;
+		} else if (!contact.equals(other.contact))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ContactChanges [action=" + action + ", contact=" + contact
+				+ "]";
+	}
+	
+	
+	
 }

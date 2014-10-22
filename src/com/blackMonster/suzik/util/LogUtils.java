@@ -15,9 +15,9 @@ public class LogUtils {
 
 	public static void LOGD(final String tag, String message) {
        if (AppConfig.DEBUG)
-		//Log.d(tag, message);
+		Log.d(tag, message);
        log(tag, message);
-       Crashlytics.log(Log.DEBUG, tag, message);
+       //Crashlytics.log(Log.DEBUG, tag, message);
     }
 	
 	public static void LOGV(final String tag, String message) {
@@ -33,9 +33,9 @@ public class LogUtils {
     }
 	
 	public static void LOGE(final String tag, String message) {
-       // Log.e(tag, message);
+        Log.e(tag, message);
         log(tag, message);
-        Crashlytics.log(Log.ERROR, tag, message);
+       // Crashlytics.log(Log.ERROR, tag, message);
 
 
     }

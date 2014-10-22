@@ -10,19 +10,19 @@ import android.os.SystemClock;
 
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.MainPrefs;
+import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
 import com.blackMonster.suzik.sync.music.AddedSongsResponseHandler;
 import com.blackMonster.suzik.sync.music.SongsSyncer;
 import com.blackMonster.suzik.util.NetworkUtils;
 import com.crashlytics.android.Crashlytics;
 
-//
+
 /**
  * Steps to use syncer
  * 1) extend syncer.
  * 2) add unimplemented method.
  * 3) register as service in manifest.
- * 4) register in startOnNetAvailable funcion in syncer class.
- * 5) make onPerformSync synchronized if required.
+ * 4) register in startOnNetAvailable funcion in at the bottom of this class.
  *  @author akshanshsingh
  *
  */
@@ -40,24 +40,10 @@ public abstract class Syncer extends IntentService{
 		 return START_STICKY;
 	}
 	
-	
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		
 		LOGD(TAG,"onHandleIntent " + getCurrentClassName());
-	
-		new Thread() {
-			public void run() {
-				try {
-					syncNow();
-				} catch (Exception e) {
-					e.printStackTrace();
-					Crashlytics.logException(e);
-				}
-			}
-			
-		}.start();
-		
+		syncNow();
 	}
 	
 	private  void syncNow() {
@@ -125,8 +111,12 @@ public abstract class Syncer extends IntentService{
 
 	public static void startOnNetAvaiable(Context context) {
 		LOGD(TAG, "startOnNetAvaiable");
-
-		String caller = SongsSyncer.class.getSimpleName();
+		registerOnNetAvailable(SongsSyncer.class,context);
+		registerOnNetAvailable(AddedSongsResponseHandler.class,context);
+		registerOnNetAvailable(ContactsSyncer.class,context);
+	
+		
+		/*String caller = SongsSyncer.class.getSimpleName();
 		if (MainPrefs.shouldCallOnNetAvailable(caller, context)) {
 			MainPrefs.setCallOnNetAvailable(caller, false, context);
 			context.startService(new Intent(context, SongsSyncer.class));
@@ -137,12 +127,21 @@ public abstract class Syncer extends IntentService{
 			MainPrefs.setCallOnNetAvailable(caller, false, context);
 			context.startService(new Intent(context, AddedSongsResponseHandler.class));
 		}
+		*/
 		
 		
 		
 		
 		
+	}
+
+	private static void registerOnNetAvailable(Class javaClass,Context context) {
 		
+		String caller = javaClass.getSimpleName();
+		if (MainPrefs.shouldCallOnNetAvailable(caller, context)) {
+			MainPrefs.setCallOnNetAvailable(caller, false, context);
+			context.startService(new Intent(context, javaClass));
+		}
 	}
 
 

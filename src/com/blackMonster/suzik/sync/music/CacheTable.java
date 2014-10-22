@@ -26,9 +26,9 @@ class CacheTable {
 	static void createTable(SQLiteDatabase db) {
 		String sql = String
 				.format("create table %s"
-						+ "(%s INTEGER primary key,%s text,%s text, FOREIGN KEY (%s) REFERENCES %s (%s) )",
+						+ "(%s INTEGER ,%s text,%s text, FOREIGN KEY (%s) REFERENCES %s (%s), PRIMARY KEY(%s,%s) )",
 						TABLE, C_ID, C_FPRINT,C_FILENAME, C_ID, AllSongsTable.TABLE,
-						AllSongsTable.C_ID);
+						AllSongsTable.C_ID, C_ID, C_FPRINT);
 		db.execSQL(sql);
 	}
 

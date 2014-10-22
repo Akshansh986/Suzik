@@ -21,8 +21,9 @@ public class AllSongsTable {
 	public static final String TABLE = "allSongsTable";
 
 	public static void createTable(SQLiteDatabase db) {
-		String sql = String.format("create table %s" + "(%s INTEGER primary key,%s text, %s text, %s text, %s INTEGER)",
-				TABLE, C_ID,C_TITLE,C_ARTIST, C_ALBUM, C_DURATION);
+
+		String sql = String.format("create table %s" + "(%s INTEGER ,%s text, %s text, %s text, %s INTEGER, PRIMARY KEY(%s,%s,%s,%s,%s) )",
+				TABLE, C_ID,C_TITLE,C_ARTIST, C_ALBUM, C_DURATION,C_ID,C_TITLE,C_ARTIST,C_ALBUM,C_DURATION);
 		db.execSQL(sql);
 	}
 	

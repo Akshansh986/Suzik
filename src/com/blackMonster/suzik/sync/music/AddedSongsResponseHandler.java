@@ -20,7 +20,7 @@ import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;
 public class AddedSongsResponseHandler extends Syncer {
 private static final  String TAG = "AddedSongsResponseHandler";
 	@Override
-	public synchronized boolean onPerformSync() throws Exception {
+	public  boolean onPerformSync() throws Exception {
 		LOGI(TAG,"onPerformSync start");
 
 		if (QueueAddedSongs.isEmpty(this))

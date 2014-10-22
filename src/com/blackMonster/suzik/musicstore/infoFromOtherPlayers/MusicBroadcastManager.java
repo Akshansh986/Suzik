@@ -25,7 +25,6 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
 	private static DuplicateBroadcastFilter duplicateFilter = new DuplicateBroadcastFilter();
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Debug.startMethodTracing("sm");
 		String action = intent.getAction();
 		Log.e(TAG, action + "  " + "started  " + intent.getBooleanExtra(P_PLAYING,false) );
 
@@ -39,7 +38,6 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
 			e.printStackTrace();
 		}
 		Log.e(TAG, action + "  " + "completed");
-		Debug.stopMethodTracing();
 
 	}
 
@@ -47,7 +45,7 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
 
 	private void fixBroadcastParameters(Intent intent) throws ExceptionUnknownBroadcast {
 		Log.i(TAG, "fixBroadcastParameters");
-
+		BroadcastMediaStoreChanged.printBundle(intent.getExtras(), TAG);
 		track = intent.getStringExtra(P_TRACK);
 		artist = intent.getStringExtra(P_ARTIST);
 		playing = intent.getBooleanExtra(P_PLAYING, false);

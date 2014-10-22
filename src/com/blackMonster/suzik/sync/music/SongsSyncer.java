@@ -21,7 +21,7 @@ public class SongsSyncer extends Syncer {
 
 	
 	@Override
-	public synchronized boolean onPerformSync() throws Exception {
+	public  boolean onPerformSync() throws Exception {
 		LOGI(TAG,"performing Sync");
 
 		List<AndroidData> androidDataList = AndroidHelper.getAllMySongs(this);
@@ -77,7 +77,7 @@ public class SongsSyncer extends Syncer {
 
 	private  void moveAddedSongsToQueue(List<AndroidData> addedSongs) {
 		for (AndroidData song : addedSongs) {
-			LOGD(TAG,"Moving to queue : " + song.toString());
+			LOGD(TAG,"Moving to queue : " + song.getSong());
 			QueueAddedSongs.insert(new QueueData(song.getSong(), song.getfPrint(),song.getFileName()),this);
 		}
 		

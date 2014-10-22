@@ -22,12 +22,13 @@ class ChangesHandler {
 	private Context context;
 
 	boolean noChanges() {
-		return addedSongs.isEmpty() && deletedSongs.isEmpty() && modifiedSongs.isEmpty();
+		return addedSongs.isEmpty() && deletedSongs.isEmpty()
+				&& modifiedSongs.isEmpty();
 	}
-	
 
 	ChangesHandler(List<AndroidData> androidDataList,
-			List<CacheData> cacheDataList, Context context) throws InterruptedException {
+			List<CacheData> cacheDataList, Context context)
+			throws InterruptedException {
 		super();
 		this.androidDataMap = androidDataListToHashMap(androidDataList);
 		this.cacheDataMap = cacheDataListToHashMap(cacheDataList);
@@ -35,34 +36,79 @@ class ChangesHandler {
 		setAddedSongs();
 		setDeletedSongs();
 		addFingerPrint(addedSongs);
+		handleDuplicateSongs(); // optimize it
 		setModifiedSongs();
 
 	}
 
+	private void handleDuplicateSongs() {
+		filterDuplicateFromList();
+		filterFromCacheData();
+	}
+
+	private void filterFromCacheData() {
+		List<AndroidData> removed = new ArrayList<AndroidHelper.AndroidData>();
+
+		for (AndroidData aSong : addedSongs) {
+
+			for (Map.Entry<CompareParams, CacheData> entry : cacheDataMap
+					.entrySet()) {
+				if (aSong.getfPrint().equals(entry.getValue().getfPrint())) {
+					removed.add(aSong);
+					break;
+				}
+			}
+
+		}
+		addedSongs.removeAll(removed);		
+	}
+
+	private void filterDuplicateFromList() {
+		List<AndroidData> removed = new ArrayList<AndroidHelper.AndroidData>();
+
+		int n = addedSongs.size();
+		for (int i = 0; i < n; ++i) {
+			for (int j = i + 1; j < n; ++j) {
+				if (addedSongs.get(i).getfPrint()
+						.equals(addedSongs.get(j).getfPrint())) {
+					if (!removed.contains(addedSongs.get(j)))
+						removed.add(addedSongs.get(j));
+				}
+			}
+		}
+
+		addedSongs.removeAll(removed);
+
+	}
+
+
 	private void setModifiedSongs() {
 		List<AndroidData> tempAddedSong = new ArrayList<AndroidHelper.AndroidData>();
 		List<CacheData> tempDeletedSong = new ArrayList<CacheTable.CacheData>();
-		
+
 		for (AndroidData added : addedSongs) {
 			for (CacheData deleted : deletedSongs) {
 				if (added.getfPrint().equals(deleted.getfPrint())) {
-					modifiedSongs.add(new CacheData(deleted.getId(), added.getSong(), added.getfPrint(), added.getFileName()));
-					//addedSongs.remove(added);
+					modifiedSongs
+							.add(new CacheData(deleted.getId(),
+									added.getSong(), added.getfPrint(), added
+											.getFileName()));
+					// addedSongs.remove(added);
 					tempAddedSong.add(added);
-					//deletedSongs.remove(deleted);
+					// deletedSongs.remove(deleted);
 					tempDeletedSong.add(deleted);
 					break;
 				}
 			}
 		}
-		
+
 		addedSongs.removeAll(tempAddedSong);
 		deletedSongs.removeAll(tempDeletedSong);
 
 	}
 
-	
-	private void addFingerPrint(final List<AndroidData> songList) throws InterruptedException {
+	private void addFingerPrint(final List<AndroidData> songList)
+			throws InterruptedException {
 		new Fingerprinter(context, songList).addFingerPrint();
 	}
 
@@ -89,14 +135,16 @@ class ChangesHandler {
 	}
 
 	private void setAddedSongs() {
-		for (Map.Entry<CompareParams, AndroidData> entry : androidDataMap.entrySet()) {
+		for (Map.Entry<CompareParams, AndroidData> entry : androidDataMap
+				.entrySet()) {
 			if (!cacheDataMap.containsKey(entry.getKey()))
 				addedSongs.add(entry.getValue());
 		}
 	}
 
 	private void setDeletedSongs() {
-		for (Map.Entry<CompareParams, CacheData> entry : cacheDataMap.entrySet()) {
+		for (Map.Entry<CompareParams, CacheData> entry : cacheDataMap
+				.entrySet()) {
 			if (!androidDataMap.containsKey(entry.getKey()))
 				deletedSongs.add(entry.getValue());
 		}
@@ -109,21 +157,21 @@ class ChangesHandler {
 	List<CacheData> getDeletedSongs() {
 		return deletedSongs;
 	}
-	
+
 	List<CacheData> getModifiedSongs() {
 		return modifiedSongs;
 	}
 
-	
 	private class CompareParams {
 		private Song song;
 		private String fileName;
-		
-		 CompareParams(Song song, String fileName) {
+
+		CompareParams(Song song, String fileName) {
 			super();
 			this.song = song;
 			this.fileName = fileName;
 		}
+
 		@Override
 		public int hashCode() {
 			final int prime = 31;
@@ -134,6 +182,7 @@ class ChangesHandler {
 			result = prime * result + ((song == null) ? 0 : song.hashCode());
 			return result;
 		}
+
 		@Override
 		public boolean equals(Object obj) {
 			if (this == obj)
@@ -157,13 +206,11 @@ class ChangesHandler {
 				return false;
 			return true;
 		}
+
 		private ChangesHandler getOuterType() {
 			return ChangesHandler.this;
 		}
-		
-		
-		  
+
 	}
-	
 
 }

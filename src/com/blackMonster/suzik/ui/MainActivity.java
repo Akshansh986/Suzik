@@ -24,11 +24,15 @@ public class MainActivity extends Activity {
 		//startService(new Intent(this, ContentObserverService.class));
 		
 		startService(new Intent(this, InitMusicDb.class));
-		
+//		startService(new Intent(this, ContactsSyncer.class));
+
 		
 	//startService(new Intent(this, AddedSongsResponseHandler.class));
 
 //	startService(new Intent(this, SongsSyncer.class));
+//	startService(new Intent(this, SongsSyncer.class));
+//	startService(new Intent(this, SongsSyncer.class));
+
 
 		//new DbHelper(this.getApplicationContext());
 	/*	new Thread() {

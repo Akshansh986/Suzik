@@ -14,7 +14,7 @@ import com.blackMonster.suzik.sync.music.AndroidHelper.AndroidData;
 import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
 import com.blackMonster.suzik.util.ServerUtils;
 
-public class JsonHelper {
+ class JsonHelper {
 	private static final String TAG = "music.JsonHelper";
 
 	 static class DeletedSong {
@@ -53,7 +53,7 @@ public class JsonHelper {
 
 		// Hash-Map feature is not use, use different data structure to optimize
 		// it.
-		public static HashMap<Long, Integer> parseResponse(JSONObject response)
+		 static HashMap<Long, Integer> parseResponse(JSONObject response)
 				throws JSONException {
 
 			HashMap<Long, Integer> idStatus = new HashMap<Long, Integer>();
@@ -119,7 +119,7 @@ public class JsonHelper {
 
 		}
 		
-		public static boolean parseResponse(JSONObject response)
+		 static boolean parseResponse(JSONObject response)
 				throws JSONException {
 
 			int status = response.getInt(P_R_STATUS);
@@ -140,7 +140,7 @@ public class JsonHelper {
 		private static final String P_R_FPRINT = "fp";
 		private static final String P_R_ID = "id";
 
-		public static JSONObject toJson(List<String> fPrints)
+		static JSONObject toJson(List<String> fPrints)
 				throws JSONException {
 			JSONObject root = new JSONObject();
 			JSONArray array = new JSONArray();
@@ -159,7 +159,7 @@ public class JsonHelper {
 
 		}
 
-		public static HashMap<String, Long> parseResponse(JSONObject response)
+		 static HashMap<String, Long> parseResponse(JSONObject response)
 				throws JSONException {
 
 			HashMap<String, Long> result = new HashMap<String, Long>();
@@ -192,7 +192,7 @@ public class JsonHelper {
 		private static final String P_R_ALBUM = "album";
 		private static final String P_R_DURATION = "duration";
 
-		public static JSONObject getCredentials() throws JSONException {
+		static JSONObject getCredentials() throws JSONException {
 			JSONObject root = new JSONObject();
 			ServerUtils.addEssentialParamToJson(root, P_MODULE, P_CMD);
 			LOGD(TAG, root.toString());
@@ -200,7 +200,7 @@ public class JsonHelper {
 
 		}
 
-		public static List<InAppSongData> parseResponse(JSONObject response)
+		static List<InAppSongData> parseResponse(JSONObject response)
 				throws JSONException {
 
 			List<InAppSongData> result = new ArrayList<InAapSongTable.InAppSongData>();
