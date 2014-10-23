@@ -36,7 +36,7 @@ class ChangesHandler {
 		setAddedSongs();
 		setDeletedSongs();
 		addFingerPrint(addedSongs);
-		handleDuplicateSongs(); // optimize it
+		//handleDuplicateSongs(); // optimize it
 		setModifiedSongs();
 
 	}

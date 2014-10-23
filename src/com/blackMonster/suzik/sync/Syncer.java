@@ -88,8 +88,8 @@ public abstract class Syncer extends IntentService{
 //		am.set(AlarmManager.ELAPSED_REALTIME,SystemClock.elapsedRealtime() + time, operation);
 	}
 	
-	public  static void callFuture(Class cls, long time,Context context) {
-		LOGD(TAG,"calling after  "+ time + "  ms " + cls.getSimpleName());
+	public  static void callFuture(Class cls, long timeMS,Context context) {
+		LOGD(TAG,"calling after  "+ timeMS + "  ms " + cls.getSimpleName());
 		Intent intent = new Intent(context,cls);
 		
 		PendingIntent operation = PendingIntent.getService(context, -1,
@@ -97,7 +97,7 @@ public abstract class Syncer extends IntentService{
 		
 		AlarmManager am = ((AlarmManager) context.getSystemService(Context.ALARM_SERVICE));
 		am.cancel(operation);
-		am.set(AlarmManager.ELAPSED_REALTIME,SystemClock.elapsedRealtime() + time, operation);
+		am.set(AlarmManager.ELAPSED_REALTIME,SystemClock.elapsedRealtime() + timeMS, operation);
 	}
 	
 	

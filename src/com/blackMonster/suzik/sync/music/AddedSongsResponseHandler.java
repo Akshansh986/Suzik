@@ -21,6 +21,14 @@ public class AddedSongsResponseHandler extends Syncer {
 private static final  String TAG = "AddedSongsResponseHandler";
 	@Override
 	public  boolean onPerformSync() throws Exception {
+
+		synchronized (SongsSyncer.LOCK) {
+			return startSync();
+		}
+	
+	}
+
+	private boolean startSync() throws JSONException, InterruptedException, ExecutionException {
 		LOGI(TAG,"onPerformSync start");
 
 		if (QueueAddedSongs.isEmpty(this))
@@ -67,7 +75,7 @@ private static final  String TAG = "AddedSongsResponseHandler";
 		}
 		LOGI(TAG,"onperformSync done");
 
-		return true;
+		return true;		
 	}
 
 	private long getNewSongId() {

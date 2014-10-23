@@ -18,10 +18,21 @@ import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;
 
 public class SongsSyncer extends Syncer {
 	private static final String TAG = "SongsSyncer";
-
+	static final String LOCK = "lock";
 	
 	@Override
 	public  boolean onPerformSync() throws Exception {
+
+		synchronized (SongsSyncer.LOCK) {
+			return startSync();
+		}
+		
+	}
+
+
+
+
+	private boolean startSync() throws Exception {
 		LOGI(TAG,"performing Sync");
 
 		List<AndroidData> androidDataList = AndroidHelper.getAllMySongs(this);
@@ -69,7 +80,7 @@ public class SongsSyncer extends Syncer {
 		if (!QueueAddedSongs.isEmpty(this)) AddedSongsResponseHandler.futureCall(this);
 		
 		LOGI(TAG,"All done");
-		return true;
+		return true;		
 	}
 
 

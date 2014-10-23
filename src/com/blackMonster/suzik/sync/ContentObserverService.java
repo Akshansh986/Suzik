@@ -29,7 +29,6 @@ public class ContentObserverService extends Service{
 		if (musicObserver == null) {
 			LOGD(TAG,"creating Observer");
 			musicObserver = new ObserverMusic(new Handler(), this);
-			getContentResolver().unregisterContentObserver(musicObserver);
 			getContentResolver().registerContentObserver(AndroidHelper.URI, true, musicObserver);
 		}		
 	}
