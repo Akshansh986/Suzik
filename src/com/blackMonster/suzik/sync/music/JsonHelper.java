@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 
 import com.blackMonster.suzik.musicstore.module.Song;
-import com.blackMonster.suzik.sync.music.AndroidHelper.AndroidData;
+import com.blackMonster.suzik.sync.music.AndroidMusicHelper.AndroidData;
 import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
 import com.blackMonster.suzik.util.ServerUtils;
 

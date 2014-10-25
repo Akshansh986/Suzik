@@ -12,11 +12,11 @@ import android.provider.MediaStore;
 
 import com.blackMonster.suzik.musicstore.module.Song;
 
-public class AndroidHelper {
+public class AndroidMusicHelper {
 	public static Uri URI = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
 
-	public static List<AndroidData> getAllMySongs(Context context)
+	 static List<AndroidData> getAllMySongs(Context context)
 			throws Exception {
 		List<AndroidData> androidDataSet = null;
 

@@ -54,9 +54,31 @@ class CacheTable {
 	
 	static HashSet<Contact> getMyContacts(Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
-		HashSet<Contact> result = new HashSet<Contact>();
+		HashSet<Contact> result = null;
 		Cursor cursor = db.query(TABLE, null,null, null, null, null, null);
 
+		
+		
+		
+		if (cursor != null) {
+			result = new HashSet<Contact>();
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				result.add(new Contact(cursor.getString(cursor
+						.getColumnIndex(C_PHONE_NO))));
+				cursor.moveToNext();
+			}
+
+			cursor.close();
+
+		}
+			
+		return result;
+				
+		
+		
+		
+		/*
 		if (cursor != null) {
 			if (cursor.moveToFirst()) {
 				result.add(new Contact(cursor.getString(cursor
@@ -65,8 +87,7 @@ class CacheTable {
 			cursor.close();
 		}else {
 			LOGD(TAG, "cursor is null");
-		}
-		return result;
+		}*/
 	}
 	
 	public static boolean remove(Contact contact, Context context) {

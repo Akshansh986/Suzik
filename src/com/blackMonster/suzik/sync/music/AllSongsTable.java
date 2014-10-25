@@ -9,25 +9,25 @@ import android.database.sqlite.SQLiteDatabase;
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.musicstore.module.Song;
 
-public class AllSongsTable {
+ class AllSongsTable {
 
 	private static final String TAG = "AllSongsTable";
-	public static final String C_ID = "id";
-	public static final String C_TITLE = "title";
-	public static final String C_ARTIST = "artist";
-	public static final String C_ALBUM = "album";
-	public static final String C_DURATION = "duration";
+	 static final String C_ID = "id";
+	 static final String C_TITLE = "title";
+	 static final String C_ARTIST = "artist";
+	 static final String C_ALBUM = "album";
+	 static final String C_DURATION = "duration";
 	
-	public static final String TABLE = "allSongsTable";
+	 static final String TABLE = "allSongsTable";
 
-	public static void createTable(SQLiteDatabase db) {
+	static void createTable(SQLiteDatabase db) {
 
 		String sql = String.format("create table %s" + "(%s INTEGER primary key,%s text, %s text, %s text, %s INTEGER)",
 				TABLE, C_ID,C_TITLE,C_ARTIST, C_ALBUM, C_DURATION);
 		db.execSQL(sql);
 	}
 	
-	public static Song getSong(long id, Context context) {
+	 static Song getSong(long id, Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
 		Song ans = null;
 
@@ -49,7 +49,7 @@ public class AllSongsTable {
 
 	
 
-	public static boolean insert(long id, Song song, Context context) {
+	 static boolean insert(long id, Song song, Context context) {
 		LOGD(TABLE, "insert");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
@@ -64,7 +64,7 @@ public class AllSongsTable {
 		
 	}
 	
-	public static boolean update(long id, Song newSong, Context context) {
+	 static boolean update(long id, Song newSong, Context context) {
 		LOGD(TABLE, "update");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
@@ -81,12 +81,12 @@ public class AllSongsTable {
 
 
 	
-	public static boolean remove(long id, Context context) {
+	 static boolean remove(long id, Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 		return db.delete(TABLE, C_ID + "='" + id + "'", null) > 0;
 	}
 
-	public static boolean isEmpty(Context context) {
+	 static boolean isEmpty(Context context) {
 		LOGD(TAG, "in isEmpty");
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
 		boolean result;

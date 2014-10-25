@@ -15,30 +15,33 @@ public class ContactsSyncer extends Syncer {
 	private static final String TAG = "ContactsSyncer";
 
 	@Override
-	public  boolean onPerformSync() throws Exception {
-		LOGI(TAG,"performing Sync");
+	public boolean onPerformSync() throws Exception {
+		LOGI(TAG, "performing Sync");
 
 		boolean result;
 		HashSet<Contact> serverContactList;
 
 		serverContactList = getFromServerOrCacheTable();
-		LOGD(TAG,"getFromServerOrCacheTable done");
+		LOGD(TAG, "getFromServerOrCacheTable done");
 
 		HashSet<Contact> androidContactList = getFromAndroid();
-		LOGD(TAG,"get form andorid done");
+		LOGD(TAG, "get form andorid done");
 
-		HashSet<ContactChanges> contactChanges = getChanges(serverContactList,
+		HashSet<ContactChanges> changes = getChanges(serverContactList,
 				androidContactList);
-		LOGD(TAG,"changes done");
+		LOGD(TAG, "changes done");
+
+		if (changes.size() == 0)
+			return true;
 
 		HashMap<Contact, Integer> updateServerResult = ServerHelper
-				.updateServer(contactChanges);
-		LOGD(TAG,"update server done");
+				.updateServer(changes);
+		LOGD(TAG, "update server done");
 
-		result = updateChangesToCacheTable(contactChanges, updateServerResult);
-		LOGD(TAG,"update Cachetable done");
+		result = updateChangesToCacheTable(changes, updateServerResult);
+		LOGD(TAG, "update Cachetable done");
 
-		LOGD(TAG,"all done");
+		LOGD(TAG, "all done");
 
 		return result;
 
@@ -54,18 +57,26 @@ public class ContactsSyncer extends Syncer {
 		for (ContactChanges changes : contactChanges) {
 			if (updateServerResult.containsKey(changes.getContact())) {
 
-				
 				if (updateServerResult.get(changes.getContact()) == UpdateContacts.STATUS_DONE) {
-					LOGD(TAG,"inserting" + changes.getContact().getNumber());
-					CacheTable.insert(changes.getContact(), this);
+
+					if (changes.getAction() == ContactChanges.ACTION_ADDED) {
+						LOGD(TAG, "inserting"
+								+ changes.getContact().getNumber());
+						CacheTable.insert(changes.getContact(), this);
+					} else if (changes.getAction() == ContactChanges.ACTION_DELETED) {
+						LOGD(TAG, "removing "
+								+ changes.getContact().getNumber());
+						CacheTable.remove(changes.getContact(), this);
+					}
+
 				} else {
-					LOGD(TAG,"status false " + changes.getContact().getNumber());
+					LOGD(TAG, "status false "
+							+ changes.getContact().getNumber());
 					result = false;
 				}
 
-			
 			} else {
-				LOGD(TAG,"not found " + changes.getContact().getNumber());
+				LOGD(TAG, "not found " + changes.getContact().getNumber());
 				result = false;
 			}
 		}
@@ -99,7 +110,7 @@ public class ContactsSyncer extends Syncer {
 	}
 
 	private HashSet<Contact> getFromAndroid() throws Exception {
-		return AndroidHelper.getMyContacts(this);
+		return AndroidContactsHelper.getMyContacts(this);
 	}
 
 	private HashSet<Contact> getFromServerOrCacheTable() throws Exception {

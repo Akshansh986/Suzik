@@ -86,11 +86,12 @@ public class InAapSongTable {
 
 	public static HashSet<InAppSongData> getAllData(Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
-		HashSet<InAppSongData> inAppSongDataSet = new HashSet<InAppSongData>();
+		HashSet<InAppSongData> inAppSongDataSet = null;
 
 		Cursor cursor = db.query(TABLE, null, null, null, null, null, null);
 
 		if (cursor != null) {
+			inAppSongDataSet = new HashSet<InAppSongData>();
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				long id = cursor.getLong(cursor.getColumnIndex(C_ID));

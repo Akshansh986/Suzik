@@ -8,14 +8,14 @@ import java.util.Map;
 import android.content.Context;
 
 import com.blackMonster.suzik.musicstore.module.Song;
-import com.blackMonster.suzik.sync.music.AndroidHelper.AndroidData;
+import com.blackMonster.suzik.sync.music.AndroidMusicHelper.AndroidData;
 import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 
 class ChangesHandler {
 	private HashMap<CompareParams, AndroidData> androidDataMap;
 	private HashMap<CompareParams, CacheData> cacheDataMap;
 
-	private List<AndroidData> addedSongs = new ArrayList<AndroidHelper.AndroidData>();
+	private List<AndroidData> addedSongs = new ArrayList<AndroidMusicHelper.AndroidData>();
 	private List<CacheData> deletedSongs = new ArrayList<CacheTable.CacheData>();
 	private List<CacheData> modifiedSongs = new ArrayList<CacheTable.CacheData>();
 
@@ -47,7 +47,7 @@ class ChangesHandler {
 	}
 
 	private void filterFromCacheData() {
-		List<AndroidData> removed = new ArrayList<AndroidHelper.AndroidData>();
+		List<AndroidData> removed = new ArrayList<AndroidMusicHelper.AndroidData>();
 
 		for (AndroidData aSong : addedSongs) {
 
@@ -64,7 +64,7 @@ class ChangesHandler {
 	}
 
 	private void filterDuplicateFromList() {
-		List<AndroidData> removed = new ArrayList<AndroidHelper.AndroidData>();
+		List<AndroidData> removed = new ArrayList<AndroidMusicHelper.AndroidData>();
 
 		int n = addedSongs.size();
 		for (int i = 0; i < n; ++i) {
@@ -83,7 +83,7 @@ class ChangesHandler {
 
 
 	private void setModifiedSongs() {
-		List<AndroidData> tempAddedSong = new ArrayList<AndroidHelper.AndroidData>();
+		List<AndroidData> tempAddedSong = new ArrayList<AndroidMusicHelper.AndroidData>();
 		List<CacheData> tempDeletedSong = new ArrayList<CacheTable.CacheData>();
 
 		for (AndroidData added : addedSongs) {
@@ -125,7 +125,7 @@ class ChangesHandler {
 
 	private HashMap<CompareParams, AndroidData> androidDataListToHashMap(
 			List<AndroidData> androidDataSet) {
-		HashMap<CompareParams, AndroidData> map = new HashMap<CompareParams, AndroidHelper.AndroidData>();
+		HashMap<CompareParams, AndroidData> map = new HashMap<CompareParams, AndroidMusicHelper.AndroidData>();
 
 		for (AndroidData data : androidDataSet) {
 			map.put(new CompareParams(data.getSong(), data.getFileName()), data);

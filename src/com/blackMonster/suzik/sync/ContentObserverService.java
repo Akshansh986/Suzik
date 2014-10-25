@@ -6,12 +6,16 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 
-import com.blackMonster.suzik.sync.music.AndroidHelper;
+import com.blackMonster.suzik.sync.contacts.AndroidContactsHelper;
+import com.blackMonster.suzik.sync.contacts.ObserverContacts;
+import com.blackMonster.suzik.sync.music.AndroidMusicHelper;
 import com.blackMonster.suzik.sync.music.ObserverMusic;
 
 public class ContentObserverService extends Service{
 	private static final String TAG = "ContentObserverService";
 	private static ObserverMusic musicObserver=null ;
+	private static ObserverContacts contactsObserver=null ;
+
 	
 	
 
@@ -27,10 +31,16 @@ public class ContentObserverService extends Service{
 	
 	private  void createObserver() {
 		if (musicObserver == null) {
-			LOGD(TAG,"creating Observer");
+			LOGD(TAG,"creating music Observer");
 			musicObserver = new ObserverMusic(new Handler(), this);
-			getContentResolver().registerContentObserver(AndroidHelper.URI, true, musicObserver);
+			getContentResolver().registerContentObserver(AndroidMusicHelper.URI, true, musicObserver);
 		}		
+		
+		if (contactsObserver == null) {
+			LOGD(TAG,"creating contacts Observer " + AndroidContactsHelper.URI);
+			contactsObserver = new ObserverContacts(new Handler(), this);
+			getContentResolver().registerContentObserver(AndroidContactsHelper.URI, false, contactsObserver);
+		}	
 	}
 
 
@@ -41,6 +51,11 @@ public class ContentObserverService extends Service{
 		if (musicObserver!=null) {
 			getContentResolver().unregisterContentObserver(musicObserver);
 			musicObserver =null;
+		}
+		
+		if (contactsObserver!=null) {
+			getContentResolver().unregisterContentObserver(contactsObserver);
+			contactsObserver =null;
 		}
 	}
 	@Override

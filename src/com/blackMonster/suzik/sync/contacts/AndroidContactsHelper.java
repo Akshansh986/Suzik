@@ -8,13 +8,15 @@ import java.util.HashSet;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.ContactsContract;
 
 import com.blackMonster.suzik.sync.contacts.model.Contact;
 
-public class AndroidHelper {
+public class AndroidContactsHelper {
 	private static final String TAG = "AndroidContactsHelper";
-	
+	public static Uri URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+
 	   private static String[] projectionPhones = {
 		        ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
 		        ContactsContract.CommonDataKinds.Phone.NUMBER,
@@ -33,7 +35,7 @@ public class AndroidHelper {
 		String phoneNumber;
 
 		Cursor cursor = cr.query(
-				ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projectionPhones, null,
+				URI, projectionPhones, null,
 				null, null);
 
 		if (cursor != null) {
@@ -47,7 +49,7 @@ public class AndroidHelper {
 
 				if (phoneNumber == null || phoneNumber.equals("") )
 					continue;
-				LOGD(TAG,phoneNumber);
+				//LOGD(TAG,phoneNumber);
 				
 
 				phoneNumber = FormatContact.standerdizeNumber(phoneNumber);

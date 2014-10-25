@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutionException;
 import org.json.JSONException;
 
 import com.blackMonster.suzik.sync.Syncer;
-import com.blackMonster.suzik.sync.music.AndroidHelper.AndroidData;
+import com.blackMonster.suzik.sync.music.AndroidMusicHelper.AndroidData;
 import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
 import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;
@@ -35,7 +35,7 @@ public class SongsSyncer extends Syncer {
 	private boolean startSync() throws Exception {
 		LOGI(TAG,"performing Sync");
 
-		List<AndroidData> androidDataList = AndroidHelper.getAllMySongs(this);
+		List<AndroidData> androidDataList = AndroidMusicHelper.getAllMySongs(this);
 		LOGD(TAG,"android size " + androidDataList.size());
 		
 		List<CacheData> cacheDataList = CacheTable.getAllData(this);
@@ -124,7 +124,7 @@ public class SongsSyncer extends Syncer {
 
 	private  void removeSongsIfAlreadyInQueue(List<AndroidData> addedSongs) {
 		if (QueueAddedSongs.isEmpty(this)) return;
-		List<AndroidData> removed = new ArrayList<AndroidHelper.AndroidData>();
+		List<AndroidData> removed = new ArrayList<AndroidMusicHelper.AndroidData>();
 		for (AndroidData added : addedSongs) {
 				LOGD(TAG,"removing already in queue : " + added.getSong().toString());
 				if (QueueAddedSongs.search(added.getfPrint(), this) !=  null)
@@ -137,7 +137,7 @@ public class SongsSyncer extends Syncer {
 	private void handleAddedSongsIfAlreadyInAppSong(
 			List<AndroidData> addedSongs) {
 
-		List<AndroidData> removed = new ArrayList<AndroidHelper.AndroidData>();
+		List<AndroidData> removed = new ArrayList<AndroidMusicHelper.AndroidData>();
 		
 		for (AndroidData song : addedSongs) {
 			

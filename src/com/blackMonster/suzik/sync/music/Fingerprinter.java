@@ -9,7 +9,7 @@ import java.util.concurrent.CountDownLatch;
 
 import android.content.Context;
 
-import com.blackMonster.suzik.sync.music.AndroidHelper.AndroidData;
+import com.blackMonster.suzik.sync.music.AndroidMusicHelper.AndroidData;
 import com.gracenote.mmid.MobileSDK.GNConfig;
 import com.gracenote.mmid.MobileSDK.GNFingerprintResult;
 import com.gracenote.mmid.MobileSDK.GNFingerprintResultReady;
@@ -22,7 +22,7 @@ class Fingerprinter{
 	private CountDownLatch startSignal, doneSignal;
 
 	
-	private List<AndroidData> fpErrorSong = new ArrayList<AndroidHelper.AndroidData>();
+	private List<AndroidData> fpErrorSong = new ArrayList<AndroidMusicHelper.AndroidData>();
 	
 	Fingerprinter(Context context,List<AndroidData> songList){
 		this.songList = songList;

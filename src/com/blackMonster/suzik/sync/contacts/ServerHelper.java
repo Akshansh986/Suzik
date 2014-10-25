@@ -35,7 +35,7 @@ class ServerHelper {
 	static HashMap<Contact, Integer> updateServer(
 			HashSet<ContactChanges> contactChanges) throws JSONException,
 			InterruptedException, ExecutionException {
-		if (true)  return new HashMap<Contact, Integer>();
+		if (true)  return getDummyResult(contactChanges);
 		JSONObject updates = JsonHelper.UpdateContacts.toJson(contactChanges);
 
 		RequestFuture<JSONObject> future = RequestFuture.newFuture();
@@ -46,6 +46,18 @@ class ServerHelper {
 		JSONObject response = future.get();
 		return JsonHelper.UpdateContacts.parseResponse(response);
 
+	}
+
+	private static HashMap<Contact, Integer> getDummyResult(HashSet<ContactChanges> contactChanges) {
+		HashMap<Contact, Integer> result = new HashMap<Contact, Integer>();
+		int i=0;
+		for (ContactChanges contact : contactChanges) {
+			if (++i == 5)
+				result.put(contact.getContact(), JsonHelper.UpdateContacts.STATUS_FAILED);
+			else
+				result.put(contact.getContact(), JsonHelper.UpdateContacts.STATUS_DONE);
+		}		
+		return result;
 	}
 
 }

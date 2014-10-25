@@ -58,11 +58,12 @@ class CacheTable {
 
 	static List<CacheData> getAllData(Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
-		List<CacheData> cachedDataSet = new ArrayList<CacheData>();
+		List<CacheData> cachedDataSet = null;
 
 		Cursor cursor = db.query(TABLE, null, null, null, null, null, null);
 
 		if (cursor != null) {
+			cachedDataSet =  new ArrayList<CacheData>();
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				long id = cursor.getLong(cursor.getColumnIndex(C_ID));
@@ -81,6 +82,7 @@ class CacheTable {
 			cursor.close();
 
 		}
+		
 
 		return cachedDataSet;
 	}
