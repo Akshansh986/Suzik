@@ -7,6 +7,8 @@ import java.util.concurrent.ExecutionException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.blackMonster.suzik.AppConfig;
@@ -35,7 +37,7 @@ class ServerHelper {
 	static HashMap<Contact, Integer> updateServer(
 			HashSet<ContactChanges> contactChanges) throws JSONException,
 			InterruptedException, ExecutionException {
-		if (true)  return getDummyResult(contactChanges);
+		//if (true)  return getDummyResult(contactChanges);
 		JSONObject updates = JsonHelper.UpdateContacts.toJson(contactChanges);
 
 		RequestFuture<JSONObject> future = RequestFuture.newFuture();
@@ -44,6 +46,7 @@ class ServerHelper {
 		AppController.getInstance().addToRequestQueue(request);
 
 		JSONObject response = future.get();
+		Log.d("ServerHelper", "update response : " + response.toString());
 		return JsonHelper.UpdateContacts.parseResponse(response);
 
 	}

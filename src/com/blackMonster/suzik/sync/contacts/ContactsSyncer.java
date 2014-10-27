@@ -1,7 +1,7 @@
 package com.blackMonster.suzik.sync.contacts;
 
-import static com.blackMonster.suzik.util.LogUtils.LOGI;
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.LOGI;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,7 +17,7 @@ public class ContactsSyncer extends Syncer {
 	@Override
 	public boolean onPerformSync() throws Exception {
 		LOGI(TAG, "performing Sync");
-
+		
 		boolean result;
 		HashSet<Contact> serverContactList;
 
@@ -36,7 +36,8 @@ public class ContactsSyncer extends Syncer {
 
 		HashMap<Contact, Integer> updateServerResult = ServerHelper
 				.updateServer(changes);
-		LOGD(TAG, "update server done");
+		LOGD(TAG, "update server done " + updateServerResult.toString());
+		updateServerResult.toString();
 
 		result = updateChangesToCacheTable(changes, updateServerResult);
 		LOGD(TAG, "update Cachetable done");
@@ -46,6 +47,9 @@ public class ContactsSyncer extends Syncer {
 		return result;
 
 	}
+
+	
+
 
 	private boolean updateChangesToCacheTable(
 			HashSet<ContactChanges> contactChanges,

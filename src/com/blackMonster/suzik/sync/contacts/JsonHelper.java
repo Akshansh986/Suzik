@@ -19,8 +19,8 @@ class JsonHelper {
 	private static final String TAG = "contacts.JsonHelper";
 
 	static class ServerAllContacts {
-		private static final String P_MODULE = "contacts";
-		private static final String P_CMD = "getAllcontacts";
+		private static final String P_MODULE = "contact";
+		private static final String P_CMD = "contactsList";
 
 		private static final String P_R_CONTACT_LIST = "contacts";
 		private static final String P_R_NUMBER = "num";
@@ -54,15 +54,15 @@ class JsonHelper {
 
 	static class UpdateContacts {
 
-		private static final String P_MODULE = "contacts";
-		private static final String P_CMD = "update";
+		private static final String P_MODULE = "contact";
+		//private static final String P_CMD = "update";
 
-		private static final String P_CONTACT_DATA = "contactsData";
-		private static final String P_NUMBER = "num";
+		private static final String P_CONTACT_DATA = "contactsList";
+		private static final String P_NUMBER = "number";
 		private static final String P_ACTION = "action";
 
-		private static final String P_R_UPDATE_RESPONSE = "updateResponse";
-		private static final String P_R_NUMBER = "num";
+		private static final String P_R_UPDATE_RESPONSE = "contactList";
+		private static final String P_R_NUMBER = "number";
 		private static final String P_R_STATUS = "status";
 
 		static final int STATUS_DONE = 1;
@@ -71,6 +71,9 @@ class JsonHelper {
 
 		static JSONObject toJson(HashSet<ContactChanges> contactList)
 				throws JSONException {
+			//JSONObject a = new JSONObject("{\"myNumber\":\"2870558803\",\"module\":\"contact\",\"contactsList\":[{\"action\":\"add\",\"number\":\"+919873386899\"},{\"action\":\"add\",\"number\":\"+919540333290\"}]}");
+			//LOGD(TAG,a.toString());
+			//if (true) return a;
 			JSONObject root = new JSONObject();
 			JSONArray contactArray = new JSONArray();
 
@@ -79,7 +82,7 @@ class JsonHelper {
 			}
 
 			root.put(P_CONTACT_DATA, contactArray);
-			ServerUtils.addEssentialParamToJson(root, P_MODULE, P_CMD);
+			ServerUtils.addEssentialParamToJson(root, P_MODULE);
 			LOGD(TAG, root.toString());
 			return root;
 		}
@@ -88,8 +91,8 @@ class JsonHelper {
 				throws JSONException {
 
 			JSONObject obj = new JSONObject();
-			obj.put(P_NUMBER, cChagnes.getContact().getNumber());
-			obj.put(P_ACTION, cChagnes.getAction());
+			obj.put(P_NUMBER, cChagnes.getContact().getNumber().replace("+", "%2B"));
+			obj.put(P_ACTION, cChagnes.getActionString());
 			return obj;
 
 		}

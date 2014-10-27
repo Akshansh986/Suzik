@@ -3,19 +3,22 @@ package com.blackMonster.suzik.sync.contacts.model;
 public class ContactChanges {
 	public static final int ACTION_DELETED = 0;
 	public static final int ACTION_ADDED = 1;
+	
+	public static final String ACTION_DELETED_STRING = "add";
+	public static final String ACTION_ADDED_STRING = "remove";
 
 	int action;
 	Contact contact;
-	
+
 	public ContactChanges(Contact contact, int action) {
 		this.contact = contact;
 		this.action = action;
 	}
-	
+
 	public Contact getContact() {
 		return contact;
 	}
-	
+
 	public int getAction() {
 		return action;
 	}
@@ -53,7 +56,14 @@ public class ContactChanges {
 		return "ContactChanges [action=" + action + ", contact=" + contact
 				+ "]";
 	}
-	
-	
-	
+
+	public String getActionString() {
+		if (action == ACTION_ADDED)
+			return ACTION_ADDED_STRING;
+		else if (action == ACTION_DELETED)
+			return ACTION_DELETED_STRING;
+
+		return null;
+	}
+
 }
