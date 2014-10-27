@@ -13,6 +13,8 @@ import android.content.Intent;
 
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.MainPrefs;
+import com.blackMonster.suzik.musicstore.module.UserActivity;
+import com.blackMonster.suzik.musicstore.timeline.UserActivityQueue;
 import com.blackMonster.suzik.sync.Syncer;
 import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;
@@ -61,6 +63,7 @@ private static final  String TAG = "AddedSongsResponseHandler";
 				LOGD(TAG,"removing from queue");
 
 				QueueAddedSongs.remove(entry.getKey(), this);
+				UserActivityQueue.add(new UserActivity(id, UserActivity.ACTION_OUT_APP_DOWNLOAD), this);
 
 			}
 

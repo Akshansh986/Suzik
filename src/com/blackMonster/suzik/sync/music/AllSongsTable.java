@@ -1,10 +1,14 @@
 package com.blackMonster.suzik.sync.music;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
+
+import java.util.HashMap;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Pair;
 
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.musicstore.module.Song;
@@ -46,7 +50,27 @@ import com.blackMonster.suzik.musicstore.module.Song;
 
 		return ans;
 	}
+	 
+	 static Pair<Long, Song> search(String title,String artist, Context context) {
+			SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
+			Pair<Long, Song> result = null;
+			Cursor cursor = db.query(TABLE, null, C_TITLE + "='" + title + "'" + " AND " + C_ARTIST + "='" + artist + "'" , null, null, null, null);
 
+			if (cursor != null) {
+				if (cursor.moveToFirst()) {
+					Song song = new Song(cursor.getString(cursor
+							.getColumnIndex(C_TITLE)), cursor.getString(cursor
+							.getColumnIndex(C_ARTIST)), cursor.getString(cursor
+							.getColumnIndex(C_ALBUM)), cursor.getLong(cursor
+							.getColumnIndex(C_DURATION)));
+					result = new Pair<Long, Song>(cursor.getLong(cursor.getColumnIndex(C_ID)), song);
+					
+				}
+				cursor.close();
+			}
+
+			return result;
+		}
 	
 
 	 static boolean insert(long id, Song song, Context context) {

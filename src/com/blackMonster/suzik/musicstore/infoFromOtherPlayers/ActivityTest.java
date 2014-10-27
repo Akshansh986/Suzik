@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.R;
-import com.blackMonster.suzik.musicstore.SendMyMusic;
 
 public class ActivityTest extends Activity {
 
@@ -16,7 +15,7 @@ public class ActivityTest extends Activity {
 		setContentView(R.layout.activity_signup);
 		Log.d("ACtivitytest", "oncreate");
 		DbHelper.getInstance(this);
-		SendMyMusic.send(this);
+		//SendMyMusic.send(this);
 		//TablePausedSongs.insert(new TablePausedSongs(123, "18 till i die", "akshansh", 234344, 0, 12, 12232), this);
 		//TablePausedSongs trow = TablePausedSongs.search("18 till i die", "akshansh", this);
 	//	if (trow == null) Log.d("Act", "null");

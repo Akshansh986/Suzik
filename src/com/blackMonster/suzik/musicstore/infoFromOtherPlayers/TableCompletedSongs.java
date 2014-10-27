@@ -27,7 +27,7 @@ public class TableCompletedSongs {
 		db.execSQL(sql);
 	}
 
-	public static void insert(Song song,long completedTS, Context context) {
+	public static void isert(Song song,long completedTS, Context context) {
 		Log.d(TABLE, "insert");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
