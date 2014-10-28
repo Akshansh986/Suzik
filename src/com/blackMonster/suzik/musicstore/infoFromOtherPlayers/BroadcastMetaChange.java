@@ -20,7 +20,7 @@ public class BroadcastMetaChange extends MusicBroadcastManager {
 
 	private void setPlayingSong(Context context) {
 		Log.i(TAG, "setplayingsong");
-		//PlayingSong.set(getSong(), 0, System.currentTimeMillis(), context);
+		PlayingSong.set(getSong(), 0, System.currentTimeMillis(), context);
 	}
 
 }

@@ -1,6 +1,4 @@
-package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
-
-import com.blackMonster.suzik.DbHelper;
+package com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,8 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-public class TableCompletedSongs {
-	public static final String TABLE = "completedSongs";
+import com.blackMonster.suzik.DbHelper;
+import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.Song;
+
+public class TableAllPlayed {
+	public static final String TABLE = "allPlayed";
 	public static final String C_ID = "ID";
 	public static final String C_TRACK = "TRACK";
 	public static final String C_ARTIST = "ARTIST";
@@ -27,7 +28,7 @@ public class TableCompletedSongs {
 		db.execSQL(sql);
 	}
 
-	public static void isert(Song song,long completedTS, Context context) {
+	public static void insert(Song song,long completedTS, Context context) {
 		Log.d(TABLE, "insert");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
@@ -91,8 +92,7 @@ public class TableCompletedSongs {
 	public static Cursor getAllRows(Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
 		return db.rawQuery("select rowid _id,* from " + TABLE
-				+ " ORDER BY " + "_id" + " DESC", null);	
-	}
+				+ " ORDER BY " + "_id" + " DESC", null);	}
 
 	public static int clearTable(Context context) {
 		return DbHelper.getInstance(context).getWritableDatabase()

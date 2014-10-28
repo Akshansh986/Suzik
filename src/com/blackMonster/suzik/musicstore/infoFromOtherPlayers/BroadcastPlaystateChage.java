@@ -33,7 +33,7 @@ public class BroadcastPlaystateChage extends MusicBroadcastManager {
 			pastPlayed = 0;
 
 		long startTs = System.currentTimeMillis();
-		///PlayingSong.set(getSong(), pastPlayed, startTs, context);
+		PlayingSong.set(getSong(), pastPlayed, startTs, context);
 	}
 
 	private void handlePause(Context context) {
@@ -43,13 +43,13 @@ public class BroadcastPlaystateChage extends MusicBroadcastManager {
 				- PlayingSong.getStartTs(context)
 				+ PlayingSongPrefs.getPastPlayed(context);
 		long pauseTS = System.currentTimeMillis();
-	/*	if (PlayingSong.isCompleted(context))
+		if (PlayingSong.isCompleted(context))
 			TableCompletedSongs.insert(getSong(), System.currentTimeMillis(),
 					context);
 		else
 			TablePausedSongs.insert(new TablePausedSongs(getSong(), pastPlayed,
 					pauseTS), context);
-*/
+
 		PlayingSong.reset(context);
 	}
 

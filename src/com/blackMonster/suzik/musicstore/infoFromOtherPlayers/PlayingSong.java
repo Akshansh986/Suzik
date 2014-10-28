@@ -3,8 +3,6 @@ package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 import android.content.Context;
 import android.util.Log;
 
-import com.blackMonster.suzik.musicstore.module.Song;
-
 public class PlayingSong {
 	private static final String TAG = "PlayingSong";
 	private static final double VIRTUALLY_COMPLETED_LOWER_LIMIT = .6; // 60%
@@ -17,7 +15,7 @@ public class PlayingSong {
 			Log.e(TAG, "Unable to write");
 			return false;
 		} else {
-			//PlayingSongPrefs.setAll(song, pastPlayed, startTS, context);
+			PlayingSongPrefs.setAll(song, pastPlayed, startTS, context);
 			Log.d(TAG, "written");
 			return true;
 		}
@@ -30,7 +28,7 @@ public class PlayingSong {
 			return false;
 		boolean inTime = (System.currentTimeMillis() - PlayingSongPrefs
 				.getStartTS(context)) <= 500;
-		boolean sameSong = false;//song.equals(PlayingSongPrefs.getSong(context));
+		boolean sameSong = song.equals(PlayingSongPrefs.getSong(context));
 		
 		Log.d(TAG, "intime " + inTime + "samesong" + sameSong);
 		if (inTime && sameSong)
@@ -41,8 +39,8 @@ public class PlayingSong {
 
 	public static void reset(Context context) {
 		Log.i(TAG, "reset");
-		//PlayingSongPrefs.setAll(new Song(-1, "NA", "NA", -1, -1), -1, -1,
-			//	context);
+		PlayingSongPrefs.setAll(new Song(-1, "NA", "NA", -1, -1), -1, -1,
+				context);
 	}
 
 	public static boolean isCompleted(Context context) {
@@ -92,15 +90,19 @@ public class PlayingSong {
 
 	public static void moveToCompleted(long completedTS, Context context) {
 		Log.i(TAG, "movetocompleted");
-	//	TableCompletedSongs.insert(PlayingSong.getSong(context), completedTS,
-		//		context);
+		TableCompletedSongs.insert(PlayingSong.getSong(context), completedTS,
+				context);
 		PlayingSong.reset(context);
 
 	}
 
 	public static Song getSong(Context context) {
 		Log.i(TAG, "getsong");
-		return null;
+		return new Song(PlayingSongPrefs.getId(context),
+				PlayingSongPrefs.getTrack(context),
+				PlayingSongPrefs.getArtist(context),
+				PlayingSongPrefs.getDuration(context),
+				PlayingSongPrefs.getStreaming(context));
 	}
 
 	public static long pastPlayed(Context context) {
