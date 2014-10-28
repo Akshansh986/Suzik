@@ -6,7 +6,7 @@ import android.util.Pair;
 import com.blackMonster.suzik.musicstore.module.Song;
 
 public class MusicSyncManager {
-	public static  Pair<Long, Song> getSong(String title, String artist, Context context) {
-		return AllSongsTable.search(title, artist, context);
+	public static  Pair<Long, Song> getSong(Song song, Context context) {
+		return AllSongsTable.search(song, context);
 	}
 }
