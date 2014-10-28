@@ -1,12 +1,13 @@
 package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 
-import com.blackMonster.suzik.DbHelper;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import com.blackMonster.suzik.DbHelper;
+import com.blackMonster.suzik.musicstore.module.Song;
 
 public class TablePausedSongs {
 	private static final String TABLE = "pausedSongs";
@@ -43,14 +44,14 @@ public class TablePausedSongs {
 
 		ContentValues values = new ContentValues();
 
-		values.put(C_ID, tPsong.song.id);
+		/*values.put(C_ID, tPsong.song.id);
 		values.put(C_TRACK, tPsong.song.track);
 		values.put(C_ARTIST, tPsong.song.artist);
 		values.put(C_DURATION, tPsong.song.duration);
 		values.put(C_STREAMING, tPsong.song.streaming);
 		values.put(C_PAST_PLAYED, tPsong.pastPlayed);
 		values.put(C_PAUSE_TS, tPsong.pauseTS);
-
+*/
 		db.insert(TABLE, null, values);
 	}
 
@@ -60,7 +61,7 @@ public class TablePausedSongs {
 		TablePausedSongs ans = null;
 		Cursor cursor = db.query(TABLE, null, C_TRACK + "='" + track + "' AND "
 				+ C_ARTIST + "='" + artist + "'", null, null, null, null);
-
+/*
 		if (cursor != null) {
 			if (cursor.moveToFirst()) {
 				ans = new TablePausedSongs(new Song(cursor.getLong(cursor
@@ -74,7 +75,7 @@ public class TablePausedSongs {
 			}
 			cursor.close();
 		}
-
+*/
 		return ans;
 	}
 

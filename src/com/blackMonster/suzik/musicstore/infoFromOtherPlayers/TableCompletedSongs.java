@@ -1,12 +1,13 @@
 package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 
-import com.blackMonster.suzik.DbHelper;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import com.blackMonster.suzik.DbHelper;
+import com.blackMonster.suzik.musicstore.module.Song;
 
 public class TableCompletedSongs {
 	public static final String TABLE = "completedSongs";
@@ -32,14 +33,14 @@ public class TableCompletedSongs {
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-
+/*
 		values.put(C_ID, song.id);
 		values.put(C_TRACK, song.track);
 		values.put(C_ARTIST, song.artist);
 		values.put(C_DURATION, song.duration);
 		values.put(C_STREAMING, song.streaming);
 		values.put(C_COMPLETED_TS, completedTS);
-
+*/
 		db.insert(TABLE, null, values);
 		
 	}
@@ -51,7 +52,7 @@ public class TableCompletedSongs {
 
 		Cursor cursor = db.query(TABLE, null, C_TRACK + "='" + track + "' AND "
 				+ C_ARTIST + "='" + artist + "'", null, null, null, null);
-
+/*
 		if (cursor != null) {
 			if (cursor.moveToFirst()) {
 				ans = new Song(cursor.getLong(cursor
@@ -63,7 +64,7 @@ public class TableCompletedSongs {
 			}
 			cursor.close();
 		}
-
+*/
 		return ans;
 	}
 

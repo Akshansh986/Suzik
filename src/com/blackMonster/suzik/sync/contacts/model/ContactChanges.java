@@ -4,8 +4,8 @@ public class ContactChanges {
 	public static final int ACTION_DELETED = 0;
 	public static final int ACTION_ADDED = 1;
 	
-	public static final String ACTION_DELETED_STRING = "add";
-	public static final String ACTION_ADDED_STRING = "remove";
+	public static final String ACTION_ADDED_STRING = "add";
+	public static final String ACTION_DELETED_STRING = "remove";
 
 	int action;
 	Contact contact;

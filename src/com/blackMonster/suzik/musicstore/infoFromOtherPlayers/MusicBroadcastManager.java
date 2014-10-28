@@ -1,17 +1,12 @@
 package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 
-import java.util.HashMap;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Debug;
 import android.util.Log;
 import android.util.Pair;
 
-import com.blackMonster.suzik.musicstore.SongSentTable;
-import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.TableAllPlayed;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.music.MusicSyncManager;
 
@@ -34,12 +29,12 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
 		Log.e(TAG, action + "  " + "started  " + intent.getBooleanExtra(P_PLAYING,false) );
 
 		try {
-			fixBroadcastParameters(intent);
+			//fixBroadcastParameters(intent);
 			if ( !duplicateFilter.isDuplicate(getSong(), action,playing, System.currentTimeMillis()) ){
-				TableAllPlayed.insert(getSong(), System.currentTimeMillis(), context);
+			//	TableAllPlayed.insert(getSong(), System.currentTimeMillis(), context);
 				run(context);
 			}
-		} catch (ExceptionUnknownBroadcast e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		Log.e(TAG, action + "  " + "completed");
@@ -83,7 +78,7 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
 	}
 
 	public Song getSong() {
-		return new Song(getID(), getTrack(), getArtist(), getDuration(),isStreaming());
+		return null;
 	}
 
 	public long getID() {

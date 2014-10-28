@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.blackMonster.suzik.musicstore.module.Song;
+
 public class PlayingSongPrefs {
 
 	public static final String PREFS_NAME = "playingSongPrefs";
@@ -29,9 +31,7 @@ public class PlayingSongPrefs {
 
 	public static Song getSong(Context context) {
 		initPrefInstance(context);
-		return new Song(prefs.getLong(ID, -1), prefs.getString(TRACK, "NA"),
-				prefs.getString(ARTIST, "NA"), prefs.getLong(DURATION, -1),
-				prefs.getLong(STREAMING, -1));
+		return  null;
 	}
 
 	public static Long getId(Context context) {
@@ -107,7 +107,7 @@ public class PlayingSongPrefs {
 	public static void setAll(Song song, long pastPlayed, long startTS,
 			Context context) {
 		initPrefInstance(context);
-		Editor editor = prefs.edit();
+	/*	Editor editor = prefs.edit();
 		editor.putLong(ID, song.id);
 		editor.putString(TRACK, song.track);
 		editor.putString(ARTIST, song.artist);
@@ -116,7 +116,7 @@ public class PlayingSongPrefs {
 		editor.putLong(PAST_PLAYED, pastPlayed);
 		editor.putLong(START_TS, startTS);
 		editor.commit();
-
+*/
 	}
 
 	public static void close() {
