@@ -19,11 +19,13 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
 	private static final String TAG = "MusicBroadcastManager";
 	private static final String P_TRACK = "track";
 	private static final String P_ARTIST = "artist";
+	private static final String P_ALBUM = "album";
+	
 	private static final String P_PLAYING = "playing";
 	private static final String P_ID = "id";
 	private static final String P_DURATION = "duration";
 
-	private String track, artist;
+	private String track, artist, album;
 	private long id, duration;
 	private boolean streaming, playing;
 	
@@ -53,12 +55,15 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
 		BroadcastMediaStoreChanged.printBundle(intent.getExtras(), TAG);
 		track = intent.getStringExtra(P_TRACK);
 		artist = intent.getStringExtra(P_ARTIST);
+		album = 	intent.getStringExtra(P_ALBUM);
+		duration = intent.getLongExtra(P_DURATION, 0);
 		playing = intent.getBooleanExtra(P_PLAYING, false);
+		Song song = new Song(track, artist, album, duration);
 		if (track == null || artist == null)
 			throw new ExceptionUnknownBroadcast();
 
 		Log.d(TAG, track + "   " + artist);
-		Pair<Long, Song> song = MusicSyncManager.getSong(track, artist, context);
+		Pair<Long, Song> song = MusicSyncManager.getSong(song, context);
 
 		if (song == null) {
 			Bundle bundle = intent.getExtras();

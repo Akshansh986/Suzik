@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.blackMonster.suzik.DbHelper;
-import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.Song;
+import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.BroadcastSong;
 
 public class TableAllPlayed {
 	public static final String TABLE = "allPlayed";
@@ -17,7 +17,7 @@ public class TableAllPlayed {
 	public static final String C_DURATION = "DURATION";
 	public static final String C_STREAMING = "STREAMING";
 	public static final String C_COMPLETED_TS = "COMPLETED_TS";
-	Song song;
+	BroadcastSong song;
 
 	
 
@@ -28,7 +28,7 @@ public class TableAllPlayed {
 		db.execSQL(sql);
 	}
 
-	public static void insert(Song song,long completedTS, Context context) {
+	public static void insert(BroadcastSong song,long completedTS, Context context) {
 		Log.d(TABLE, "insert");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
@@ -45,17 +45,17 @@ public class TableAllPlayed {
 		
 	}
 
-	public static Song search(String track, String artist,
+	public static BroadcastSong search(String track, String artist,
 			Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
-		Song ans = null;
+		BroadcastSong ans = null;
 
 		Cursor cursor = db.query(TABLE, null, C_TRACK + "='" + track + "' AND "
 				+ C_ARTIST + "='" + artist + "'", null, null, null, null);
 
 		if (cursor != null) {
 			if (cursor.moveToFirst()) {
-				ans = new Song(cursor.getLong(cursor
+				ans = new BroadcastSong(cursor.getLong(cursor
 						.getColumnIndex(C_ID)), cursor.getString(cursor
 						.getColumnIndex(C_TRACK)), cursor.getString(cursor
 						.getColumnIndex(C_ARTIST)), cursor.getLong(cursor

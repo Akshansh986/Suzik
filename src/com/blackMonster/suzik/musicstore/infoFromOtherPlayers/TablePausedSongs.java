@@ -18,10 +18,10 @@ public class TablePausedSongs {
 	private static final String C_PAST_PLAYED = "PAST_PLAYED";
 	private static final String C_PAUSE_TS = "STOP_TS";
 
-	private Song song;
+	private BroadcastSong song;
 	private long pastPlayed, pauseTS;
 
-	public TablePausedSongs(Song song, long pastPlayed, long pauseTS) {
+	public TablePausedSongs(BroadcastSong song, long pastPlayed, long pauseTS) {
 		this.song = song;
 		this.pastPlayed = pastPlayed;
 		this.pauseTS = pauseTS;
@@ -63,7 +63,7 @@ public class TablePausedSongs {
 
 		if (cursor != null) {
 			if (cursor.moveToFirst()) {
-				ans = new TablePausedSongs(new Song(cursor.getLong(cursor
+				ans = new TablePausedSongs(new BroadcastSong(cursor.getLong(cursor
 						.getColumnIndex(C_ID)), cursor.getString(cursor
 						.getColumnIndex(C_TRACK)), cursor.getString(cursor
 						.getColumnIndex(C_ARTIST)), cursor.getLong(cursor
@@ -94,7 +94,7 @@ public class TablePausedSongs {
 				.delete(TABLE, null, null);
 	}
 
-	public Song getSong() {
+	public BroadcastSong getSong() {
 		return song;
 	}
 

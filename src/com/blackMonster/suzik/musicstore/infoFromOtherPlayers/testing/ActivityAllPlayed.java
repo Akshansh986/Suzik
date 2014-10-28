@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.R;
-import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.Song;
+import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.BroadcastSong;
 
 public class ActivityAllPlayed extends Activity implements
 		OnItemClickListener {
@@ -67,7 +67,7 @@ public class ActivityAllPlayed extends Activity implements
 		String track = cursor.getString(cursor
 				.getColumnIndex(TableAllPlayed.C_TRACK));
 		TableUserSelectedCompleted.insert(
-				new Song(cursor.getLong(cursor
+				new BroadcastSong(cursor.getLong(cursor
 						.getColumnIndex(TableAllPlayed.C_ID)), track, cursor
 						.getString(cursor
 								.getColumnIndex(TableAllPlayed.C_ARTIST)),

@@ -51,9 +51,20 @@ import com.blackMonster.suzik.musicstore.module.Song;
 		return ans;
 	}
 	 
-	 static Pair<Long, Song> search(String title,String artist, Context context) {
+	 static Pair<Long, Song> search(Song song, Context context) {
 			SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
 			Pair<Long, Song> result = null;
+			
+			String whereArgs =  C_TITLE + "='" + song.getTitle() + "'" + " AND " + C_ARTIST + "='" + song.getArtist() + "'"; 
+			whereArgs += (song.getAlbum() == null) ? "" : C_ALBUM + "='" + song.getAlbum() + "'" ;
+			whereArgs += whereArgs.equals("") ? "" : " AND " ;
+			whereArgs += (song.getDuration() == 0) ? "" : C_DURATION + "='" + song.getDuration() + "'" ;
+			
+			
+			
+			
+			
+			
 			Cursor cursor = db.query(TABLE, null, C_TITLE + "='" + title + "'" + " AND " + C_ARTIST + "='" + artist + "'" , null, null, null, null);
 
 			if (cursor != null) {
