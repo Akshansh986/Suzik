@@ -10,12 +10,12 @@ public class DuplicateBroadcastFilter {
 	List<BroadcastInfo> broadcastList = new ArrayList<BroadcastInfo>();
 
 	class BroadcastInfo {
-		BroadcastSong song;
+		Song song;
 		String action;
 		long time;
 		boolean playing;
 
-		public BroadcastInfo(BroadcastSong song, String action, long time, boolean playing) {
+		public BroadcastInfo(Song song, String action, long time, boolean playing) {
 			this.song = song;
 			this.action = action;
 			this.time = time;
@@ -23,7 +23,7 @@ public class DuplicateBroadcastFilter {
 		}
 	}
 
-	boolean isDuplicate(BroadcastSong currSong, String currAction, boolean currPlaying, long currTime) {
+	boolean isDuplicate(Song currSong, String currAction, boolean currPlaying, long currTime) {
 		Log.d("DuplicateBroadcastfilter", "isDuplicate");
 		boolean result = false, found = false;
 

@@ -27,9 +27,9 @@ public class PlayingSongPrefs {
 		return prefs;
 	}
 
-	public static BroadcastSong getSong(Context context) {
+	public static Song getSong(Context context) {
 		initPrefInstance(context);
-		return new BroadcastSong(prefs.getLong(ID, -1), prefs.getString(TRACK, "NA"),
+		return new Song(prefs.getLong(ID, -1), prefs.getString(TRACK, "NA"),
 				prefs.getString(ARTIST, "NA"), prefs.getLong(DURATION, -1),
 				prefs.getLong(STREAMING, -1));
 	}
@@ -104,7 +104,7 @@ public class PlayingSongPrefs {
 		prefs.edit().putLong(PAST_PLAYED, pastPlayed).commit();
 	}
 
-	public static void setAll(BroadcastSong song, long pastPlayed, long startTS,
+	public static void setAll(Song song, long pastPlayed, long startTS,
 			Context context) {
 		initPrefInstance(context);
 		Editor editor = prefs.edit();

@@ -8,7 +8,7 @@ public class PlayingSong {
 	private static final double VIRTUALLY_COMPLETED_LOWER_LIMIT = .6; // 60%
 	private static final double VIRTYALLY_COMPLETED_UPPER_LIMIT = 2; // 200%
 
-	public static boolean set(BroadcastSong song, long pastPlayed, long startTS,
+	public static boolean set(Song song, long pastPlayed, long startTS,
 			Context context) {
 		Log.i(TAG, "set");
 		if (isInTimeNSameSong(song, context)) {
@@ -21,7 +21,7 @@ public class PlayingSong {
 		}
 	}
 
-	private static boolean isInTimeNSameSong(BroadcastSong song, Context context) {
+	private static boolean isInTimeNSameSong(Song song, Context context) {
 		Log.i(TAG, "getWriteLock");
 
 		if ( ! isPlaying(context))
@@ -39,7 +39,7 @@ public class PlayingSong {
 
 	public static void reset(Context context) {
 		Log.i(TAG, "reset");
-		PlayingSongPrefs.setAll(new BroadcastSong(-1, "NA", "NA", -1, -1), -1, -1,
+		PlayingSongPrefs.setAll(new Song(-1, "NA", "NA", -1, -1), -1, -1,
 				context);
 	}
 
@@ -96,9 +96,9 @@ public class PlayingSong {
 
 	}
 
-	public static BroadcastSong getSong(Context context) {
+	public static Song getSong(Context context) {
 		Log.i(TAG, "getsong");
-		return new BroadcastSong(PlayingSongPrefs.getId(context),
+		return new Song(PlayingSongPrefs.getId(context),
 				PlayingSongPrefs.getTrack(context),
 				PlayingSongPrefs.getArtist(context),
 				PlayingSongPrefs.getDuration(context),
