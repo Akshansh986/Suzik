@@ -62,7 +62,7 @@ public class InAapSongTable {
 		
 		InAppSongData inAppSongData = null;
 		
-		Cursor cursor = db.query(TABLE, null, C_FPRINT + "='" + fingerPrint + "'", null, null,
+		Cursor cursor = db.query(TABLE, null, C_FPRINT + "=?", new String[]{fingerPrint}, null,
 					null, null);
 
 			if (cursor != null) {

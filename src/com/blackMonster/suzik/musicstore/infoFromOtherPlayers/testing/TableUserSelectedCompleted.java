@@ -14,6 +14,8 @@ public class TableUserSelectedCompleted {
 	public static final String C_ID = "ID";
 	public static final String C_TRACK = "TRACK";
 	public static final String C_ARTIST = "ARTIST";
+	public static final String C_ALBUM = "ALBUM";
+
 	public static final String C_DURATION = "DURATION";
 	public static final String C_STREAMING = "STREAMING";
 	public static final String C_COMPLETED_TS = "COMPLETED_TS";
@@ -23,8 +25,8 @@ public class TableUserSelectedCompleted {
 
 	public static void createTable(SQLiteDatabase db) {
 		String sql = String.format("create table %s"
-				+ "(%s INTEGER, %s text,%s text, %s integer, %s integer, %s integer)",
-				TABLE, C_ID, C_TRACK, C_ARTIST, C_DURATION, C_STREAMING, C_COMPLETED_TS);
+				+ "(%s INTEGER, %s text,%s text,%s text, %s integer, %s integer, %s integer)",
+				TABLE, C_ID, C_TRACK, C_ARTIST, C_ALBUM, C_DURATION, C_STREAMING, C_COMPLETED_TS);
 		db.execSQL(sql);
 	}
 
@@ -34,11 +36,12 @@ public class TableUserSelectedCompleted {
 
 		ContentValues values = new ContentValues();
 
-		values.put(C_ID, song.id);
-		values.put(C_TRACK, song.track);
-		values.put(C_ARTIST, song.artist);
-		values.put(C_DURATION, song.duration);
-		values.put(C_STREAMING, song.streaming);
+		values.put(C_ID, song.getId());
+		values.put(C_TRACK, song.getTitle());
+		values.put(C_ARTIST, song.getArtist());
+		values.put(C_ALBUM, song.getAlbum());
+		values.put(C_DURATION, song.getDuration());
+		values.put(C_STREAMING, song.isStreaming());
 		values.put(C_COMPLETED_TS, completedTS);
 
 		db.insert(TABLE, null, values);
@@ -58,8 +61,9 @@ public class TableUserSelectedCompleted {
 				ans = new BroadcastSong(cursor.getLong(cursor
 						.getColumnIndex(C_ID)), cursor.getString(cursor
 						.getColumnIndex(C_TRACK)), cursor.getString(cursor
-						.getColumnIndex(C_ARTIST)), cursor.getLong(cursor
-						.getColumnIndex(C_DURATION)), cursor.getLong(cursor
+						.getColumnIndex(C_ARTIST)), cursor.getString(cursor
+						.getColumnIndex(C_ALBUM)), cursor.getLong(cursor
+						.getColumnIndex(C_DURATION)), cursor.getInt(cursor
 						.getColumnIndex(C_STREAMING)));
 			}
 			cursor.close();

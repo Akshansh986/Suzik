@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.blackMonster.suzik.sync.ContentObserverService;
 import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
+import com.blackMonster.suzik.sync.music.InitMusicDb;
 import com.crashlytics.android.Crashlytics;
 
 public class MainActivity extends Activity {
@@ -23,7 +24,7 @@ public class MainActivity extends Activity {
 		startService(new Intent(this, ContentObserverService.class));
 		//startService(new Intent(this, ContentObserverService.class));
 		
-		//startService(new Intent(this, InitMusicDb.class));
+		startService(new Intent(this, InitMusicDb.class));
 		startService(new Intent(this, ContactsSyncer.class));
 
 		

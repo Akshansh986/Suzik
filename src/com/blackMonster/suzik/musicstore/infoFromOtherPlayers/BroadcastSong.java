@@ -3,14 +3,22 @@ package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 import com.blackMonster.suzik.musicstore.module.Song;
 
 public class BroadcastSong extends Song{
-	public long id;
-	public long streaming;
+	private long id;
+	private int streaming;
 
 	public BroadcastSong(long id, String track, String artist,String album, long duration,
-			long streaming) {
+			int streaming) {
 		super(track, artist, album, duration);
 		this.id = id;
 		this.streaming = streaming;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public int isStreaming() {
+		return streaming;
 	}
 
 	@Override

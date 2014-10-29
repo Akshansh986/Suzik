@@ -25,7 +25,7 @@ public abstract class MyContentObserver extends ContentObserver{
 	
 	@Override
 	public void onChange(boolean selfChange, Uri uri) {
-		LOGD("ObserverMusic", "onChange");
+		LOGD(getClass().getSimpleName(), "onChange");
 		Syncer.callFuture(onContentChange(), WAIT_MS, context);	//THIS ensures batching of requests.
 	}
 	

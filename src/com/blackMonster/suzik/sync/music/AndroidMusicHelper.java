@@ -75,6 +75,8 @@ public class AndroidMusicHelper {
 	}
 
 	static class AndroidData {
+	
+
 		private String location = "";
 		private String fPrint = "";
 		private Song song;
@@ -105,7 +107,55 @@ public class AndroidMusicHelper {
 		}
 		
 
-		
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result
+					+ ((fPrint == null) ? 0 : fPrint.hashCode());
+			result = prime * result
+					+ ((fileName == null) ? 0 : fileName.hashCode());
+			result = prime * result
+					+ ((location == null) ? 0 : location.hashCode());
+			result = prime * result + ((song == null) ? 0 : song.hashCode());
+			return result;
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			AndroidData other = (AndroidData) obj;
+			if (fPrint == null) {
+				if (other.fPrint != null)
+					return false;
+			} else if (!fPrint.equals(other.fPrint))
+				return false;
+			if (fileName == null) {
+				if (other.fileName != null)
+					return false;
+			} else if (!fileName.equals(other.fileName))
+				return false;
+			if (location == null) {
+				if (other.location != null)
+					return false;
+			} else if (!location.equals(other.location))
+				return false;
+			if (song == null) {
+				if (other.song != null)
+					return false;
+			} else if (!song.equals(other.song))
+				return false;
+			return true;
+		}
+
+
+
+
+
 				
 	
 		

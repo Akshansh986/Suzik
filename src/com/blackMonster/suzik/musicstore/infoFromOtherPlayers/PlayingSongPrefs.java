@@ -10,6 +10,7 @@ public class PlayingSongPrefs {
 	public static final String ID = "ID";
 	public static final String TRACK = "TRACK";
 	public static final String ARTIST = "ARTIST";
+	public static final String ALBUM = "ALBUM";
 	public static final String DURATION = "DURATION";
 	public static final String STREAMING = "STREAMING";
 	public static final String START_TS = "START_TS";
@@ -29,9 +30,9 @@ public class PlayingSongPrefs {
 
 	public static BroadcastSong getSong(Context context) {
 		initPrefInstance(context);
-		return new BroadcastSong(prefs.getLong(ID, -1), prefs.getString(TRACK, "NA"),
-				prefs.getString(ARTIST, "NA"), prefs.getLong(DURATION, -1),
-				prefs.getLong(STREAMING, -1));
+		return new BroadcastSong(prefs.getLong(ID, -1), prefs.getString(TRACK,
+				"NA"), prefs.getString(ARTIST, "NA"), prefs.getString(ALBUM,
+				"NA"), prefs.getLong(DURATION, -1), prefs.getInt(STREAMING, -1));
 	}
 
 	public static Long getId(Context context) {
@@ -48,15 +49,20 @@ public class PlayingSongPrefs {
 		initPrefInstance(context);
 		return prefs.getString(ARTIST, "NA");
 	}
+	
+	public static String getAlbum(Context context) {
+		initPrefInstance(context);
+		return prefs.getString(ALBUM, "NA");
+	}
 
 	public static Long getDuration(Context context) {
 		initPrefInstance(context);
 		return prefs.getLong(DURATION, -1);
 	}
 
-	public static Long getStreaming(Context context) {
+	public static Integer getStreaming(Context context) {
 		initPrefInstance(context);
-		return prefs.getLong(STREAMING, -1);
+		return prefs.getInt(STREAMING, -1);
 	}
 
 	public static Long getStartTS(Context context) {
@@ -84,14 +90,19 @@ public class PlayingSongPrefs {
 		prefs.edit().putString(ARTIST, artist).commit();
 	}
 
+	public static void setAlbum(String album, Context context) {
+		initPrefInstance(context);
+		prefs.edit().putString(ALBUM, album).commit();
+	}
+
 	public static void setDuration(long duration, Context context) {
 		initPrefInstance(context);
 		prefs.edit().putLong(DURATION, duration).commit();
 	}
 
-	public static void setStreaming(long streaming, Context context) {
+	public static void setStreaming(int streaming, Context context) {
 		initPrefInstance(context);
-		prefs.edit().putLong(STREAMING, streaming).commit();
+		prefs.edit().putInt(STREAMING, streaming).commit();
 	}
 
 	public static void setStartTS(long startTs, Context context) {
@@ -104,15 +115,16 @@ public class PlayingSongPrefs {
 		prefs.edit().putLong(PAST_PLAYED, pastPlayed).commit();
 	}
 
-	public static void setAll(BroadcastSong song, long pastPlayed, long startTS,
-			Context context) {
+	public static void setAll(BroadcastSong song, long pastPlayed,
+			long startTS, Context context) {
 		initPrefInstance(context);
 		Editor editor = prefs.edit();
-		editor.putLong(ID, song.id);
-		editor.putString(TRACK, song.track);
-		editor.putString(ARTIST, song.artist);
-		editor.putLong(DURATION, song.duration);
-		editor.putLong(STREAMING, song.streaming);
+		editor.putLong(ID, song.getId());
+		editor.putString(TRACK, song.getTitle());
+		editor.putString(ARTIST, song.getArtist());
+		editor.putString(ALBUM, song.getAlbum());
+		editor.putLong(DURATION, song.getDuration());
+		editor.putInt(STREAMING, song.isStreaming());
 		editor.putLong(PAST_PLAYED, pastPlayed);
 		editor.putLong(START_TS, startTS);
 		editor.commit();

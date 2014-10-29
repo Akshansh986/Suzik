@@ -1,5 +1,8 @@
 package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 
+import com.blackMonster.suzik.musicstore.module.UserActivity;
+import com.blackMonster.suzik.musicstore.timeline.UserActivityQueue;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -8,8 +11,8 @@ public class PlayingSong {
 	private static final double VIRTUALLY_COMPLETED_LOWER_LIMIT = .6; // 60%
 	private static final double VIRTYALLY_COMPLETED_UPPER_LIMIT = 2; // 200%
 
-	public static boolean set(BroadcastSong song, long pastPlayed, long startTS,
-			Context context) {
+	public static boolean set(BroadcastSong song, long pastPlayed,
+			long startTS, Context context) {
 		Log.i(TAG, "set");
 		if (isInTimeNSameSong(song, context)) {
 			Log.e(TAG, "Unable to write");
@@ -24,12 +27,12 @@ public class PlayingSong {
 	private static boolean isInTimeNSameSong(BroadcastSong song, Context context) {
 		Log.i(TAG, "getWriteLock");
 
-		if ( ! isPlaying(context))
+		if (!isPlaying(context))
 			return false;
 		boolean inTime = (System.currentTimeMillis() - PlayingSongPrefs
 				.getStartTS(context)) <= 500;
 		boolean sameSong = song.equals(PlayingSongPrefs.getSong(context));
-		
+
 		Log.d(TAG, "intime " + inTime + "samesong" + sameSong);
 		if (inTime && sameSong)
 			return true;
@@ -39,7 +42,8 @@ public class PlayingSong {
 
 	public static void reset(Context context) {
 		Log.i(TAG, "reset");
-		PlayingSongPrefs.setAll(new BroadcastSong(-1, "NA", "NA", -1, -1), -1, -1,
+		PlayingSongPrefs.setAll(
+				new BroadcastSong(-1, "NA", "NA", "NA", -1, -1), -1, -1,
 				context);
 	}
 
@@ -92,6 +96,7 @@ public class PlayingSong {
 		Log.i(TAG, "movetocompleted");
 		TableCompletedSongs.insert(PlayingSong.getSong(context), completedTS,
 				context);
+		UserActivityQueue.add(new UserActivity(PlayingSong.getSong(context).getId(), UserActivity.ACTION_OUT_APP_PLAYED), context);
 		PlayingSong.reset(context);
 
 	}
@@ -101,6 +106,7 @@ public class PlayingSong {
 		return new BroadcastSong(PlayingSongPrefs.getId(context),
 				PlayingSongPrefs.getTrack(context),
 				PlayingSongPrefs.getArtist(context),
+				PlayingSongPrefs.getAlbum(context),
 				PlayingSongPrefs.getDuration(context),
 				PlayingSongPrefs.getStreaming(context));
 	}

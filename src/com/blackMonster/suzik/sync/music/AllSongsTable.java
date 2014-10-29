@@ -2,8 +2,11 @@ package com.blackMonster.suzik.sync.music;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import android.R.string;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,6 +15,7 @@ import android.util.Pair;
 
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.musicstore.module.Song;
+import com.blackMonster.suzik.util.DbUtils;
 
  class AllSongsTable {
 
@@ -51,30 +55,27 @@ import com.blackMonster.suzik.musicstore.module.Song;
 		return ans;
 	}
 	 
+	
+	 
 	 static Pair<Long, Song> search(Song song, Context context) {
 			SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
 			Pair<Long, Song> result = null;
 			
-			String whereArgs =  C_TITLE + "='" + song.getTitle() + "'" + " AND " + C_ARTIST + "='" + song.getArtist() + "'"; 
-			whereArgs += (song.getAlbum() == null) ? "" : C_ALBUM + "='" + song.getAlbum() + "'" ;
-			whereArgs += whereArgs.equals("") ? "" : " AND " ;
-			whereArgs += (song.getDuration() == 0) ? "" : C_DURATION + "='" + song.getDuration() + "'" ;
+			if (song.getTitle() == null || song.getArtist() == null) return null;
+			
+			Pair<String, String[]> args = DbUtils.songToWhereArgs(song, C_TITLE, C_ARTIST, C_ALBUM, C_DURATION);
 			
 			
-			
-			
-			
-			
-			Cursor cursor = db.query(TABLE, null, C_TITLE + "='" + title + "'" + " AND " + C_ARTIST + "='" + artist + "'" , null, null, null, null);
+			Cursor cursor = db.query(TABLE, null,args.first , args.second, null, null, null);
 
 			if (cursor != null) {
 				if (cursor.moveToFirst()) {
-					Song song = new Song(cursor.getString(cursor
+					Song dbSong = new Song(cursor.getString(cursor
 							.getColumnIndex(C_TITLE)), cursor.getString(cursor
 							.getColumnIndex(C_ARTIST)), cursor.getString(cursor
 							.getColumnIndex(C_ALBUM)), cursor.getLong(cursor
 							.getColumnIndex(C_DURATION)));
-					result = new Pair<Long, Song>(cursor.getLong(cursor.getColumnIndex(C_ID)), song);
+					result = new Pair<Long, Song>(cursor.getLong(cursor.getColumnIndex(C_ID)), dbSong);
 					
 				}
 				cursor.close();

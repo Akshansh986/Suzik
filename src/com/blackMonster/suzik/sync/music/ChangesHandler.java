@@ -1,5 +1,5 @@
 package com.blackMonster.suzik.sync.music;
-
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +12,7 @@ import com.blackMonster.suzik.sync.music.AndroidMusicHelper.AndroidData;
 import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 
 class ChangesHandler {
+	private static final String TAG = "ChangesHandler";
 	private HashMap<CompareParams, AndroidData> androidDataMap;
 	private HashMap<CompareParams, CacheData> cacheDataMap;
 
@@ -33,8 +34,15 @@ class ChangesHandler {
 		this.androidDataMap = androidDataListToHashMap(androidDataList);
 		this.cacheDataMap = cacheDataListToHashMap(cacheDataList);
 		this.context = context.getApplicationContext();
+		
+		LOGD(TAG,androidDataMap.toString());
+		LOGD(TAG,cacheDataMap.toString());
+		
 		setAddedSongs();
+		LOGD(TAG,addedSongs.toString());
+		
 		setDeletedSongs();
+		LOGD(TAG,deletedSongs.toString());
 		addFingerPrint(addedSongs);
 		//handleDuplicateSongs(); // optimize it
 		setModifiedSongs();
@@ -210,6 +218,14 @@ class ChangesHandler {
 		private ChangesHandler getOuterType() {
 			return ChangesHandler.this;
 		}
+
+		@Override
+		public String toString() {
+			return "CompareParams [song=" + song + ", fileName=" + fileName
+					+ "]";
+		}
+		
+		
 
 	}
 

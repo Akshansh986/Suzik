@@ -28,7 +28,7 @@ public class DuplicateBroadcastFilter {
 		boolean result = false, found = false;
 
 		for (BroadcastInfo broadcast : broadcastList) {
-			Log.d("DuplicateBroadcastfilter", broadcast.action + "  " + broadcast.song.track + "  " + broadcast.playing);
+			Log.d("DuplicateBroadcastfilter", broadcast.action + "  " + broadcast.song.getTitle() + "  " + broadcast.playing);
 			if (broadcast.action.equals(currAction)) {
 
 				if (broadcast.song.equals(currSong)

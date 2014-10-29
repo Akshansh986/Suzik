@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 
-class TableUserActivityQueue {
+public class TableUserActivityQueue {
 
 	private static final String TAG = "TableUserActivityQueue";
 	private static final String C_LOCAL_ID = "localId";
@@ -24,9 +24,9 @@ class TableUserActivityQueue {
 
 	private static final String TABLE = "TableUserActivityQueue";
 
-	static void createTable(SQLiteDatabase db) {
+public 	static void createTable(SQLiteDatabase db) {
 		String sql = String.format("create table %s"
-				+ "(%s INTEGER AUTOINCREMENT,%s INTEGER, %s INTEGER)", TABLE, C_LOCAL_ID, C_SERVER_ID, C_ACTION);
+				+ "(%s INTEGER PRIMARY KEY AUTOINCREMENT,%s INTEGER, %s INTEGER)", TABLE, C_LOCAL_ID, C_SERVER_ID, C_ACTION);
 		db.execSQL(sql);
 	}
 

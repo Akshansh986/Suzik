@@ -68,13 +68,12 @@ public class ActivityAllPlayed extends Activity implements
 				.getColumnIndex(TableAllPlayed.C_TRACK));
 		TableUserSelectedCompleted.insert(
 				new BroadcastSong(cursor.getLong(cursor
-						.getColumnIndex(TableAllPlayed.C_ID)), track, cursor
-						.getString(cursor
-								.getColumnIndex(TableAllPlayed.C_ARTIST)),
-						cursor.getLong(cursor
-								.getColumnIndex(TableAllPlayed.C_DURATION)),
-						cursor.getLong(cursor
-								.getColumnIndex(TableAllPlayed.C_STREAMING))),
+						.getColumnIndex(TableAllPlayed.C_ID)), cursor.getString(cursor
+						.getColumnIndex(TableAllPlayed.C_TRACK)), cursor.getString(cursor
+						.getColumnIndex(TableAllPlayed.C_ARTIST)), cursor.getString(cursor
+						.getColumnIndex(TableAllPlayed.C_ALBUM)), cursor.getLong(cursor
+						.getColumnIndex(TableAllPlayed.C_DURATION)), cursor.getInt(cursor
+						.getColumnIndex(TableAllPlayed.C_STREAMING))),
 				cursor.getLong(cursor
 						.getColumnIndex(TableAllPlayed.C_COMPLETED_TS)), this);
 		Toast.makeText(this, track + "  copied to user selected",

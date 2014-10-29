@@ -3,6 +3,10 @@ package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 import android.content.Context;
 import android.util.Log;
 
+import com.blackMonster.suzik.musicstore.module.Song;
+import com.blackMonster.suzik.musicstore.module.UserActivity;
+import com.blackMonster.suzik.musicstore.timeline.UserActivityQueue;
+
 public class BroadcastPlaystateChage extends MusicBroadcastManager {
 	private static final String TAG = "BroadcastPlaystateChage";
 
@@ -21,13 +25,12 @@ public class BroadcastPlaystateChage extends MusicBroadcastManager {
 		if (PlayingSong.isVirtuallyCompleted(context))
 			PlayingSong.moveToCompleted(System.currentTimeMillis(), context);
 
-		TablePausedSongs tps = TablePausedSongs.search(getTrack(), getArtist(),
-				context);
+		TablePausedSongs tps = TablePausedSongs.search((Song)getSong(),context);
 		long pastPlayed;
 		if (tps != null) {
 			pastPlayed = tps.getPastPlayed();
 			Log.d(TAG, "pastplayed" + pastPlayed);
-			TablePausedSongs.remove(getTrack(), getArtist(), context);
+			TablePausedSongs.remove(getSong(), context);
 			Log.d(TAG, "pastplayed" + pastPlayed);
 		} else
 			pastPlayed = 0;
@@ -43,9 +46,12 @@ public class BroadcastPlaystateChage extends MusicBroadcastManager {
 				- PlayingSong.getStartTs(context)
 				+ PlayingSongPrefs.getPastPlayed(context);
 		long pauseTS = System.currentTimeMillis();
-		if (PlayingSong.isCompleted(context))
+		if (PlayingSong.isCompleted(context)) {
 			TableCompletedSongs.insert(getSong(), System.currentTimeMillis(),
 					context);
+			UserActivityQueue.add(new UserActivity(getID(), UserActivity.ACTION_OUT_APP_PLAYED), context);
+			
+		}
 		else
 			TablePausedSongs.insert(new TablePausedSongs(getSong(), pastPlayed,
 					pauseTS), context);

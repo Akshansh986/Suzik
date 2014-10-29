@@ -174,6 +174,51 @@ class CacheTable {
 			this.fPrint = fPrint;
 		}
 
+		
+		
+		
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result
+					+ ((fPrint == null) ? 0 : fPrint.hashCode());
+			result = prime * result
+					+ ((fileName == null) ? 0 : fileName.hashCode());
+			result = prime * result + (int) (id ^ (id >>> 32));
+			result = prime * result + ((song == null) ? 0 : song.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			CacheData other = (CacheData) obj;
+			if (fPrint == null) {
+				if (other.fPrint != null)
+					return false;
+			} else if (!fPrint.equals(other.fPrint))
+				return false;
+			if (fileName == null) {
+				if (other.fileName != null)
+					return false;
+			} else if (!fileName.equals(other.fileName))
+				return false;
+			if (id != other.id)
+				return false;
+			if (song == null) {
+				if (other.song != null)
+					return false;
+			} else if (!song.equals(other.song))
+				return false;
+			return true;
+		}
+
 		@Override
 		public String toString() {
 			return "CacheData [id=" + id + ", song=" + song + ", fPrint="
