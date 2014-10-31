@@ -1,9 +1,6 @@
 package com.blackMonster.suzik.sync.music;
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 
@@ -13,42 +10,124 @@ import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 
 class ChangesHandler {
 	private static final String TAG = "ChangesHandler";
-	private HashMap<CompareParams, AndroidData> androidDataMap;
-	private HashMap<CompareParams, CacheData> cacheDataMap;
+	//private HashMap<CompareParams, AndroidData> androidDataMap;
+	//private HashMap<CompareParams, CacheData> cacheDataMap;
 
-	private List<AndroidData> addedSongs = new ArrayList<AndroidMusicHelper.AndroidData>();
-	private List<CacheData> deletedSongs = new ArrayList<CacheTable.CacheData>();
-	private List<CacheData> modifiedSongs = new ArrayList<CacheTable.CacheData>();
-
+	//private List<AndroidData> addedSongs = new ArrayList<AndroidMusicHelper.AndroidData>();
+	//private List<CacheData> deletedSongs = new ArrayList<CacheTable.CacheData>();
+	//private List<CacheData> modifiedSongs = new ArrayList<CacheTable.CacheData>();
+	List<AndroidData> androidDataList;
+	List<CacheData> cacheDataList;
 	private Context context;
 
 	boolean noChanges() {
-		return addedSongs.isEmpty() && deletedSongs.isEmpty()
-				&& modifiedSongs.isEmpty();
+		return androidDataList.isEmpty() && cacheDataList.isEmpty();
 	}
 
 	ChangesHandler(List<AndroidData> androidDataList,
 			List<CacheData> cacheDataList, Context context)
 			throws InterruptedException {
 		super();
-		this.androidDataMap = androidDataListToHashMap(androidDataList);
-		this.cacheDataMap = cacheDataListToHashMap(cacheDataList);
+		//this.androidDataMap = androidDataListToHashMap(androidDataList);
+		//this.cacheDataMap = cacheDataListToHashMap(cacheDataList);
 		this.context = context.getApplicationContext();
+		this.androidDataList = androidDataList;
+		this.cacheDataList = cacheDataList;
+		setChanges();
+		addFingerPrint(androidDataList);
 		
-		LOGD(TAG,androidDataMap.toString());
-		LOGD(TAG,cacheDataMap.toString());
 		
-		setAddedSongs();
-		LOGD(TAG,addedSongs.toString());
 		
-		setDeletedSongs();
-		LOGD(TAG,deletedSongs.toString());
-		addFingerPrint(addedSongs);
-		//handleDuplicateSongs(); // optimize it
-		setModifiedSongs();
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//LOGD(TAG,androidDataMap.toString());
+		//LOGD(TAG,cacheDataMap.toString());
+		
+		//setAddedSongs();
+		///LOGD(TAG,addedSongs.toString());
+		
+//		setDeletedSongs();
+//		LOGD(TAG,deletedSongs.toString());
+//		addFingerPrint(addedSongs);
+//		handleDuplicateSongs(); // optimize it
+//		setModifiedSongs();
 
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+private void setChanges() {
+	
+	for (Iterator<AndroidData> it = androidDataList.iterator(); it.hasNext(); ) {
+	    AndroidData androidData = it.next();
+	    CacheData cacheData = inCacheData(androidData);
+	    
+	    if (cacheData != null) {
+	    		it.remove();
+	    		cacheDataList.remove(cacheData);
+	    }
+	    
+	}
+		
+}
 
+	private CacheData inCacheData(AndroidData androidData) {
+		if (androidData == null) return null;
+		
+		for (CacheData cd : cacheDataList) {
+			if (cd.getFileName().equals(androidData.getFileName()) && cd.getSong().equals(androidData.getSong())) {
+				return cd;
+			}
+		}
+			
+	return null;
+}
+
+
+	private void addFingerPrint(final List<AndroidData> songList)
+			throws InterruptedException {
+		new Fingerprinter(context, songList).addFingerPrint();
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/*
 	private void handleDuplicateSongs() {
 		filterDuplicateFromList();
 		filterFromCacheData();
@@ -115,10 +194,6 @@ class ChangesHandler {
 
 	}
 
-	private void addFingerPrint(final List<AndroidData> songList)
-			throws InterruptedException {
-		new Fingerprinter(context, songList).addFingerPrint();
-	}
 
 	private HashMap<CompareParams, CacheData> cacheDataListToHashMap(
 			List<CacheData> cacheDataSet) {
@@ -157,19 +232,19 @@ class ChangesHandler {
 				deletedSongs.add(entry.getValue());
 		}
 	}
-
+*/
 	List<AndroidData> getAddedSongs() {
-		return addedSongs;
+		return androidDataList;
 	}
 
 	List<CacheData> getDeletedSongs() {
-		return deletedSongs;
+		return cacheDataList;
 	}
 
-	List<CacheData> getModifiedSongs() {
+	/*List<CacheData> getModifiedSongs() {
 		return modifiedSongs;
 	}
-
+*/
 	private class CompareParams {
 		private Song song;
 		private String fileName;

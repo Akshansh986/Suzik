@@ -42,8 +42,7 @@ public class SongsSyncer extends Syncer {
 		LOGD(TAG,"cache table size " + cacheDataList.size());
 		ChangesHandler changes = new ChangesHandler(androidDataList, cacheDataList,this);
 		LOGD(TAG,"changes done");
-		LOGD(TAG,"added : " + changes.getAddedSongs().size() + " removed : " + changes.getDeletedSongs().size() + 
-				" modified : " + changes.getModifiedSongs().size());
+		LOGD(TAG,"added : " + changes.getAddedSongs().size() + " removed : " + changes.getDeletedSongs().size());
 		
 		if (changes.noChanges()) return true;
 	/*	
@@ -55,8 +54,8 @@ public class SongsSyncer extends Syncer {
 		if (true ) return false;
 	*/
 		
-		handleModifiedSongs(changes.getModifiedSongs());
-		LOGI(TAG,"modified song handle done");
+		//handleModifiedSongs(changes.getModifiedSongs());
+		//LOGI(TAG,"modified song handle done");
 	
 		handleAddedSongsIfAlreadyInAppSong(changes.getAddedSongs());
 		LOGI(TAG,"handleAddedSongsIfAlreadyInAppSong done");
