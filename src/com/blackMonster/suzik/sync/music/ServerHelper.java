@@ -2,6 +2,7 @@ package com.blackMonster.suzik.sync.music;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -17,6 +18,7 @@ import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.sync.music.AndroidMusicHelper.AndroidData;
 import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
+import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;
 
 
 
@@ -71,8 +73,7 @@ import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
 
 	}
 
-	static HashMap<String, Long> postFingerPrints(List<String> fPrints,
-			Context context) throws JSONException, InterruptedException,
+	static HashMap<String, Long> postFingerPrints(Context context) throws JSONException, InterruptedException,
 			ExecutionException {
 
 		JSONObject fPrintsJson = JsonHelper.AddedSongsQueue

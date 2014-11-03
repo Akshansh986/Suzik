@@ -1,9 +1,11 @@
 package com.blackMonster.suzik.sync.music;
 
-import static com.blackMonster.suzik.util.LogUtils.*;
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.LOGI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -88,7 +90,7 @@ public class SongsSyncer extends Syncer {
 	private  void moveAddedSongsToQueue(List<AndroidData> addedSongs) {
 		for (AndroidData song : addedSongs) {
 			LOGD(TAG,"Moving to queue : " + song.getSong());
-			QueueAddedSongs.insert(new QueueData(song.getSong(), song.getfPrint(),song.getFileName()),this);
+			QueueAddedSongs.insert(new QueueData(null,song.getSong(), song.getfPrint(),song.getFileName()),this);
 		}
 		
 	}
@@ -98,10 +100,36 @@ public class SongsSyncer extends Syncer {
 		//if (true) return true;
 		
 		if (deletedSongs.isEmpty()) return true;
+		
+		HashMap<Long, Long> serverLocalMap = new HashMap<Long, Long>(); 
+		
 		List<Long> ids = new ArrayList<Long>();
+		
+		for (Iterator<CacheData> it = deletedSongs.iterator(); it.hasNext(); ) {
+		    CacheData cacheData = it.next();
+		    if (CacheTable.noOfCopies(cacheData.getfPrint(), this) > 1) {
+		    		CacheTable.remove(cacheData.getId(), this);
+		    }
+		    else
+		    {
+		    	long serverId = AllSongsTable.getServerId(cacheData.getId(),this);
+		    	serverLocalMap.put(serverId, cacheData.getId());
+		    	ids.add(serverId);
+		    }
+		   
+		}		
+		
+		
+		
+		
+		
+		
+		if (ids.size()==0) return true;
+		
+		/*
 		for (CacheData data : deletedSongs) {
 			ids.add(data.getId());
-		}
+		}*/
 		HashMap<Long, Integer> idStatus = ServerHelper.postDeletedSongs(ids);
 		
 		boolean res = true;
@@ -111,7 +139,7 @@ public class SongsSyncer extends Syncer {
 				res = false;
 			}
 			else {
-				CacheTable.remove(entry.getKey(), this);
+				CacheTable.remove(serverLocalMap.get(entry.getKey()), this);
 			}
 		
 		}
@@ -123,13 +151,18 @@ public class SongsSyncer extends Syncer {
 
 	private  void removeSongsIfAlreadyInQueue(List<AndroidData> addedSongs) {
 		if (QueueAddedSongs.isEmpty(this)) return;
+		List<QueueData> queue = QueueAddedSongs.getAllData(this);
+		ChangesHandler.removeCommons(addedSongs, queue);
+		/*
+		
+		
 		List<AndroidData> removed = new ArrayList<AndroidMusicHelper.AndroidData>();
 		for (AndroidData added : addedSongs) {
 				LOGD(TAG,"removing already in queue : " + added.getSong().toString());
 				if (QueueAddedSongs.search(added.getfPrint(), this) !=  null)
 					removed.add(added);
 		}
-		addedSongs.removeAll(removed);
+		addedSongs.removeAll(removed);*/
 	}
 
 
@@ -144,8 +177,8 @@ public class SongsSyncer extends Syncer {
 
 			if (inAppSong != null) {
 				LOGD(TAG,"handling in app " + inAppSong.toString());
-				InAapSongTable.remove(inAppSong.getId(), this);
-				CacheTable.insert(new CacheData(inAppSong.getId(), inAppSong.getSong(), inAppSong.getfPrint(),song.getFileName()), this);
+				boolean r = InAapSongTable.remove(inAppSong.getId(), this);
+				CacheTable.insert(new CacheData(null, inAppSong.getServerId(), song.getSong(), inAppSong.getfPrint(), song.getFileName()), this);
 				//addedSongs.remove(song);         //debug check this
 				removed.add(song);
 			}
@@ -156,7 +189,7 @@ public class SongsSyncer extends Syncer {
 					
 	}
 
-
+/*
 	private void handleModifiedSongs(List<CacheData> modifiedSongs	) {
 
 		for (CacheData modified : modifiedSongs) {
@@ -166,7 +199,7 @@ public class SongsSyncer extends Syncer {
 
 	}
 
-
+*/
 	
 
 }

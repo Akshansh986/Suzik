@@ -24,7 +24,7 @@ import com.blackMonster.suzik.util.ServerUtils;
 
 
 		private static final String P_R_MAIN_TAG = "songData";
-		private static final String P_R_ID = "id";
+		private static final String P_R_SERVER_ID = "id";
 		private static final String P_R_STATUS = "status";
 		
 		public static final int RESPONSE_OK = 1;
@@ -62,7 +62,7 @@ import com.blackMonster.suzik.util.ServerUtils;
 			for (int i = 0; i < responseArray.length(); i++) {
 				JSONObject responseObj = (JSONObject) responseArray.get(i);
 
-				idStatus.put(responseObj.getLong(P_R_ID),
+				idStatus.put(responseObj.getLong(P_R_SERVER_ID),
 						responseObj.getInt(P_R_STATUS));
 			}
 
@@ -138,7 +138,7 @@ import com.blackMonster.suzik.util.ServerUtils;
 
 		private static final String P_R_MAIN_TAG = "songsStatus";
 		private static final String P_R_FPRINT = "fp";
-		private static final String P_R_ID = "id";
+		private static final String P_R_SERVER_ID = "id";
 
 		static JSONObject toJson(List<String> fPrints)
 				throws JSONException {
@@ -170,7 +170,7 @@ import com.blackMonster.suzik.util.ServerUtils;
 				JSONObject responseObj = (JSONObject) responseArray.get(i);
 
 				result.put(responseObj.getString(P_R_FPRINT),
-						responseObj.getLong(P_R_ID));
+						responseObj.getLong(P_R_SERVER_ID));
 			}
 
 			return result;
@@ -184,7 +184,7 @@ import com.blackMonster.suzik.util.ServerUtils;
 		private static final String P_CMD = "getSongsList";
 
 		private static final String P_R_SONG_LIST = "songData";
-		private static final String P_R_ID = "id";
+		private static final String P_R_SERVER_ID = "id";
 		private static final String P_R_FPRINT = "fingerprint";
 		private static final String P_R_LINK = "album_art_link";
 		private static final String P_R_TITLE = "title";
@@ -216,8 +216,10 @@ import com.blackMonster.suzik.util.ServerUtils;
 						rObj.getString(P_R_ARTIST), rObj.getString(P_R_ALBUM),
 						rObj.getLong(P_R_DURATION));
 
-				result.add(new InAppSongData(rObj.getLong(P_R_ID), song, rObj
+				
+				result.add(new InAppSongData(null, rObj.getLong(P_R_SERVER_ID),song, rObj
 						.getString(P_R_FPRINT), rObj.getString(P_R_LINK), null));
+
 			}
 
 			return result;

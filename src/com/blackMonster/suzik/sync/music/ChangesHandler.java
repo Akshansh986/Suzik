@@ -28,12 +28,13 @@ class ChangesHandler {
 			List<CacheData> cacheDataList, Context context)
 			throws InterruptedException {
 		super();
-		//this.androidDataMap = androidDataListToHashMap(androidDataList);
-		//this.cacheDataMap = cacheDataListToHashMap(cacheDataList);
+	
 		this.context = context.getApplicationContext();
 		this.androidDataList = androidDataList;
 		this.cacheDataList = cacheDataList;
-		setChanges();
+		
+		removeCommons(androidDataList, cacheDataList);
+
 		addFingerPrint(androidDataList);
 		
 		
@@ -77,21 +78,27 @@ class ChangesHandler {
 	
 	
 	
-private void setChanges() {
+ static void removeCommons(List<? extends SongAndFileName> list1, List<? extends SongAndFileName> list2) {
 	
-	for (Iterator<AndroidData> it = androidDataList.iterator(); it.hasNext(); ) {
-	    AndroidData androidData = it.next();
-	    CacheData cacheData = inCacheData(androidData);
+	for (Iterator<? extends SongAndFileName> it = list1.iterator(); it.hasNext(); ) {
+	    SongAndFileName song = it.next();
+	    song = new SongAndFileName(song.getSong(), song.getFileName()	);
+	    
+	    
+	    if (list2.remove(song)) {
+	    		it.remove();
+	    }
+	 /*   CacheData cacheData = inCacheData(androidData);
 	    
 	    if (cacheData != null) {
 	    		it.remove();
 	    		cacheDataList.remove(cacheData);
 	    }
-	    
+	    */
 	}
 		
 }
-
+/*
 	private CacheData inCacheData(AndroidData androidData) {
 		if (androidData == null) return null;
 		
@@ -103,7 +110,7 @@ private void setChanges() {
 			
 	return null;
 }
-
+*/
 
 	private void addFingerPrint(final List<AndroidData> songList)
 			throws InterruptedException {

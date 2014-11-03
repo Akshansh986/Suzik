@@ -20,7 +20,8 @@ import com.blackMonster.suzik.util.DbUtils;
  class AllSongsTable {
 
 	private static final String TAG = "AllSongsTable";
-	 static final String C_ID = "id";
+	 static final String C_LOCAL_ID = "localId";
+	 static final String C_SERVER_ID = "serverId";
 	 static final String C_TITLE = "title";
 	 static final String C_ARTIST = "artist";
 	 static final String C_ALBUM = "album";
@@ -30,24 +31,26 @@ import com.blackMonster.suzik.util.DbUtils;
 
 	static void createTable(SQLiteDatabase db) {
 
-		String sql = String.format("create table %s" + "(%s INTEGER primary key,%s text, %s text, %s text, %s INTEGER)",
-				TABLE, C_ID,C_TITLE,C_ARTIST, C_ALBUM, C_DURATION);
+		String sql = String.format("create table %s" + "(%s INTEGER primary key AUTOINCREMENT,%s text, %s text, %s text, %s INTEGER, %s INTEGER)",
+				TABLE, C_LOCAL_ID,C_TITLE,C_ARTIST, C_ALBUM, C_DURATION, C_SERVER_ID);
 		db.execSQL(sql);
 	}
 	
-	 static Song getSong(long id, Context context) {
+	 static AllSongData getSong(long id, Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
-		Song ans = null;
+		AllSongData ans = null;
 
-		Cursor cursor = db.query(TABLE, null, C_ID + "='" + id + "'", null, null, null, null);
+		Cursor cursor = db.query(TABLE, null, C_LOCAL_ID + "='" + id + "'", null, null, null, null);
 
 		if (cursor != null) {
 			if (cursor.moveToFirst()) {
-				ans = new Song(cursor.getString(cursor
+				Song song = new Song(cursor.getString(cursor
 						.getColumnIndex(C_TITLE)), cursor.getString(cursor
 						.getColumnIndex(C_ARTIST)), cursor.getString(cursor
 						.getColumnIndex(C_ALBUM)), cursor.getLong(cursor
 						.getColumnIndex(C_DURATION)));
+				long serverId = cursor.getLong(cursor.getColumnIndex(C_SERVER_ID));
+				ans = new AllSongData(id, serverId, song);
 			}
 			cursor.close();
 		}
@@ -55,11 +58,28 @@ import com.blackMonster.suzik.util.DbUtils;
 		return ans;
 	}
 	 
+	 
+	 static Long getServerId(long localId, Context context) {
+			SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
+			Long ans = null;
+
+			Cursor cursor = db.query(TABLE, null, C_LOCAL_ID + "='" + localId + "'", null, null, null, null);
+
+			if (cursor != null) {
+				if (cursor.moveToFirst()) {
+					ans = cursor.getLong(cursor.getColumnIndex(C_SERVER_ID));
+				}
+				cursor.close();
+			}
+
+			return ans;
+		}
+	 
 	
 	 
-	 static Pair<Long, Song> search(Song song, Context context) {
+	 static AllSongData search(Song song, Context context) {
 			SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
-			Pair<Long, Song> result = null;
+			AllSongData result = null;
 			
 			if (song.getTitle() == null || song.getArtist() == null) return null;
 			
@@ -75,7 +95,9 @@ import com.blackMonster.suzik.util.DbUtils;
 							.getColumnIndex(C_ARTIST)), cursor.getString(cursor
 							.getColumnIndex(C_ALBUM)), cursor.getLong(cursor
 							.getColumnIndex(C_DURATION)));
-					result = new Pair<Long, Song>(cursor.getLong(cursor.getColumnIndex(C_ID)), dbSong);
+					long id = cursor.getLong(cursor.getColumnIndex(C_LOCAL_ID));
+					long serverId = cursor.getLong(cursor.getColumnIndex(C_SERVER_ID));
+					result = new AllSongData(id, serverId, dbSong);
 					
 				}
 				cursor.close();
@@ -85,21 +107,21 @@ import com.blackMonster.suzik.util.DbUtils;
 		}
 	
 
-	 static boolean insert(long id, Song song, Context context) {
+	 static long insert(AllSongData data, Context context) {
 		LOGD(TABLE, "insert");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 
-		values.put(C_ID, id);
-		values.put(C_TITLE, song.getTitle());
-		values.put(C_ARTIST, song.getArtist());
-		values.put(C_ALBUM, song.getAlbum());
-		values.put(C_DURATION, song.getDuration());
-		return db.insert(TABLE, null, values) > -1;
+		values.put(C_SERVER_ID, data.getServerId());
+		values.put(C_TITLE,data.getSong().getTitle());
+		values.put(C_ARTIST, data.getSong().getArtist());
+		values.put(C_ALBUM, data.getSong().getAlbum());
+		values.put(C_DURATION, data.getSong().getDuration());
+		return db.insert(TABLE, null, values);
 		
 	}
-	
+	/*
 	 static boolean update(long id, Song newSong, Context context) {
 		LOGD(TABLE, "update");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
@@ -110,16 +132,16 @@ import com.blackMonster.suzik.util.DbUtils;
 		values.put(C_ARTIST, newSong.getArtist());
 		values.put(C_ALBUM, newSong.getAlbum());
 		values.put(C_DURATION, newSong.getDuration());
-		return db.update(TABLE, values,  C_ID + "='" + id + "'" ,null) > 0;
+		return db.update(TABLE, values,  C_LOCAL_ID + "='" + id + "'" ,null) > 0;
 		
 	}
-	
+	*/
 
 
 	
 	 static boolean remove(long id, Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
-		return db.delete(TABLE, C_ID + "='" + id + "'", null) > 0;
+		return db.delete(TABLE, C_LOCAL_ID + "='" + id + "'", null) > 0;
 	}
 
 	 static boolean isEmpty(Context context) {
@@ -141,5 +163,38 @@ import com.blackMonster.suzik.util.DbUtils;
 
 		return result;
 	}
+	 
+	 
+	static class AllSongData {
+		 
+		 private Song song;
+		 private Long id;
+		 private long serverId;
+		 
+		 	 
+		 
+		public AllSongData(Long id, long serverId,Song song) {
+			super();
+			this.song = song;
+			this.id = id;
+			this.serverId = serverId;
+		}
+		
+		
+		Song getSong() {
+			return song;
+		}
+
+
+		Long getId() {
+			return id;
+		}
+
+
+		long getServerId() {
+			return serverId;
+		}
+	 }
+	 
 
 }

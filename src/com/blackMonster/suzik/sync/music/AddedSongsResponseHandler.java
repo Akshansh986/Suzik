@@ -2,7 +2,9 @@ package com.blackMonster.suzik.sync.music;
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import static com.blackMonster.suzik.util.LogUtils.LOGI;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -43,12 +45,30 @@ private static final  String TAG = "AddedSongsResponseHandler";
 
 		if (fPrintIdMap.size() > 0) {
 			LOGD(TAG,"replied " + fPrintIdMap.size());
+			List<QueueData> queueDataList = QueueAddedSongs.getAllData(this);
+			
+			
+			for (QueueData currQd : queueDataList) {
+				Long serverId = fPrintIdMap.get(currQd.getfPrint());
+				if (serverId == null) continue;
+				
+		
+				LOGD(TAG,"inserting " + currQd.getFileName() + " to cachel table");
 
-			for (Map.Entry<String, Long> entry : fPrintIdMap.entrySet()) {
+				CacheTable.insert(
+						new CacheData(null, serverId, currQd.getSong(), currQd.getfPrint(), currQd.getFileName()), this);
+				LOGD(TAG,"removing from queue");
 
-				long id = entry.getValue();
-				if (id == 0) {
-					id = getNewSongId();
+				QueueAddedSongs.remove(currQd.getId(), this);
+				UserActivityQueue.add(new UserActivity(serverId, UserActivity.ACTION_OUT_APP_DOWNLOAD), this);
+			}
+			
+			
+		/*	for (Map.Entry<String, Long> entry : fPrintIdMap.entrySet()) {
+
+				long serverId = entry.getValue();
+				if (serverId == 0) {
+					//serverId = getNewSongId();
 					LOGD(TAG,"id 0 for " + entry.getKey());
 
 					
@@ -58,14 +78,13 @@ private static final  String TAG = "AddedSongsResponseHandler";
 				LOGD(TAG,"inserting " + qData.getFileName() + " to cachel table");
 
 				CacheTable.insert(
-						new CacheData(id, qData.getSong(), qData.getfPrint(),
-								qData.getFileName()), this);
+						new CacheData(null, serverId, qData.getSong(), qData.getfPrint(), qData.getFileName()), this);
 				LOGD(TAG,"removing from queue");
 
 				QueueAddedSongs.remove(entry.getKey(), this);
-				UserActivityQueue.add(new UserActivity(id, UserActivity.ACTION_OUT_APP_DOWNLOAD), this);
+				UserActivityQueue.add(new UserActivity(serverId, UserActivity.ACTION_OUT_APP_DOWNLOAD), this);
 
-			}
+			}*/
 
 			if (!QueueAddedSongs.isEmpty(this)) {
 				futureCall(this);
@@ -89,8 +108,7 @@ private static final  String TAG = "AddedSongsResponseHandler";
 
 	private HashMap<String, Long> getQueueStatusFromServer()
 			throws JSONException, InterruptedException, ExecutionException {
-		return ServerHelper.postFingerPrints(
-				QueueAddedSongs.getAllFprints(this), this);
+		return ServerHelper.postFingerPrints(this);
 
 	}
 

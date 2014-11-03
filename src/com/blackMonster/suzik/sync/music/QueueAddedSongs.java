@@ -1,6 +1,7 @@
 package com.blackMonster.suzik.sync.music;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.LOGE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +13,13 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.musicstore.module.Song;
+import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 
 class QueueAddedSongs {
 
 	private static final String TAG = "QueueAddedSongs";
 
+	private static final String C_ID = "id";
 	private static final String C_TITLE = "title";
 	private static final String C_ARTIST = "artist";
 	private static final String C_ALBUM = "album";
@@ -28,11 +31,11 @@ class QueueAddedSongs {
 	private static final String TABLE = "QueueAddedSongs";
 
 	static void createTable(SQLiteDatabase db) {
-		String sql = String.format("create table %s" + "(%s text, %s text, %s text, %s text, %s INTEGER, %s text)",
-				TABLE,C_FILENAME, C_TITLE,C_ARTIST, C_ALBUM, C_DURATION, C_FPRINT);
+		String sql = String.format("create table %s" + "(%s INTEGER primary key AUTOINCREMENT, %s text, %s text, %s text, %s text, %s INTEGER, %s text)",
+				TABLE, C_ID, C_FILENAME, C_TITLE,C_ARTIST, C_ALBUM, C_DURATION, C_FPRINT);
 		db.execSQL(sql);
 	}
-	
+	/*
 	static QueueData search(String fPrint, Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
 		QueueData queueData = null;
@@ -53,7 +56,38 @@ class QueueAddedSongs {
 
 		return queueData;
 	}
-	
+	*/
+	static List<QueueData> getAllData(Context context) {
+		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
+		List<QueueData> queueDataSet = null;
+
+		Cursor cursor = db.query(TABLE, null, null, null, null, null, null);
+
+		if (cursor != null) {
+			queueDataSet =  new ArrayList<QueueData>();
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				String fp = cursor.getString(cursor.getColumnIndex(C_FPRINT));
+				String fileName = cursor.getString(cursor.getColumnIndex(C_FILENAME));
+				Song song = new Song(cursor.getString(cursor
+						.getColumnIndex(C_TITLE)), cursor.getString(cursor
+						.getColumnIndex(C_ARTIST)), cursor.getString(cursor
+						.getColumnIndex(C_ALBUM)), cursor.getLong(cursor
+						.getColumnIndex(C_DURATION)));
+				long id = cursor.getLong(cursor.getColumnIndex(C_ID));
+				queueDataSet.add(new QueueData(id, song, fp, fileName));
+			
+				cursor.moveToNext();
+
+			}
+
+			cursor.close();
+
+		}
+		
+
+		return queueDataSet;
+	}
 	static List<String> getAllFprints(Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
 
@@ -105,10 +139,10 @@ class QueueAddedSongs {
 		
 	}
 	
-	static boolean remove(String fPrint, Context context) {
+	static boolean remove(long id, Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
-		int res = db.delete(TABLE, C_FPRINT + "='" + fPrint + "'", null);
-		LOGD(TAG,"Deleted rows: " + res +" for : " + fPrint);
+		int res = db.delete(TABLE, C_ID + "='" + id + "'", null);
+		LOGD(TAG,"Deleted rows: " + res +" for : " + id);
 		return res>0;
 	}
 	
@@ -137,29 +171,20 @@ class QueueAddedSongs {
 		return result;
 	}
 	
-	static class QueueData {
-		private Song song;
+	static class QueueData extends SongAndFileName{
 		private String fPrint;
-		private String fileName;
+		private Long id;
 
-		QueueData(Song song, String fPrint, String fileName) {
-			super();
-			this.song = song;
+		QueueData(Long id, Song song, String fPrint, String fileName) {
+			super(song,fileName);
+			this.id = id;
 			this.fPrint = fPrint;
-			this.fileName = fileName;
 		}
 
-		Song getSong() {
-			return song;
+		Long getId(){
+			return id;
 		}
 		
-		String getFileName() {
-			return fileName;
-		}
-
-		void setSong(Song song) {
-			this.song = song;
-		}
 
 		String getfPrint() {
 			return fPrint;
@@ -168,6 +193,45 @@ class QueueAddedSongs {
 		void setfPrint(String fPrint) {
 			this.fPrint = fPrint;
 		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = super.hashCode();
+			result = prime * result
+					+ ((fPrint == null) ? 0 : fPrint.hashCode());
+			result = prime * result + ((id == null) ? 0 : id.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (!super.equals(obj))
+				return false;
+			if (!(obj instanceof QueueData))
+				return false;
+			QueueData other = (QueueData) obj;
+			if (fPrint == null) {
+				if (other.fPrint != null)
+					return false;
+			} else if (!fPrint.equals(other.fPrint))
+				return false;
+			if (id == null) {
+				if (other.id != null)
+					return false;
+			} else if (!id.equals(other.id))
+				return false;
+			return true;
+		}
+
+		@Override
+		public String toString() {
+			return "QueueData [fPrint=" + fPrint + ", id=" + id + "]";
+		}
+		
+		
 
 	}
 

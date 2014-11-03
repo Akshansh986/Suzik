@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.musicstore.module.Song;
+import com.blackMonster.suzik.sync.music.AllSongsTable.AllSongData;
 
 public class InAapSongTable {
 
@@ -30,15 +31,15 @@ public class InAapSongTable {
 				.format("create table %s"
 						+ "(%s INTEGER primary key,%s text,%s text, %s text, FOREIGN KEY (%s) REFERENCES %s (%s) )",
 						TABLE, C_ID, C_FPRINT,C_LINK,C_LOCATION, C_ID, AllSongsTable.TABLE,
-						AllSongsTable.C_ID);
+						AllSongsTable.C_LOCAL_ID);
 		db.execSQL(sql);
 	}
 
 	public static InAppSongData getData(long id, Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
-		Song song = AllSongsTable.getSong(id, context);
+		AllSongData asd = AllSongsTable.getSong(id, context);
 		InAppSongData inAppSongData = null;
-		if (song != null) {
+		if (asd != null) {
 			Cursor cursor = db.query(TABLE, null, C_ID + "='" + id + "'", null, null,
 					null, null);
 
@@ -47,7 +48,7 @@ public class InAapSongTable {
 					String fp = cursor.getString(cursor.getColumnIndex(C_FPRINT));
 					String link = cursor.getString(cursor.getColumnIndex(C_LINK));
 					String location = cursor.getString(cursor.getColumnIndex(C_LOCATION));
-					inAppSongData = new InAppSongData(id, song, fp,link,location);
+					inAppSongData = new InAppSongData(id, asd.getServerId(), asd.getSong(), fp, link, location);
 				}
 				cursor.close();
 			}
@@ -72,9 +73,9 @@ public class InAapSongTable {
 					String location = cursor.getString(cursor.getColumnIndex(C_LOCATION));
 					long id = cursor.getLong(cursor.getColumnIndex(C_ID));
 					
-					Song song = AllSongsTable.getSong(id, context);
-					if (song != null)
-					inAppSongData = new InAppSongData(id, song, fp,link,location);
+					AllSongData asd = AllSongsTable.getSong(id, context);
+					if (asd != null)
+					inAppSongData = new InAppSongData(id, asd.getServerId(), asd.getSong(), fp, link, location);
 				
 				}
 				cursor.close();
@@ -99,9 +100,9 @@ public class InAapSongTable {
 				String link = cursor.getString(cursor.getColumnIndex(C_LINK));
 				String location = cursor.getString(cursor.getColumnIndex(C_LOCATION));
 				
-				Song song = AllSongsTable.getSong(id, context);
-				if (song != null)
-					inAppSongDataSet.add(new InAppSongData(id, song, fp, link, location));
+				AllSongData asd = AllSongsTable.getSong(id, context);
+				if (asd != null)
+					inAppSongDataSet.add(new InAppSongData(id, asd.getServerId(), asd.getSong(), fp, link, location));
 				else
 					LOGE(TAG, "Song no found");
 				
@@ -121,10 +122,10 @@ public class InAapSongTable {
 		LOGD(TABLE, "insert");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
-		AllSongsTable.insert(inAppSongData.getId(), inAppSongData.getSong(), context);
+		long localId = AllSongsTable.insert(new AllSongData(null, inAppSongData.getServerId(), inAppSongData.getSong()), context);
 
 		ContentValues values = new ContentValues();
-		values.put(C_ID, inAppSongData.getId());
+		values.put(C_ID, localId);;
 		values.put(C_FPRINT, inAppSongData.getfPrint());
 		values.put(C_LINK, inAppSongData.getLink());
 		values.put(C_LOCATION, inAppSongData.getLocation());
@@ -139,7 +140,7 @@ public class InAapSongTable {
 			insert(data, context);
 		}
 	}
-
+/*
 	public static boolean update(InAppSongData newInAppSongData, Context context) {
 		LOGD(TABLE, "update");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
@@ -156,23 +157,26 @@ public class InAapSongTable {
 			return false;
 
 	}
-
+*/
 	static boolean remove(long id, Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
-		AllSongsTable.remove(id, context);
-		return db.delete(TABLE, C_ID + "='" + id + "'", null) > 0;
+		boolean rr = AllSongsTable.remove(id, context);
+		boolean r = db.delete(TABLE, C_ID + "='" + id + "'", null) >0;
+		return r && rr ;
 	}
 	
 	
 	public static class InAppSongData {
-		private long id;
+		private Long id;
+		private long serverId;
 		private Song song;
 		private String fPrint, link , location;
 	
-		public InAppSongData(long id, Song song, String fPrint, String link,
+		public InAppSongData(Long id,long serverId, Song song, String fPrint, String link,
 				String location) {
 			super();
 			this.id = id;
+			this.serverId = serverId;
 			this.song = song;
 			this.fPrint = fPrint;
 			this.link = link;
@@ -186,8 +190,11 @@ public class InAapSongTable {
 			this.fPrint = fPrint;
 		}  */
 
-		public long getId() {
+		public Long getId() {
 			return id;
+		}
+		public long getServerId() {
+			return serverId;
 		}
 
 		public Song getSong() {
@@ -216,7 +223,7 @@ public class InAapSongTable {
 
 		@Override
 		public String toString() {
-			return "InAppSongData [id=" + id + ", song=" + song + ", fPrint="
+			return "InAppSongData [id=" + serverId + ", song=" + song + ", fPrint="
 					+ fPrint + ", link=" + link + ", location=" + location
 					+ "]";
 		}
