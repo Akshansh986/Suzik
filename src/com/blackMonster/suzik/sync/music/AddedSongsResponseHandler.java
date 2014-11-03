@@ -2,10 +2,8 @@ package com.blackMonster.suzik.sync.music;
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import static com.blackMonster.suzik.util.LogUtils.LOGI;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.json.JSONException;
@@ -16,7 +14,7 @@ import android.content.Intent;
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
-import com.blackMonster.suzik.musicstore.timeline.UserActivityQueue;
+import com.blackMonster.suzik.musicstore.timeline.UserActivityManager;
 import com.blackMonster.suzik.sync.Syncer;
 import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;
@@ -55,12 +53,16 @@ private static final  String TAG = "AddedSongsResponseHandler";
 		
 				LOGD(TAG,"inserting " + currQd.getFileName() + " to cachel table");
 
-				CacheTable.insert(
+				long id = CacheTable.insert(
 						new CacheData(null, serverId, currQd.getSong(), currQd.getfPrint(), currQd.getFileName()), this);
 				LOGD(TAG,"removing from queue");
 
 				QueueAddedSongs.remove(currQd.getId(), this);
-				UserActivityQueue.add(new UserActivity(serverId, UserActivity.ACTION_OUT_APP_DOWNLOAD), this);
+
+				if (MainPrefs.isFirstTimeMusicSyncDone(this)) {
+					UserActivityManager.add(new UserActivity(null, id, UserActivity.ACTION_OUT_APP_DOWNLOAD, UserActivity.STREAMING_FALSE, System.currentTimeMillis()), this);
+				}
+			
 			}
 			
 			
@@ -89,6 +91,9 @@ private static final  String TAG = "AddedSongsResponseHandler";
 			if (!QueueAddedSongs.isEmpty(this)) {
 				futureCall(this);
 			}
+			else {
+				MainPrefs.setFirstTimeMusicSyncDone(this);
+			}
 		} else {
 			LOGD(TAG,"reply size zero");
 			QueueAddedSongs.clearAll(this);
@@ -100,11 +105,11 @@ private static final  String TAG = "AddedSongsResponseHandler";
 		return true;		
 	}
 
-	private long getNewSongId() {
+	/*private long getNewSongId() {
 		int id = MainPrefs.getUnIdentifiableSongId(this) + 1;
 		MainPrefs.setUnIndetifiableSongId(id, this);
 		return id;
-	}
+	}*/
 
 	private HashMap<String, Long> getQueueStatusFromServer()
 			throws JSONException, InterruptedException, ExecutionException {

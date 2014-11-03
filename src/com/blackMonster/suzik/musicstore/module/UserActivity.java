@@ -6,32 +6,36 @@ public class UserActivity {
 	public static final int ACTION_IN_APP_PLAYED = 2;
 	public static final int ACTION_OUT_APP_PLAYED = 1;
 	
-	private long localId;
-	private long serverId;
+	public static final int STREAMING_TRUE = 1;
+	public static final int STREAMING_FALSE = 0;
+	
+	private Long id;
+	private long songId,completedTS;
+	private int streaming;
 	private int action;
-	public UserActivity(long localId, long serverId, int action) {
+	public UserActivity(Long id, long songId, int action, int streaming, long completedTS) {
 		super();
-		this.localId = localId;
-		this.serverId = serverId;
+		this.id = id;
+		this.songId = songId;
 		this.action = action;
+		this.streaming = streaming;
+		this.completedTS = completedTS;
 	}
 	
-	
-	public UserActivity(long serverId, int action) {
-		super();
-		this.serverId = serverId;
-		this.action = action;
+	public Long id() {
+		return id;
 	}
-
-
-	public long getLocalId() {
-		return localId;
+	public long songId() {
+		return songId;
 	}
-	public long getServerId() {
-		return serverId;
-	}
-	public int getAction() {
+	public int action() {
 		return action;
+	}
+	public int streaming() {
+		return streaming;
+	}
+	public long completedTS() {
+		return completedTS;
 	}
 	
 	

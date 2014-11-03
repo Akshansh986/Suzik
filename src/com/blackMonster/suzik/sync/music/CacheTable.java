@@ -101,7 +101,7 @@ class CacheTable {
 		return cachedDataSet;
 	}
 
-	static void insert(CacheData cacheData, Context context) {
+	static long insert(CacheData cacheData, Context context) {
 		LOGD(TABLE, "insert");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
@@ -112,6 +112,7 @@ class CacheTable {
 		values.put(C_FPRINT, cacheData.getfPrint());
 		values.put(C_FILENAME, cacheData.getFileName());
 		db.insert(TABLE, null, values);
+		return id;
 	}
 	
 	// This should be improved (bulk entry)

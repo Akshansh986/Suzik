@@ -4,7 +4,7 @@ import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.TableCompletedSong
 import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.TablePausedSongs;
 import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.TableAllPlayed;
 import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.TableUserSelectedCompleted;
-import com.blackMonster.suzik.musicstore.timeline.TableUserActivityQueue;
+import com.blackMonster.suzik.musicstore.timeline.QueueUserActivity;
 import com.blackMonster.suzik.sync.contacts.SyncContactsCreateTable;
 import com.blackMonster.suzik.sync.music.SyncMusicCreateTable;
 
@@ -46,7 +46,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		TableAllPlayed.createTable(db);
 		TableUserSelectedCompleted.createTable(db);
 		
-		TableUserActivityQueue.createTable(db);
+		QueueUserActivity.createTable(db);
 		
 		SyncMusicCreateTable.createAll(db);
 		SyncContactsCreateTable.createAll(db);

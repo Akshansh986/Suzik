@@ -11,4 +11,8 @@ public class MusicSyncManager {
 		AllSongData asd =  AllSongsTable.search(song, context);
 		return new Pair<Long, Song>(asd.getId(), asd.getSong());
 	}
+	
+	public static long getServerId(long id, Context context) {
+		return AllSongsTable.getServerId(id, context);
+	}
 }

@@ -9,6 +9,7 @@ import android.util.Pair;
 
 import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.TableAllPlayed;
 import com.blackMonster.suzik.musicstore.module.Song;
+import com.blackMonster.suzik.musicstore.module.UserActivity;
 import com.blackMonster.suzik.sync.music.MusicSyncManager;
 
 public abstract class MusicBroadcastManager extends BroadcastReceiver {
@@ -75,12 +76,12 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
 			Bundle bundle = intent.getExtras();
 			id = getFromBundle(bundle,P_ID);   //Using getFromBundle instead of getExtraLong because getFromBundle can throw exception.
 			duration = getFromBundle(bundle, P_DURATION);
-			streaming = 1;
+			streaming = UserActivity.STREAMING_TRUE;
 			Log.d(TAG, "song not found in database");
 		} else {
 			id = song.first;
 			duration = song.second.getDuration();
-			streaming = 0;
+			streaming = UserActivity.STREAMING_FALSE;
 			Log.d(TAG, "song found in database");
 
 		}

@@ -1,10 +1,10 @@
 package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 
-import com.blackMonster.suzik.musicstore.module.UserActivity;
-import com.blackMonster.suzik.musicstore.timeline.UserActivityQueue;
-
 import android.content.Context;
 import android.util.Log;
+
+import com.blackMonster.suzik.musicstore.module.UserActivity;
+import com.blackMonster.suzik.musicstore.timeline.UserActivityManager;
 
 public class PlayingSong {
 	private static final String TAG = "PlayingSong";
@@ -96,7 +96,7 @@ public class PlayingSong {
 		Log.i(TAG, "movetocompleted");
 		TableCompletedSongs.insert(PlayingSong.getSong(context), completedTS,
 				context);
-		UserActivityQueue.add(new UserActivity(PlayingSong.getSong(context).getId(), UserActivity.ACTION_OUT_APP_PLAYED), context);
+		UserActivityManager.add(new UserActivity(null, PlayingSong.getSong(context).getId(), UserActivity.ACTION_OUT_APP_PLAYED, PlayingSong.getSong(context).isStreaming(), System.currentTimeMillis()), context);
 		PlayingSong.reset(context);
 
 	}

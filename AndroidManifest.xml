@@ -93,6 +93,7 @@
         <service android:name="com.blackMonster.suzik.sync.music.InitMusicDb"></service>
         
         <service android:name="com.blackMonster.suzik.sync.contacts.ContactsSyncer"></service>
+        <service android:name="com.blackMonster.suzik.musicstore.timeline.UserActivityQueueSyncer"></service>
         
         <receiver android:name="com.blackMonster.suzik.sync.BootReceiver" >
             <intent-filter>
