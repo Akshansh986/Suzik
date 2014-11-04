@@ -66,8 +66,8 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
 		duration = getFromBundle(intent.getExtras(), P_DURATION);
 		playing = intent.getBooleanExtra(P_PLAYING, false);
 		Song tempSong = new Song(track, artist, album, duration);
-		if (track == null || artist == null)
-			throw new ExceptionUnknownBroadcast();
+//		if (track == null || artist == null)
+//			throw new ExceptionUnknownBroadcast();
 
 		Log.d(TAG, track + "   " + artist);
 		Pair<Long, Song> song = MusicSyncManager.getSong(tempSong, context);
