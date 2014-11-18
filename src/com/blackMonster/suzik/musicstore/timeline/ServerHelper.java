@@ -22,7 +22,7 @@ class ServerHelper {
 	static HashMap<Long, Integer> postUserActivity(
 			List<Pair<UserActivity, Long>> postParams) throws JSONException,
 			InterruptedException, ExecutionException {
-		if (true) return dummyResponse(postParams);
+		//if (true) return dummyResponse(postParams);
 		JSONObject postJson = JsonHelper.UserActivityJson.toJson(postParams);
 
 		RequestFuture<JSONObject> future = RequestFuture.newFuture();
