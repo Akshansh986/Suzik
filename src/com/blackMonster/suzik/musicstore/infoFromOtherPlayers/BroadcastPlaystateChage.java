@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
-import com.blackMonster.suzik.musicstore.timeline.UserActivityManager;
+import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
 
 public class BroadcastPlaystateChage extends MusicBroadcastManager {
 	private static final String TAG = "BroadcastPlaystateChage";

@@ -1,4 +1,4 @@
-package com.blackMonster.suzik.musicstore.timeline;
+package com.blackMonster.suzik.musicstore.userActivity;
 
 import android.content.Context;
 

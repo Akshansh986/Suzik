@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.blackMonster.suzik.musicstore.module.UserActivity;
-import com.blackMonster.suzik.musicstore.timeline.UserActivityManager;
+import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
 
 public class PlayingSong {
 	private static final String TAG = "PlayingSong";

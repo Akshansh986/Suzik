@@ -14,7 +14,7 @@ import android.content.Intent;
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
-import com.blackMonster.suzik.musicstore.timeline.UserActivityManager;
+import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
 import com.blackMonster.suzik.sync.Syncer;
 import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;

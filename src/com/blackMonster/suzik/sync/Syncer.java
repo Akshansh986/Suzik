@@ -10,7 +10,7 @@ import android.os.SystemClock;
 
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.MainPrefs;
-import com.blackMonster.suzik.musicstore.timeline.UserActivityQueueSyncer;
+import com.blackMonster.suzik.musicstore.userActivity.UserActivityQueueSyncer;
 import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
 import com.blackMonster.suzik.sync.music.AddedSongsResponseHandler;
 import com.blackMonster.suzik.sync.music.SongsSyncer;

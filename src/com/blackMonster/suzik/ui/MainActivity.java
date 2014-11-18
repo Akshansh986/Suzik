@@ -3,7 +3,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.blackMonster.suzik.musicstore.timeline.UserActivityQueueSyncer;
+import com.blackMonster.suzik.musicstore.userActivity.UserActivityQueueSyncer;
 import com.blackMonster.suzik.sync.ContentObserverService;
 import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
 import com.blackMonster.suzik.sync.music.InitMusicDb;
