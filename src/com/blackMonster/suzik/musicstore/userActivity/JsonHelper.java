@@ -26,8 +26,7 @@ class JsonHelper {
 		private static final String P_ACTION = "action";
 		private static final String P_COMPLETED_TS = "ts";
 
-		private static final String P_MODULE = "music";
-		private static final String P_CMD_VALUE = "ua";
+		private static final String P_MODULE = "storeTimelineData";
 
 		private static final String P_R_MAIN_TAG = "response";
 		private static final String P_R_POST_ID = "postId";
@@ -47,7 +46,7 @@ class JsonHelper {
 			}
 
 			root.put(P_MAIN_TAG, uaArray);
-			ServerUtils.addEssentialParamToJson(root, P_MODULE, P_CMD_VALUE);
+			ServerUtils.addEssentialParamToJson(root, P_MODULE);
 			LOGD(TAG, root.toString());
 			return root;
 		}
@@ -58,7 +57,7 @@ class JsonHelper {
 			JSONObject obj = new JSONObject();
 			obj.put(P_POST_ID, activity.first.id());
 			obj.put(P_SERVER_ID, activity.second);
-			obj.put(P_ACTION, activity.first.action());
+			obj.put(P_ACTION, activity.first.getActionString());
 			obj.put(P_STREAMING, activity.first.streaming());
 			obj.put(P_COMPLETED_TS, activity.first.completedTS());
 			return obj;
