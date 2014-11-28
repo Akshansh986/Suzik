@@ -59,8 +59,17 @@ public class UserActivityQueueSyncer extends Syncer {
 		List<Pair<UserActivity, Long>> postParams = new ArrayList<Pair<UserActivity, Long>>();
 
 		for (UserActivity ua : userActivity) {
-			postParams.add(new Pair<UserActivity, Long>(ua, MusicSyncManager
-					.getServerId(ua.songId(), this)));
+
+			if (!ua.isStreaming()) {
+				postParams.add(new Pair<UserActivity, Long>(ua, MusicSyncManager
+						.getServerId(ua.songId(), this)));
+			}
+			else
+			{
+				postParams.add(new Pair<UserActivity, Long>(ua,ua.songId()));	
+			}
+			
+			
 		}
 
 		return ServerHelper.postUserActivity(postParams);

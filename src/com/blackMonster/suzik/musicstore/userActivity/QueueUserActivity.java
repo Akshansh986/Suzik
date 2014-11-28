@@ -76,7 +76,7 @@ public class QueueUserActivity {
 
 		values.put(C_SONG_ID, data.songId());
 		values.put(C_ACTION, data.action());
-		values.put(C_STREAMING, data.streaming());
+		values.put(C_STREAMING, data.getStreaming());
 		values.put(C_COMPLETED_TS, data.completedTS());
 
 		return db.insert(TABLE, null, values) > -1;

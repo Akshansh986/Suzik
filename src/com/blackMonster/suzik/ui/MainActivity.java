@@ -22,12 +22,12 @@ public class MainActivity extends Activity {
 		//else
 		//	LOGD(TAG,"not null");
 		
-		//startService(new Intent(this, ContentObserverService.class));
+		startService(new Intent(this, ContentObserverService.class));
 		//startService(new Intent(this, ContentObserverService.class));
 		
-		//startService(new Intent(this, InitMusicDb.class));
-		//startService(new Intent(this, ContactsSyncer.class));
-		startService(new Intent(this, UserActivityQueueSyncer.class));
+		startService(new Intent(this, InitMusicDb.class));
+		startService(new Intent(this, ContactsSyncer.class));
+		//startService(new Intent(this, UserActivityQueueSyncer.class));
 
 		
 	//startService(new Intent(this, SongsSyncer.class));

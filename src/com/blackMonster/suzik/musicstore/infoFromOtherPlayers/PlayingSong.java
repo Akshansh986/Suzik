@@ -8,7 +8,7 @@ import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
 
 public class PlayingSong {
 	private static final String TAG = "PlayingSong";
-	private static final double VIRTUALLY_COMPLETED_LOWER_LIMIT = .6; // 60%
+	private static final double VIRTUALLY_COMPLETED_LOWER_LIMIT = .1; // 60%
 	private static final double VIRTYALLY_COMPLETED_UPPER_LIMIT = 2; // 200%
 
 	public static boolean set(BroadcastSong song, long pastPlayed,

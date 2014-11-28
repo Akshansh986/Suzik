@@ -30,7 +30,7 @@ class JsonHelper {
 
 		private static final String P_R_MAIN_TAG = "response";
 		private static final String P_R_POST_ID = "postId";
-		private static final String P_R_STATUS = "status";
+		private static final String P_R_STATUS = "songStatus";
 
 		public static final int RESPONSE_OK = 1;
 		public static final int RESPONSE_FAILED = 0;
@@ -58,7 +58,7 @@ class JsonHelper {
 			obj.put(P_POST_ID, activity.first.id());
 			obj.put(P_SERVER_ID, activity.second);
 			obj.put(P_ACTION, activity.first.getActionString());
-			obj.put(P_STREAMING, activity.first.streaming());
+			obj.put(P_STREAMING, activity.first.getStreaming());
 			obj.put(P_COMPLETED_TS, activity.first.completedTS());
 			return obj;
 		}

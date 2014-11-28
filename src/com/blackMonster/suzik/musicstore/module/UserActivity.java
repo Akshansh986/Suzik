@@ -8,8 +8,8 @@ public class UserActivity {
 
 	private static final String ACTION_IN_APP_DOWNLOAD_STRING = "inAppDownload";
 	private static final String ACTION_OUT_APP_DOWNLOAD_STRING = "outAppDownload";
-	private static final String ACTION_IN_APP_PLAYED_STRING = "inAppPlayed";
-	private static final String ACTION_OUT_APP_PLAYED_STRING = "outAppPlayed";
+	private static final String ACTION_IN_APP_PLAYED_STRING = "inAppPlay";
+	private static final String ACTION_OUT_APP_PLAYED_STRING = "outAppPlay";
 
 	public static final int STREAMING_TRUE = 1;
 	public static final int STREAMING_FALSE = 0;
@@ -41,8 +41,12 @@ public class UserActivity {
 		return action;
 	}
 
-	public int streaming() {
+	public int getStreaming() {
 		return streaming;
+	}
+	
+	public boolean isStreaming(){
+		return streaming == STREAMING_TRUE;
 	}
 
 	public long completedTS() {
