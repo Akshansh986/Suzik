@@ -11,6 +11,7 @@ import org.json.JSONException;
 
 import android.util.Pair;
 
+import com.blackMonster.suzik.musicstore.MusicServerUtils;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 import com.blackMonster.suzik.sync.Syncer;
 import com.blackMonster.suzik.sync.music.MusicSyncManager;
@@ -60,7 +61,9 @@ public class UserActivityQueueSyncer extends Syncer {
 
 		for (UserActivity ua : userActivity) {
 
-			if (!ua.isStreaming()) {
+			if (!ua.isOnlineSong()) {
+				Long songId = ua.songId();
+				if (songId == null || MusicServerUtils.isDummyServerSongId(songId) ) continue;
 				postParams.add(new Pair<UserActivity, Long>(ua, MusicSyncManager
 						.getServerId(ua.songId(), this)));
 			}

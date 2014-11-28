@@ -45,7 +45,7 @@ public class UserActivity {
 		return streaming;
 	}
 	
-	public boolean isStreaming(){
+	public boolean isOnlineSong(){
 		return streaming == STREAMING_TRUE;
 	}
 
