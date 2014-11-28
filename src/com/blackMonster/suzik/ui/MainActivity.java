@@ -3,6 +3,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.blackMonster.suzik.musicstore.userActivity.UserActivityQueueSyncer;
 import com.blackMonster.suzik.sync.ContentObserverService;
 import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
 import com.blackMonster.suzik.sync.music.InitMusicDb;
@@ -25,7 +26,8 @@ public class MainActivity extends Activity {
 		//startService(new Intent(this, ContentObserverService.class));
 		
 		startService(new Intent(this, InitMusicDb.class));
-		//startService(new Intent(this, ContactsSyncer.class));
+		startService(new Intent(this, ContactsSyncer.class));
+		//startService(new Intent(this, UserActivityQueueSyncer.class));
 
 		
 	//startService(new Intent(this, SongsSyncer.class));

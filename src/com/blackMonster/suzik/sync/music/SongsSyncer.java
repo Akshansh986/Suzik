@@ -108,6 +108,7 @@ public class SongsSyncer extends Syncer {
 		for (Iterator<CacheData> it = deletedSongs.iterator(); it.hasNext(); ) {
 		    CacheData cacheData = it.next();
 		    if (CacheTable.noOfCopies(cacheData.getfPrint(), this) > 1) {
+		    		LOGD(TAG,"removed from only cache table : " + cacheData.toString());
 		    		CacheTable.remove(cacheData.getId(), this);
 		    }
 		    else
@@ -121,7 +122,7 @@ public class SongsSyncer extends Syncer {
 		
 		
 		
-		
+		LOGD(TAG,"Removing ids from server : " + ids.toString());
 		
 		
 		if (ids.size()==0) return true;

@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
-import com.blackMonster.suzik.musicstore.timeline.UserActivityQueue;
+import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
 
 public class BroadcastPlaystateChage extends MusicBroadcastManager {
 	private static final String TAG = "BroadcastPlaystateChage";
@@ -49,7 +49,7 @@ public class BroadcastPlaystateChage extends MusicBroadcastManager {
 		if (PlayingSong.isCompleted(context)) {
 			TableCompletedSongs.insert(getSong(), System.currentTimeMillis(),
 					context);
-			UserActivityQueue.add(new UserActivity(getID(), UserActivity.ACTION_OUT_APP_PLAYED), context);
+			UserActivityManager.add(new UserActivity(null, getID(), UserActivity.ACTION_OUT_APP_PLAYED, isStreaming(), System.currentTimeMillis()), context);
 			
 		}
 		else

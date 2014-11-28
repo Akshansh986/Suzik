@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="20" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -93,6 +93,7 @@
         <service android:name="com.blackMonster.suzik.sync.music.InitMusicDb"></service>
         
         <service android:name="com.blackMonster.suzik.sync.contacts.ContactsSyncer"></service>
+        <service android:name="com.blackMonster.suzik.musicstore.userActivity.UserActivityQueueSyncer"></service>
         
         <receiver android:name="com.blackMonster.suzik.sync.BootReceiver" >
             <intent-filter>

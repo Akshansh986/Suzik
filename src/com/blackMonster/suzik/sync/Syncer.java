@@ -10,6 +10,7 @@ import android.os.SystemClock;
 
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.MainPrefs;
+import com.blackMonster.suzik.musicstore.userActivity.UserActivityQueueSyncer;
 import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
 import com.blackMonster.suzik.sync.music.AddedSongsResponseHandler;
 import com.blackMonster.suzik.sync.music.SongsSyncer;
@@ -22,12 +23,15 @@ import com.crashlytics.android.Crashlytics;
  * 1) extend syncer.
  * 2) add unimplemented method.
  * 3) register as service in manifest.
- * 4) register in startOnNetAvailable funcion in at the bottom of this class.
+ * 4) register in startOnNetAvailable function in at the bottom of this class.
  *  @author akshanshsingh
  *
  */
 public abstract class Syncer extends IntentService{
 	private static final String TAG = "SyncManager";
+	
+	private static final long BATCHING_REQUEST_WAIT_TIME_MS = 3000;
+
 	
 	
 	public Syncer() {
@@ -100,6 +104,14 @@ public abstract class Syncer extends IntentService{
 		am.set(AlarmManager.ELAPSED_REALTIME,SystemClock.elapsedRealtime() + timeMS, operation);
 	}
 	
+	/**
+	 * Start syncing after a fixed time, and resets timer if new request comes in that time period.
+	 * @param cls
+	 * @param context
+	 */
+	public static void batchRequest(Class cls,Context context) {
+		callFuture(cls, BATCHING_REQUEST_WAIT_TIME_MS, context);
+	}
 	
 	
 	public  abstract  boolean onPerformSync() throws Exception;
@@ -114,6 +126,7 @@ public abstract class Syncer extends IntentService{
 		registerOnNetAvailable(SongsSyncer.class,context);
 		registerOnNetAvailable(AddedSongsResponseHandler.class,context);
 		registerOnNetAvailable(ContactsSyncer.class,context);
+		registerOnNetAvailable(UserActivityQueueSyncer.class, context);
 	
 		
 		/*String caller = SongsSyncer.class.getSimpleName();

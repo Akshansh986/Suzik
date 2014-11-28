@@ -6,7 +6,8 @@ import android.content.SharedPreferences;
 public class MainPrefs {
 	public static final String PREFS_NAME = "MainPrefs";
 	public static final String MY_NO = "MY_NO";
-	public static final String UNIDENTIFIABLE_SONG_ID_MAX = "UNIDENTIFIABLE_SONG_ID_MAX";
+	public static final String FIRST_TIME_MUSIC_SYNC = "firstMusicSync";
+
 
 	
 	private static SharedPreferences prefs=null;
@@ -14,6 +15,7 @@ public class MainPrefs {
 	private static void initPrefInstance(Context context) {
 		if (prefs == null) prefs = context.getSharedPreferences(PREFS_NAME, 0);
 	}
+	
 	public static SharedPreferences getSharedPreference(Context context) {
 		initPrefInstance(context);
 		return prefs;
@@ -37,22 +39,23 @@ public class MainPrefs {
 		prefs.edit().putString(MY_NO, number).commit();
 	}
 	
+	public static void setFirstTimeMusicSyncDone(Context context) {
+		initPrefInstance(context);
+		prefs.edit().putBoolean(FIRST_TIME_MUSIC_SYNC, true).commit();
+	}
+	
+	public static boolean isFirstTimeMusicSyncDone(Context context) {
+		initPrefInstance(context);
+		return prefs.getBoolean(FIRST_TIME_MUSIC_SYNC, false);
+	}
+	
+	
 
 	public static String getMyNo(Context context) {
 		initPrefInstance(context);
 		return prefs.getString(MY_NO, "123");
 	}
 	
-	public static void setUnIndetifiableSongId(int id,Context context) {
-		initPrefInstance(context);
-		prefs.edit().putInt(UNIDENTIFIABLE_SONG_ID_MAX, id).commit();
-	}
-	
-
-	public static int getUnIdentifiableSongId(Context context) {
-		initPrefInstance(context);
-		return prefs.getInt(UNIDENTIFIABLE_SONG_ID_MAX, 0);
-	}
 	
 	
 	public static void close() {

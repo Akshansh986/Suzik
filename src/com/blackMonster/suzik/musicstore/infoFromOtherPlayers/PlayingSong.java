@@ -1,14 +1,14 @@
 package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 
-import com.blackMonster.suzik.musicstore.module.UserActivity;
-import com.blackMonster.suzik.musicstore.timeline.UserActivityQueue;
-
 import android.content.Context;
 import android.util.Log;
 
+import com.blackMonster.suzik.musicstore.module.UserActivity;
+import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
+
 public class PlayingSong {
 	private static final String TAG = "PlayingSong";
-	private static final double VIRTUALLY_COMPLETED_LOWER_LIMIT = .6; // 60%
+	private static final double VIRTUALLY_COMPLETED_LOWER_LIMIT = .1; // 60%
 	private static final double VIRTYALLY_COMPLETED_UPPER_LIMIT = 2; // 200%
 
 	public static boolean set(BroadcastSong song, long pastPlayed,
@@ -96,7 +96,7 @@ public class PlayingSong {
 		Log.i(TAG, "movetocompleted");
 		TableCompletedSongs.insert(PlayingSong.getSong(context), completedTS,
 				context);
-		UserActivityQueue.add(new UserActivity(PlayingSong.getSong(context).getId(), UserActivity.ACTION_OUT_APP_PLAYED), context);
+		UserActivityManager.add(new UserActivity(null, PlayingSong.getSong(context).getId(), UserActivity.ACTION_OUT_APP_PLAYED, PlayingSong.getSong(context).isStreaming(), System.currentTimeMillis()), context);
 		PlayingSong.reset(context);
 
 	}

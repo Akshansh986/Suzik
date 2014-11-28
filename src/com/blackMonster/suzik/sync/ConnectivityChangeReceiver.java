@@ -16,7 +16,12 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
 		if (intent.getAction().equals("android.net.conn.CONNECTIVITY_CHANGE")) {
 			LOGD(TAG, "connectivity change");
 			if (NetworkUtils.isInternetAvailable(context)) {
+				LOGD(TAG, "Net available");
 				Syncer.startOnNetAvaiable(context);
+			}
+			else
+			{
+				LOGD(TAG, "Net not available");
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package com.blackMonster.suzik.musicstore.timeline;
+package com.blackMonster.suzik.musicstore.userActivity;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
@@ -13,24 +13,27 @@ import android.database.sqlite.SQLiteDatabase;
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 
-public class TableUserActivityQueue {
+public class QueueUserActivity {
 
 	private static final String TAG = "TableUserActivityQueue";
-	private static final String C_LOCAL_ID = "localId";
-	private static final String C_SERVER_ID = "serverId";
-
-	
+	private static final String C_ID = "id";
+	private static final String C_SONG_ID = "songId";
 	private static final String C_ACTION = "action";
+	private static final String C_STREAMING = "STREAMING";
+	private static final String C_COMPLETED_TS = "COMPLETED_TS";
 
 	private static final String TABLE = "TableUserActivityQueue";
 
-public 	static void createTable(SQLiteDatabase db) {
-		String sql = String.format("create table %s"
-				+ "(%s INTEGER PRIMARY KEY AUTOINCREMENT,%s INTEGER, %s INTEGER)", TABLE, C_LOCAL_ID, C_SERVER_ID, C_ACTION);
+	public static void createTable(SQLiteDatabase db) {
+		String sql = String
+				.format("create table %s"
+						+ "(%s INTEGER PRIMARY KEY AUTOINCREMENT,%s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER)",
+						TABLE, C_ID, C_SONG_ID, C_ACTION, C_STREAMING,
+						C_COMPLETED_TS);
 		db.execSQL(sql);
 	}
 
-	static List<UserActivity> getAllActivity(Context context) {
+	static List<UserActivity> getAllData(Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
 
 		List<UserActivity> allActivity = null;
@@ -40,9 +43,12 @@ public 	static void createTable(SQLiteDatabase db) {
 			allActivity = new ArrayList<UserActivity>();
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				allActivity.add(new UserActivity(cursor.getLong(cursor.getColumnIndex(C_LOCAL_ID)), cursor.getLong(cursor
-						.getColumnIndex(C_SERVER_ID)), cursor.getInt(cursor
-						.getColumnIndex(C_ACTION))));
+				allActivity.add(new UserActivity(cursor.getLong(cursor
+						.getColumnIndex(C_ID)), cursor.getLong(cursor
+						.getColumnIndex(C_SONG_ID)), cursor.getInt(cursor
+						.getColumnIndex(C_ACTION)), cursor.getInt(cursor
+						.getColumnIndex(C_STREAMING)), cursor.getLong(cursor
+						.getColumnIndex(C_COMPLETED_TS))));
 				cursor.moveToNext();
 			}
 			cursor.close();
@@ -68,16 +74,18 @@ public 	static void createTable(SQLiteDatabase db) {
 
 		ContentValues values = new ContentValues();
 
-		values.put(C_SERVER_ID, data.getServerId());
-		values.put(C_ACTION, data.getAction());
-	
+		values.put(C_SONG_ID, data.songId());
+		values.put(C_ACTION, data.action());
+		values.put(C_STREAMING, data.getStreaming());
+		values.put(C_COMPLETED_TS, data.completedTS());
+
 		return db.insert(TABLE, null, values) > -1;
 
 	}
 
-	static boolean remove(long localId, Context context) {
+	static boolean remove(long id, Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
-		int res = db.delete(TABLE, C_LOCAL_ID + "='" + localId + "'", null);
+		int res = db.delete(TABLE, C_ID + "='" + id + "'", null);
 		return res > 0;
 	}
 

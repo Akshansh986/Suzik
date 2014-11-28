@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Handler;
 
 public abstract class MyContentObserver extends ContentObserver{
-	private static final long WAIT_MS = 3000;
 	private Context context;
 	public MyContentObserver(Handler handler, Context context) {
 		super(handler);
@@ -26,7 +25,7 @@ public abstract class MyContentObserver extends ContentObserver{
 	@Override
 	public void onChange(boolean selfChange, Uri uri) {
 		LOGD(getClass().getSimpleName(), "onChange");
-		Syncer.callFuture(onContentChange(), WAIT_MS, context);	//THIS ensures batching of requests.
+		Syncer.batchRequest(onContentChange(), context);
 	}
 	
 	@SuppressWarnings("rawtypes")

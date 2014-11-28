@@ -4,11 +4,12 @@ import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.content.Context;
 
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.contacts.model.Contact;
