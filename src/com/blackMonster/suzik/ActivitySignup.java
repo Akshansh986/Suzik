@@ -2,13 +2,17 @@ package com.blackMonster.suzik;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 
 public class ActivitySignup extends Activity {
 	private static final String TAG = "ActivitySignup";
 
 	AlertDialog dialog = null;
 	String myNumber;
-/*
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "onCreate");
@@ -22,26 +26,11 @@ public class ActivitySignup extends Activity {
 		myNumber = ((EditText) findViewById(R.id.signup_number))
 				.getEditableText().toString().trim();
 		
+		MainPrefs.setMyNo(myNumber, getApplicationContext());
 		
 		
-		
-		//myNumber = ContactspublicFunctions.getNumberWithCountryCode(myNumber);
-
-		
-		
-		
-		
-		
-		
-		Log.d(TAG, "buttonSubmit" + myNumber);
-		startService(ServiceSendMyContacts.getIntent(myNumber, this));
-
-		dialog = MainStaticElements
-				.createProgressDialog(R.string.loading, this);
-		dialog.show();
-
 	}
-
+/*
 	private BroadcastReceiver broadcastSendMyContactsResult = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {

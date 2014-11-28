@@ -46,3 +46,6 @@ demo/apk/
 signing.properties
 lic.properties
 website/
+res/values/com_crashlytics_export_strings.xml
+
+assets/crashlytics-build.properties

@@ -26,7 +26,7 @@ class JsonHelper {
 		private static final String P_R_CONTACT_LIST = "contacts";
 		private static final String P_R_NUMBER = "num";
 
-		static JSONObject getCredentials() throws JSONException {
+		public static JSONObject getCredentials() throws JSONException {
 			JSONObject root = new JSONObject();
 			ServerUtils.addEssentialParamToJson(root, P_MODULE, P_CMD);
 			LOGD(TAG, root.toString());
@@ -41,7 +41,6 @@ class JsonHelper {
 
 			JSONArray responseArray = response.getJSONArray(P_R_CONTACT_LIST);
 
-			Song song;
 			int n = responseArray.length();
 			for (int i = 0; i < n; i++) {
 				result.add(new Contact((String) responseArray.get(i)));
