@@ -7,13 +7,14 @@ public class MainPrefs {
 	public static final String PREFS_NAME = "MainPrefs";
 	public static final String MY_NO = "MY_NO";
 	public static final String FIRST_TIME_MUSIC_SYNC = "firstMusicSync";
+	private static final String LOGIN_DONE = "loginDone";
 
 
 	
 	private static SharedPreferences prefs=null;
 
 	private static void initPrefInstance(Context context) {
-		if (prefs == null) prefs = context.getSharedPreferences(PREFS_NAME, 0);
+		if (prefs == null) prefs = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
 	}
 	
 	public static SharedPreferences getSharedPreference(Context context) {
@@ -49,6 +50,16 @@ public class MainPrefs {
 		return prefs.getBoolean(FIRST_TIME_MUSIC_SYNC, false);
 	}
 	
+	
+	public static void setLoginDone(Context context) {
+		initPrefInstance(context);
+		prefs.edit().putBoolean(LOGIN_DONE, true).commit();
+	}
+	
+	public static boolean isLoginDone(Context context) {
+		initPrefInstance(context);
+		return prefs.getBoolean(LOGIN_DONE, false);
+	}
 	
 
 	public static String getMyNo(Context context) {

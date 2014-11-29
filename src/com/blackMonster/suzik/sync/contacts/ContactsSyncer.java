@@ -6,6 +6,9 @@ import static com.blackMonster.suzik.util.LogUtils.LOGI;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
+
 import com.blackMonster.suzik.sync.Syncer;
 import com.blackMonster.suzik.sync.contacts.JsonHelper.UpdateContacts;
 import com.blackMonster.suzik.sync.contacts.model.Contact;
@@ -13,42 +16,60 @@ import com.blackMonster.suzik.sync.contacts.model.ContactChanges;
 
 public class ContactsSyncer extends Syncer {
 	private static final String TAG = "ContactsSyncer";
+	public static final String BROADCAST_CONTACTS_SYNC_RESULT = "BROADCAST_CONTACTS_SYNC_RESULT";
+
 
 	@Override
 	public boolean onPerformSync() throws Exception {
 		LOGI(TAG, "performing Sync");
 		
-		boolean result;
-		HashSet<Contact> serverContactList;
+		try {
+			boolean result;
+			HashSet<Contact> serverContactList;
 
-		serverContactList = getFromServerOrCacheTable();
-		LOGD(TAG, "getFromServerOrCacheTable done");
+			serverContactList = getFromServerOrCacheTable();
+			LOGD(TAG, "getFromServerOrCacheTable done");
 
-		HashSet<Contact> androidContactList = getFromAndroid();
-		LOGD(TAG, "get form andorid done");
+			HashSet<Contact> androidContactList = getFromAndroid();
+			LOGD(TAG, "get form andorid done");
 
-		HashSet<ContactChanges> changes = getChanges(serverContactList,
-				androidContactList);
-		LOGD(TAG, "changes done");
+			HashSet<ContactChanges> changes = getChanges(serverContactList,
+					androidContactList);
+			LOGD(TAG, "changes done");
 
-		if (changes.size() == 0)
-			return true;
+			if (changes.size() == 0)
+				return true;
 
-		HashMap<Contact, Integer> updateServerResult = ServerHelper
-				.updateServer(changes);
-		LOGD(TAG, "update server done " + updateServerResult.toString());
-		updateServerResult.toString();
+			HashMap<Contact, Integer> updateServerResult = ServerHelper
+					.updateServer(changes);
+			LOGD(TAG, "update server done " + updateServerResult.toString());
+			updateServerResult.toString();
 
-		result = updateChangesToCacheTable(changes, updateServerResult);
-		LOGD(TAG, "update Cachetable done");
+			result = updateChangesToCacheTable(changes, updateServerResult);
+			LOGD(TAG, "update Cachetable done");
 
-		LOGD(TAG, "all done");
+			LOGD(TAG, "all done");
 
-		return result;
+			broadcastResult(BROADCAST_CONTACTS_SYNC_RESULT,result);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			broadcastResult(BROADCAST_CONTACTS_SYNC_RESULT,false);
+			throw e;
+		}
 
 	}
 
 	
+
+
+	private void broadcastResult(String type, boolean result) {
+		Intent intent = new Intent(type).putExtra(type, result);
+		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+		
+	}
+
+
 
 
 	private boolean updateChangesToCacheTable(

@@ -23,28 +23,18 @@ public class InitMusicDb extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		LOGD(TAG, "onHandleIntent ");
-		new Thread() {
-			public void run() {
-				try {
-					init();
-				} catch (Exception e) {
-					e.printStackTrace();
-					Crashlytics.logException(e);
-				}
-			}
-
-		}.start();
+		init();
 	}
 
 	private void init() {
 		try {
-			LOGD(TAG,"starting init music db");
+			LOGD(TAG, "starting init music db");
 
 			List<InAppSongData> songList = ServerHelper.getAllMySongs(this);
-			LOGD(TAG,"server done");
+			LOGD(TAG, "server done");
 			InAapSongTable.insert(songList, this);
-			LOGD(TAG,"in app insert complete");
-			startService(new Intent(this, SongsSyncer.class));
+			LOGD(TAG, "in app insert complete");
+			//startService(new Intent(this, SongsSyncer.class));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			Crashlytics.logException(e);
