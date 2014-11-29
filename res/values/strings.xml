@@ -3,7 +3,7 @@
 
     <string name="app_name">SocialMusic</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
     <string name="loading">loading...</string>
+    <string name="emptpy_timeline">Opps! seems like you don\'t have any friend on suzik.</string>
 
 </resources>

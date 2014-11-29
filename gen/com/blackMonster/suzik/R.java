@@ -67,9 +67,10 @@ public final class R {
         public static final int activity_signup=0x7f030000;
         public static final int activity_timeline=0x7f030001;
         public static final int all_played_row=0x7f030002;
-        public static final int loading_progressbar=0x7f030003;
-        public static final int test_activity=0x7f030004;
-        public static final int timeline_row=0x7f030005;
+        public static final int empty_timeline=0x7f030003;
+        public static final int loading_progressbar=0x7f030004;
+        public static final int test_activity=0x7f030005;
+        public static final int timeline_row=0x7f030006;
     }
     public static final class menu {
         public static final int activity_friends=0x7f080000;
@@ -85,8 +86,8 @@ public final class R {
 
          */
         public static final int com_crashlytics_android_build_id=0x7f060000;
-        public static final int hello_world=0x7f060003;
-        public static final int loading=0x7f060004;
+        public static final int emptpy_timeline=0x7f060004;
+        public static final int loading=0x7f060003;
     }
     public static final class style {
         /** 

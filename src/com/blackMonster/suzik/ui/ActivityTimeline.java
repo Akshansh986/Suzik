@@ -7,10 +7,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,8 +29,6 @@ import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicstore.Timeline.JsonHelperTimeline;
 import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
 import com.blackMonster.suzik.sync.ContentObserverService;
-import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
-import com.blackMonster.suzik.sync.music.InitMusicDb;
 
 public class ActivityTimeline extends Activity {
 	private static final String TAG = "ActivityTimeline";
@@ -76,8 +78,8 @@ public class ActivityTimeline extends Activity {
 		pDialog.setMessage("requestin timeline...");
 		pDialog.show();  
 		
-		//		JSONObject postJson = JsonHelperTimeline.getCredentials();
-		JSONObject postJson = JsonHelperTimeline.ServerAllSongs.getCredentials();
+				JSONObject postJson = JsonHelperTimeline.getCredentials();
+//		JSONObject postJson = JsonHelperTimeline.ServerAllSongs.getCredentials();
 		
 		JsonObjectRequest jsonReq = new JsonObjectRequest(Method.POST,
 				AppConfig.MAIN_URL, postJson, new Response.Listener<JSONObject>() {
@@ -88,10 +90,21 @@ public class ActivityTimeline extends Activity {
 						if (response != null) {
 						
 							try {
-								timelineItems = JsonHelperTimeline.ServerAllSongs.parseTimelineItems(response);
-							//	timelineItems = JsonHelperTimeline.parseTimelineItems(response);
+//								timelineItems = JsonHelperTimeline.ServerAllSongs.parseTimelineItems(response);
+								timelineItems = JsonHelperTimeline.parseTimelineItems(response);
 								adapter.setData(timelineItems);
 								adapter.notifyDataSetChanged();
+							
+								if (timelineItems.isEmpty())  {
+									new AlertDialog.Builder(ActivityTimeline.this)
+								      .setMessage(R.string.emptpy_timeline)
+								    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+								        public void onClick(DialogInterface dialog, int which) { 
+								            // continue with delete
+								        }
+								     }).show();
+								}
+								
 							} catch (JSONException e) {
 								Toast.makeText(getBaseContext(), "Unexpected response from server", Toast.LENGTH_LONG).show();
 								e.printStackTrace();

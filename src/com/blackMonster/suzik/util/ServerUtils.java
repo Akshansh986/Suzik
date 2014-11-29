@@ -16,8 +16,8 @@ public class ServerUtils {
 	public static JSONObject addEssentialParamToJson(JSONObject root, String module)
 			throws JSONException {
 
-//		root.put(P_MY_NUMBER, MainPrefs.getMyNo(AppController.getInstance().getApplicationContext()));
-		root.put(P_MY_NUMBER, "1191234");
+		root.put(P_MY_NUMBER, MainPrefs.getMyNo(AppController.getInstance().getApplicationContext()));
+//		root.put(P_MY_NUMBER, "1191234");
 
 		root.put(P_MODULE, module);
 		return root;
@@ -26,8 +26,8 @@ public class ServerUtils {
 	public static JSONObject addEssentialParamToJson(JSONObject root, String module, String cmd)
 			throws JSONException {
 
-//		root.put(P_MY_NUMBER,MainPrefs.getMyNo(AppController.getInstance().getApplicationContext()));
-		root.put(P_MY_NUMBER, "1191234");
+		root.put(P_MY_NUMBER,MainPrefs.getMyNo(AppController.getInstance().getApplicationContext()));
+//		root.put(P_MY_NUMBER, "1191234");
 
 		root.put(P_MODULE, module);
 		root.put(P_CMD, cmd);

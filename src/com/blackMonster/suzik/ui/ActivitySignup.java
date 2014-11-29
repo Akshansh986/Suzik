@@ -1,4 +1,5 @@
 package com.blackMonster.suzik.ui;
+
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,6 +19,7 @@ import com.blackMonster.suzik.MainStaticElements;
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.sync.Syncer;
 import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
+import com.blackMonster.suzik.sync.music.InitMusicDb;
 import com.blackMonster.suzik.sync.music.SongsSyncer;
 
 public class ActivitySignup extends Activity {
@@ -31,7 +33,6 @@ public class ActivitySignup extends Activity {
 		LOGD(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_signup);
-		// MusicStoreManager.updateDatabase(this);
 
 	}
 
@@ -39,103 +40,117 @@ public class ActivitySignup extends Activity {
 		hideKeyboard();
 		myNumber = ((EditText) findViewById(R.id.signup_number))
 				.getEditableText().toString().trim();
-		
+
 		MainPrefs.setMyNo(myNumber, getApplicationContext());
-		
-		LocalBroadcastManager
-		.getInstance(this)
-		.registerReceiver(
-				broadcastContactsSyncResult,
-				new IntentFilter(
-						ContactsSyncer.BROADCAST_CONTACTS_SYNC_RESULT));
-		
-		dialog = MainStaticElements.createProgressDialog("Logging in",this);
+
+		dialog = MainStaticElements.createProgressDialog("Logging in", this);
 		dialog.show();
-		
-		startService(new Intent(this, ContactsSyncer.class));
-		
+
+		unregisterReceivers();
+		registerReceivers();
+
+		startService(new Intent(this, InitMusicDb.class));
+
 	}
+
+	private void unregisterReceivers() {
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
+				broadcastContactsSyncResult);
+
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
+				broadcastInitMusicDbResult);
+	}
+
+	private void registerReceivers() {
+		LocalBroadcastManager.getInstance(this)
+				.registerReceiver(
+						broadcastContactsSyncResult,
+						new IntentFilter(
+								ContactsSyncer.BROADCAST_CONTACTS_SYNC_RESULT));
+
+		LocalBroadcastManager.getInstance(this).registerReceiver(
+				broadcastInitMusicDbResult,
+				new IntentFilter(InitMusicDb.BROADCAST_INIT_MUSIC_DB_RESULT));
+
+	}
+
+	// private int IN_PROGRESS = 1, DONE=2,ERROR=3;
+	// private int initMusicDbStatus = IN_PROGRESS, contactsSyncStatus =
+	// IN_PROGRESS;
+	private BroadcastReceiver broadcastInitMusicDbResult = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			LOGD(TAG, "received : broadcastInitMusicDbResult");
+
+			LocalBroadcastManager.getInstance(getBaseContext())
+					.unregisterReceiver(broadcastInitMusicDbResult);
+
+			if (dialog != null)
+				dialog.dismiss();
+			dialog = null;
+
+			boolean result = intent.getExtras().getBoolean(
+					InitMusicDb.BROADCAST_INIT_MUSIC_DB_RESULT);
+
+			if (result == true) {
+				startService(new Intent(getBaseContext(), ContactsSyncer.class));
+				dialog = MainStaticElements.createProgressDialog("Logging in",
+						ActivitySignup.this);
+				dialog.show();
+				// MainPrefs.setLoginDone(getBaseContext());
+				// startActivity(new Intent(getBaseContext(),
+				// ActivityTimeline.class));
+
+				// Syncer.callFuture(SongsSyncer.class, 10000,
+				// getBaseContext());
+				// finish();
+
+			} else {
+				MainPrefs.setMyNo("123", getBaseContext());
+				Toast.makeText(getBaseContext(), "Error Logging in!",
+						Toast.LENGTH_LONG).show();
+			}
+
+		}
+	};
 
 	private BroadcastReceiver broadcastContactsSyncResult = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			LOGD(TAG, "received : broadcastContactsSyncResult");
-			
-			LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
-					broadcastContactsSyncResult);
+
+			LocalBroadcastManager.getInstance(getBaseContext())
+					.unregisterReceiver(broadcastContactsSyncResult);
 
 			if (dialog != null)
 				dialog.dismiss();
 			dialog = null;
-			boolean result;
-			result = intent.getExtras().getBoolean(
+
+			boolean result = intent.getExtras().getBoolean(
 					ContactsSyncer.BROADCAST_CONTACTS_SYNC_RESULT);
 
 			if (result == true) {
 				MainPrefs.setLoginDone(getBaseContext());
-				startActivity(new Intent(getBaseContext(),ActivityTimeline.class));
-				
+				startActivity(new Intent(getBaseContext(),
+						ActivityTimeline.class));
+
 				Syncer.callFuture(SongsSyncer.class, 10000, getBaseContext());
 				finish();
 
-			}
-			else {
+			} else {
 				MainPrefs.setMyNo("123", getBaseContext());
-				Toast.makeText(getBaseContext(), "Error Logging in!", Toast.LENGTH_LONG).show();
+				Toast.makeText(getBaseContext(), "Error Logging in!",
+						Toast.LENGTH_LONG).show();
 			}
-			
-			LOGD(TAG, " " + result);
 
 		}
 	};
-	
-	/*private BroadcastReceiver broadcastUpdateDatabaseResult = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			// Log.d(TAG, "received : broadcastTempAttendenceResult");
 
-			if (dialog != null)
-				dialog.dismiss();
-			dialog = null;
-			boolean result;
-			result = intent.getExtras().getBoolean(
-					MusicStoreManager.BROADCAST_UPDATE_DATABASE_RESULT);
-
-			if (result == true) {
-				startActivity(new Intent(getBaseContext(), ActivityFriends.class));
-				SendMyMusic.send(getBaseContext());
-				finish();
-
-			}
-			Log.d(TAG, " " + result);
-
-		}
+	protected void onDestroy() {
+		super.onDestroy();
+		unregisterReceivers();
 	};
-*/
-	@Override
-	protected void onPause() {
-/*
-		LocalBroadcastManager.getInstance(this).unregisterReceiver(
-				broadcastContactsSyncResult);
-	
-		if (dialog != null) {
-			dialog.dismiss();
-			dialog = null;
 
-		}
-		*/
-		super.onPause();
-
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		
-
-	}
-	
 	private void hideKeyboard() {
 		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		View focus = getCurrentFocus();
@@ -143,7 +158,5 @@ public class ActivitySignup extends Activity {
 			inputMethodManager.hideSoftInputFromWindow(focus.getWindowToken(),
 					InputMethodManager.HIDE_NOT_ALWAYS);
 	}
-	
-
 
 }
