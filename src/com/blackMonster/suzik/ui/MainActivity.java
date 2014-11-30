@@ -4,11 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.blackMonster.suzik.MainPrefs;
-import com.blackMonster.suzik.musicstore.userActivity.UserActivityQueueSyncer;
-import com.blackMonster.suzik.sync.ContentObserverService;
 import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
-import com.blackMonster.suzik.sync.music.InitMusicDb;
-import com.crashlytics.android.Crashlytics;
 
 public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
@@ -16,7 +12,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Crashlytics.start(this);
+	//	Crashlytics.start(this);
 		
 		if (MainPrefs.isLoginDone(this)) {
 			startActivity(new Intent(this, ActivityTimeline.class));

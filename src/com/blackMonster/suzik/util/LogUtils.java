@@ -9,7 +9,6 @@ import java.util.Calendar;
 import android.util.Log;
 
 import com.blackMonster.suzik.AppConfig;
-import com.crashlytics.android.Crashlytics;
 
 public class LogUtils {
 

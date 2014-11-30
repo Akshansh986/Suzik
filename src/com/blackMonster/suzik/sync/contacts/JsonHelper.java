@@ -9,9 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-
-import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.contacts.model.Contact;
 import com.blackMonster.suzik.sync.contacts.model.ContactChanges;
 import com.blackMonster.suzik.util.ServerUtils;

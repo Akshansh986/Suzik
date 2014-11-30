@@ -1,5 +1,6 @@
 package com.blackMonster.suzik.sync.music;
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,7 +8,6 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.music.AndroidMusicHelper.AndroidData;

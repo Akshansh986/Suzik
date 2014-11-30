@@ -40,6 +40,9 @@ public class ActivitySignup extends Activity {
 		hideKeyboard();
 		myNumber = ((EditText) findViewById(R.id.signup_number))
 				.getEditableText().toString().trim();
+		if (myNumber.length() != 10) return;
+		
+		myNumber = "+91" + myNumber;
 
 		MainPrefs.setMyNo(myNumber, getApplicationContext());
 

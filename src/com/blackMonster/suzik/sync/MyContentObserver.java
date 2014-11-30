@@ -2,11 +2,7 @@ package com.blackMonster.suzik.sync;
 
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
-
-import com.blackMonster.suzik.sync.Syncer;
-
 import android.content.Context;
-import android.content.Intent;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;

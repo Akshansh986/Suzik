@@ -14,7 +14,6 @@ import android.database.sqlite.SQLiteDatabase;
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.music.AllSongsTable.AllSongData;
-import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;
 
 class CacheTable {
 
