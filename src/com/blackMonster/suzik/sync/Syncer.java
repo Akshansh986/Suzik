@@ -51,7 +51,7 @@ public abstract class Syncer extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		LOGD(TAG, "onHandleIntent " + getCurrentClassName());
+		LOGD(TAG, "onHandleIntent " + getClass().getSimpleName());
 		syncNow();
 	}
 
@@ -59,13 +59,13 @@ public abstract class Syncer extends IntentService {
 
 		if (!NetworkUtils.isInternetAvailable(this)) {
 			LOGD(TAG, "Net not available");
-			MainPrefs.setCallOnNetAvailable(getCurrentClassName(), true, this);
+			MainPrefs.setCallOnNetAvailable(getOnNetAvailablePrefsName(getClass()), true, this);
 			broadcastResult(STATUS_DEVICE_OFFLINE);
 			return;
 		}
 
 		try {
-			LOGD(TAG, "calling : " + getCurrentClassName());
+			LOGD(TAG, "calling : " + getClass().getSimpleName());
 
 			if (onPerformSync() == false) {
 				onFailure();
@@ -82,7 +82,7 @@ public abstract class Syncer extends IntentService {
 	}
 
 	private void onFailure() {
-		LOGD(TAG, "failedSync " + getCurrentClassName());
+		LOGD(TAG, "failedSync " + getClass().getSimpleName());
 		callFuture(AppConfig.SYNCER_TIME_RETRY_MS);
 		broadcastResult(STATUS_ERROR);
 	}
@@ -120,10 +120,10 @@ public abstract class Syncer extends IntentService {
 	public abstract boolean onPerformSync() throws Exception;
 
 	public abstract String getBroadcastString();
-
-	public String getCurrentClassName() {
-		return getClass().getSimpleName();
-	}
+//
+//	public String getCurrentClassName() {
+//		return getClass().getSimpleName();
+//	}
 
 	public static void startOnNetAvaiable(Context context) {
 		LOGD(TAG, "startOnNetAvaiable");
@@ -131,30 +131,22 @@ public abstract class Syncer extends IntentService {
 		registerOnNetAvailable(AddedSongsResponseHandler.class, context);
 		registerOnNetAvailable(ContactsSyncer.class, context);
 		registerOnNetAvailable(UserActivityQueueSyncer.class, context);
-
-		/*
-		 * String caller = SongsSyncer.class.getSimpleName(); if
-		 * (MainPrefs.shouldCallOnNetAvailable(caller, context)) {
-		 * MainPrefs.setCallOnNetAvailable(caller, false, context);
-		 * context.startService(new Intent(context, SongsSyncer.class)); }
-		 * 
-		 * caller = AddedSongsResponseHandler.class.getSimpleName(); if
-		 * (MainPrefs.shouldCallOnNetAvailable(caller, context)) {
-		 * MainPrefs.setCallOnNetAvailable(caller, false, context);
-		 * context.startService(new Intent(context,
-		 * AddedSongsResponseHandler.class)); }
-		 */
-
 	}
 
 	private static void registerOnNetAvailable(Class javaClass, Context context) {
 
-		String caller = javaClass.getSimpleName();
+		String caller = getOnNetAvailablePrefsName(javaClass);
 		if (MainPrefs.shouldCallOnNetAvailable(caller, context)) {
 			MainPrefs.setCallOnNetAvailable(caller, false, context);
 			context.startService(new Intent(context, javaClass));
 		}
 	}
+	
+	private static String getOnNetAvailablePrefsName(Class javaClass) {
+		return "OnNA" + javaClass.getSimpleName();
+	}
+	
+	
 
 	private void broadcastResult(int result) {
 		if (getBroadcastString() == null)
