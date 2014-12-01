@@ -1,12 +1,11 @@
 package com.blackMonster.suzik.sync;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
-
-import com.blackMonster.suzik.util.NetworkUtils;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import com.blackMonster.suzik.util.NetworkUtils;
 
 public class ConnectivityChangeReceiver extends BroadcastReceiver {
 	private static final String TAG = "ConnectivityChangeReceiver";

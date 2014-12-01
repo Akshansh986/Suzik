@@ -9,12 +9,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-
-import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.contacts.model.Contact;
 import com.blackMonster.suzik.sync.contacts.model.ContactChanges;
 import com.blackMonster.suzik.util.ServerUtils;
+import com.blackMonster.suzik.util.Utils;
 
 class JsonHelper {
 	private static final String TAG = "contacts.JsonHelper";
@@ -89,9 +87,9 @@ class JsonHelper {
 
 		private static JSONObject getSingleObject(ContactChanges cChagnes)
 				throws JSONException {
-
+			
 			JSONObject obj = new JSONObject();
-			obj.put(P_NUMBER, cChagnes.getContact().getNumber().replace("+", "%2B"));
+			obj.put(P_NUMBER, Utils.formatPhoneNumberForJson(cChagnes.getContact().getNumber()));
 			obj.put(P_ACTION, cChagnes.getActionString());
 			return obj;
 

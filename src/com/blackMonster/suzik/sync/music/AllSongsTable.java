@@ -1,12 +1,6 @@
 package com.blackMonster.suzik.sync.music;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import android.R.string;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

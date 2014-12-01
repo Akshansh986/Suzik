@@ -1,5 +1,9 @@
 package com.blackMonster.suzik;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
 import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.TableCompletedSongs;
 import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.TablePausedSongs;
 import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.TableAllPlayed;
@@ -7,11 +11,6 @@ import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.TableUserS
 import com.blackMonster.suzik.musicstore.userActivity.QueueUserActivity;
 import com.blackMonster.suzik.sync.contacts.SyncContactsCreateTable;
 import com.blackMonster.suzik.sync.music.SyncMusicCreateTable;
-
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 
 public class DbHelper extends SQLiteOpenHelper {

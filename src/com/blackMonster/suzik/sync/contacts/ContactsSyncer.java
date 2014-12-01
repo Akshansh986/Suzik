@@ -50,11 +50,9 @@ public class ContactsSyncer extends Syncer {
 
 			LOGD(TAG, "all done");
 
-			broadcastResult(BROADCAST_CONTACTS_SYNC_RESULT,result);
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
-			broadcastResult(BROADCAST_CONTACTS_SYNC_RESULT,false);
 			throw e;
 		}
 
@@ -63,12 +61,7 @@ public class ContactsSyncer extends Syncer {
 	
 
 
-	private void broadcastResult(String type, boolean result) {
-		Intent intent = new Intent(type).putExtra(type, result);
-		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-		
-	}
-
+	
 
 
 
@@ -146,6 +139,18 @@ public class ContactsSyncer extends Syncer {
 		}
 
 		return CacheTable.getMyContacts(this);
+	}
+
+
+
+
+
+
+
+
+	@Override
+	public String getBroadcastString() {
+		return BROADCAST_CONTACTS_SYNC_RESULT;
 	}
 
 }

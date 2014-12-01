@@ -49,10 +49,15 @@ public class AndroidContactsHelper {
 
 				if (phoneNumber == null || phoneNumber.equals("") )
 					continue;
-				//LOGD(TAG,phoneNumber);
+		
 				
-
-				phoneNumber = FormatContact.standerdizeNumber(phoneNumber);
+				
+				
+				
+			
+				phoneNumber = FormatContact.standerdizeNumber(phoneNumber, "+91", 10);
+				if (phoneNumber == null) continue;
+				
 				contactList.add(new Contact(phoneNumber));
 
 			}

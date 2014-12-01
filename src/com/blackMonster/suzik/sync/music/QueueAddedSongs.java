@@ -1,7 +1,6 @@
 package com.blackMonster.suzik.sync.music;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
-import static com.blackMonster.suzik.util.LogUtils.LOGE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.musicstore.module.Song;
-import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 
 class QueueAddedSongs {
 

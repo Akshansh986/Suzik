@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.blackMonster.suzik.musicstore.module.Song;
-import com.blackMonster.suzik.sync.contacts.model.Contact;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
 import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
 import com.blackMonster.suzik.util.ServerUtils;

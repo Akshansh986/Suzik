@@ -3,16 +3,13 @@ package com.blackMonster.suzik.sync.music;
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import org.json.JSONException;
-
-import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
-import com.crashlytics.android.Crashlytics;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+
+import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
+import com.crashlytics.android.Crashlytics;
 
 public class InitMusicDb extends IntentService {
 	private static final String TAG = "InitMusicDb";

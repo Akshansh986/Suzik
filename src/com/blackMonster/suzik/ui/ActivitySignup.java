@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.MainStaticElements;
 import com.blackMonster.suzik.R;
@@ -37,9 +38,14 @@ public class ActivitySignup extends Activity {
 	}
 
 	public void buttonSubmit(View v) {
-		hideKeyboard();
+		DbHelper.shutDown();
+		if (deleteDatabase(DbHelper.DB_NAME)) LOGD(TAG,"old database deleted");
 		myNumber = ((EditText) findViewById(R.id.signup_number))
 				.getEditableText().toString().trim();
+		if (myNumber.length() != 10) return;
+		
+		hideKeyboard();
+		myNumber = "+91" + myNumber;
 
 		MainPrefs.setMyNo(myNumber, getApplicationContext());
 
@@ -126,9 +132,8 @@ public class ActivitySignup extends Activity {
 				dialog.dismiss();
 			dialog = null;
 
-			boolean result = intent.getExtras().getBoolean(
-					ContactsSyncer.BROADCAST_CONTACTS_SYNC_RESULT);
-
+			boolean result = intent.getExtras().getInt(
+					ContactsSyncer.BROADCAST_CONTACTS_SYNC_RESULT) == Syncer.STATUS_OK;
 			if (result == true) {
 				MainPrefs.setLoginDone(getBaseContext());
 				startActivity(new Intent(getBaseContext(),
