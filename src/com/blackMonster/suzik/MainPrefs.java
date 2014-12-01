@@ -32,6 +32,16 @@ public class MainPrefs {
 		initPrefInstance(context);
 		return prefs.getBoolean(caller, false);
 	}
+	
+	public static void setSyncFailureCount(String caller, int value, Context context){
+		initPrefInstance(context);
+		prefs.edit().putInt(caller, value).commit();
+	}
+	
+	public static int getSyncFailureCount(String caller,Context context){
+		initPrefInstance(context);
+		return prefs.getInt(caller, 0);
+	}
 
 	
 	
