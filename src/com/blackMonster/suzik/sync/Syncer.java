@@ -1,6 +1,6 @@
 package com.blackMonster.suzik.sync;
 
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.*;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -19,13 +19,14 @@ import com.blackMonster.suzik.util.NetworkUtils;
 import com.crashlytics.android.Crashlytics;
 
 /**
- * Steps to use syncer 
+ * Steps to use syncer
  * 
- * 1) extend syncer. 
- * 2) add unimplemented method. 
- * 3) register as service in manifest. 
- * 4) register in startOnNetAvailable function in at the bottom of this class.
- * 5) return null in getBroadcastString() if you don't want broadcast.
+ * 1) extend syncer. 2) add unimplemented method. 3) register as service in
+ * manifest. 4) register in startOnNetAvailable function in at the bottom of
+ * this class. 5) return null in getBroadcastString() if you don't want
+ * broadcast.
+ * 
+ * Retry mechanism work with backoff algoritm.
  * 
  * @author akshanshsingh
  * 
@@ -39,6 +40,9 @@ public abstract class Syncer extends IntentService {
 	public static final int STATUS_ERROR = 2;
 	public static final int STATUS_DEVICE_OFFLINE = 3;
 
+	 int[] retryTimes={1,5,20,120,360,720,1440,1440}; //In minutes
+//	int[] retryTimes = { 1, 1, 1, 1 }; // In minutes
+
 	public Syncer() {
 		super(TAG);
 	}
@@ -51,7 +55,7 @@ public abstract class Syncer extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		LOGD(TAG, "onHandleIntent " + getCurrentClassName());
+		LOGD(TAG, "onHandleIntent " + getClass().getSimpleName());
 		syncNow();
 	}
 
@@ -59,18 +63,19 @@ public abstract class Syncer extends IntentService {
 
 		if (!NetworkUtils.isInternetAvailable(this)) {
 			LOGD(TAG, "Net not available");
-			MainPrefs.setCallOnNetAvailable(getCurrentClassName(), true, this);
+			MainPrefs.setCallOnNetAvailable(
+					getOnNetAvailablePrefsName(getClass()), true, this);
 			broadcastResult(STATUS_DEVICE_OFFLINE);
 			return;
 		}
 
 		try {
-			LOGD(TAG, "calling : " + getCurrentClassName());
+			LOGD(TAG, "calling : " + getClass().getSimpleName());
 
 			if (onPerformSync() == false) {
 				onFailure();
 			} else {
-				broadcastResult(STATUS_OK);
+				onSucess();
 			}
 
 		} catch (Exception e1) {
@@ -81,10 +86,47 @@ public abstract class Syncer extends IntentService {
 
 	}
 
+	private void onSucess() {
+		broadcastResult(STATUS_OK);
+		MainPrefs.setSyncFailureCount(getSyncFailureCountPrefsName(getClass()),
+				0, this);
+	}
+
 	private void onFailure() {
-		LOGD(TAG, "failedSync " + getCurrentClassName());
-		callFuture(AppConfig.SYNCER_TIME_RETRY_MS);
+		LOGD(TAG, "failedSync " + getClass().getSimpleName());
 		broadcastResult(STATUS_ERROR);
+
+		incrementFailureCount();
+		Long time = getNextRetryTimeInMs();
+		if (time != null) {
+			callFuture(time);
+		} else {
+			if (MainPrefs.getSyncFailureCount(
+					getSyncFailureCountPrefsName(getClass()), this) > retryTimes.length) {
+				LOGD(TAG, "Retry maximum limit reached");
+			}
+			MainPrefs.setSyncFailureCount(
+					getSyncFailureCountPrefsName(getClass()), 0, this);
+			LOGE(TAG, "Error getting retry time " + getClass().getSimpleName());
+
+		}
+
+	}
+
+	private void incrementFailureCount() {
+		int failure = MainPrefs.getSyncFailureCount(
+				getSyncFailureCountPrefsName(getClass()), this) + 1;
+		MainPrefs.setSyncFailureCount(getSyncFailureCountPrefsName(getClass()),
+				failure, this);
+	}
+
+	private Long getNextRetryTimeInMs() {
+		int fail = MainPrefs.getSyncFailureCount(
+				getSyncFailureCountPrefsName(getClass()), this) - 1;
+		if (fail < 0 || fail > retryTimes.length)
+			return null;
+		return retryTimes[fail] * AppConfig.MINUTE_IN_MILLISEC;
+
 	}
 
 	private void callFuture(long time) {
@@ -121,9 +163,10 @@ public abstract class Syncer extends IntentService {
 
 	public abstract String getBroadcastString();
 
-	public String getCurrentClassName() {
-		return getClass().getSimpleName();
-	}
+	//
+	// public String getCurrentClassName() {
+	// return getClass().getSimpleName();
+	// }
 
 	public static void startOnNetAvaiable(Context context) {
 		LOGD(TAG, "startOnNetAvaiable");
@@ -131,29 +174,23 @@ public abstract class Syncer extends IntentService {
 		registerOnNetAvailable(AddedSongsResponseHandler.class, context);
 		registerOnNetAvailable(ContactsSyncer.class, context);
 		registerOnNetAvailable(UserActivityQueueSyncer.class, context);
-
-		/*
-		 * String caller = SongsSyncer.class.getSimpleName(); if
-		 * (MainPrefs.shouldCallOnNetAvailable(caller, context)) {
-		 * MainPrefs.setCallOnNetAvailable(caller, false, context);
-		 * context.startService(new Intent(context, SongsSyncer.class)); }
-		 * 
-		 * caller = AddedSongsResponseHandler.class.getSimpleName(); if
-		 * (MainPrefs.shouldCallOnNetAvailable(caller, context)) {
-		 * MainPrefs.setCallOnNetAvailable(caller, false, context);
-		 * context.startService(new Intent(context,
-		 * AddedSongsResponseHandler.class)); }
-		 */
-
 	}
 
 	private static void registerOnNetAvailable(Class javaClass, Context context) {
 
-		String caller = javaClass.getSimpleName();
+		String caller = getOnNetAvailablePrefsName(javaClass);
 		if (MainPrefs.shouldCallOnNetAvailable(caller, context)) {
 			MainPrefs.setCallOnNetAvailable(caller, false, context);
 			context.startService(new Intent(context, javaClass));
 		}
+	}
+
+	private static String getOnNetAvailablePrefsName(Class javaClass) {
+		return "OnNA" + javaClass.getSimpleName();
+	}
+
+	private static String getSyncFailureCountPrefsName(Class javaClass) {
+		return "FailCount" + javaClass.getSimpleName();
 	}
 
 	private void broadcastResult(int result) {
