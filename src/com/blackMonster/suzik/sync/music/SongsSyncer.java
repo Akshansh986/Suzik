@@ -190,6 +190,14 @@ public class SongsSyncer extends Syncer {
 					
 	}
 
+
+
+
+	@Override
+	public String getBroadcastString() {
+		return null;
+	}
+
 /*
 	private void handleModifiedSongs(List<CacheData> modifiedSongs	) {
 

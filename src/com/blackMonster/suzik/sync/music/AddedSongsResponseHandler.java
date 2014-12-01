@@ -124,4 +124,9 @@ private static final  String TAG = "AddedSongsResponseHandler";
 
 	}
 
+	@Override
+	public String getBroadcastString() {
+		return null;
+	}
+
 }

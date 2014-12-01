@@ -49,20 +49,15 @@ public class AndroidContactsHelper {
 
 				if (phoneNumber == null || phoneNumber.equals("") )
 					continue;
-				//LOGD(TAG,phoneNumber);s
-			//	String swissNumberStr = "044 668 18 00";
-			//			PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-			//			phoneUtil.format(phoneNumber, arg1)
+		
 				
 				
 				
 				
-				
-				String tmp = phoneNumber;
-			//	LOGD(TAG,"original " + phoneNumber +  " reversed : " + PhoneNumberUtils.getStrippedReversed(phoneNumber) + "  " + "formatted : " + PhoneNumberUtils.formatNumber(phoneNumber) +  " isGolblab : " + PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber));
+			
 				phoneNumber = FormatContact.standerdizeNumber(phoneNumber, "+91", 10);
 				if (phoneNumber == null) continue;
-				LOGD(TAG,"original " + tmp + "  " + phoneNumber);
+				
 				contactList.add(new Contact(phoneNumber));
 
 			}
