@@ -1,6 +1,8 @@
 package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 
 
+import com.crashlytics.android.Crashlytics;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +38,7 @@ public class BroadcastMediaStoreChanged extends BroadcastReceiver{
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+			Crashlytics.logException(e);
 		}
 	}
 

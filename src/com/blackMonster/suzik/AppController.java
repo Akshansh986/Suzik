@@ -2,12 +2,15 @@ package com.blackMonster.suzik;
 
 import android.app.Application;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.blackMonster.suzik.ui.LruBitmapCache;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 public class AppController extends Application {
 
@@ -22,6 +25,9 @@ public class AppController extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Log.d(TAG, "oncreate");
+		Fabric.with(this, new Crashlytics());
+		Crashlytics.setUserIdentifier(MainPrefs.getMyNo(this));
 		mInstance = this;
 	}
 

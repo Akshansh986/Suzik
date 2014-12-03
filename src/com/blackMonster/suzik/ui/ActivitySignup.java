@@ -38,6 +38,7 @@ public class ActivitySignup extends Activity {
 	}
 
 	public void buttonSubmit(View v) {
+		LOGD(TAG,"buttonSubmit");
 		DbHelper.shutDown();
 		if (deleteDatabase(DbHelper.DB_NAME)) LOGD(TAG,"old database deleted");
 		myNumber = ((EditText) findViewById(R.id.signup_number))
@@ -48,6 +49,8 @@ public class ActivitySignup extends Activity {
 		myNumber = "+91" + myNumber;
 
 		MainPrefs.setMyNo(myNumber, getApplicationContext());
+		
+		dialog.dismiss();
 
 		dialog = MainStaticElements.createProgressDialog("Logging in", this);
 		dialog.show();

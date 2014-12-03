@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SocialMusic</string>
+    <string name="app_name">Suzik</string>
     <string name="action_settings">Settings</string>
     <string name="loading">loading...</string>
     <string name="emptpy_timeline">Opps! seems like you don\'t have any friend on suzik.</string>

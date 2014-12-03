@@ -11,6 +11,7 @@ import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.TableAllPl
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 import com.blackMonster.suzik.sync.music.MusicSyncManager;
+import com.crashlytics.android.Crashlytics;
 
 public abstract class MusicBroadcastManager extends BroadcastReceiver {
 	private static final String TAG = "MusicBroadcastManager";
@@ -41,6 +42,7 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
 			}
 		} catch (ExceptionUnknownBroadcast e) {
 			e.printStackTrace();
+			Crashlytics.logException(e);
 		}
 		Log.e(TAG, action + "  " + "completed");
 

@@ -9,6 +9,7 @@ import java.util.Calendar;
 import android.util.Log;
 
 import com.blackMonster.suzik.AppConfig;
+import com.crashlytics.android.Crashlytics;
 
 public class LogUtils {
 
@@ -16,7 +17,7 @@ public class LogUtils {
        if (AppConfig.DEBUG)
 		Log.d(tag, message);
        log(tag, message);
-       //Crashlytics.log(Log.DEBUG, tag, message);
+       Crashlytics.log(Log.DEBUG, tag, message);
     }
 	
 	public static void LOGV(final String tag, String message) {
