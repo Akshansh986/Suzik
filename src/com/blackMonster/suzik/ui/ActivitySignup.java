@@ -22,22 +22,45 @@ import com.blackMonster.suzik.sync.Syncer;
 import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
 import com.blackMonster.suzik.sync.music.InitMusicDb;
 import com.blackMonster.suzik.sync.music.SongsSyncer;
+import com.digits.sdk.android.AuthCallback;
+import com.digits.sdk.android.DigitsAuthButton;
+import com.digits.sdk.android.DigitsException;
+import com.digits.sdk.android.DigitsSession;
 
 public class ActivitySignup extends Activity {
 	private static final String TAG = "ActivitySignup";
 
 	AlertDialog dialog = null;
-	String myNumber;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		LOGD(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_signup);
+		
+		
+		DigitsAuthButton digitsButton = (DigitsAuthButton) findViewById(R.id.auth_button);
+	    digitsButton.setCallback(new AuthCallback() {
+	        @Override
+	        public void success(DigitsSession session, String phoneNumber) {
+	        	
+	    		LOGD(TAG, "Sucess " + phoneNumber);
+	    		onSucessfulRegistration(phoneNumber);
+
+	        }
+
+	        @Override
+	        public void failure(DigitsException exception) {
+	    		LOGD(TAG, "failure");
+	    		Toast.makeText(getBaseContext(), "Registration failed!",
+						Toast.LENGTH_LONG).show();
+	        }
+	    });
 
 	}
 
 	public void buttonSubmit(View v) {
+		String myNumber;
 		LOGD(TAG,"buttonSubmit");
 		DbHelper.shutDown();
 		if (deleteDatabase(DbHelper.DB_NAME)) LOGD(TAG,"old database deleted");
@@ -48,9 +71,14 @@ public class ActivitySignup extends Activity {
 		hideKeyboard();
 		myNumber = "+91" + myNumber;
 
-		MainPrefs.setMyNo(myNumber, getApplicationContext());
+		onSucessfulRegistration(myNumber);
+	
+
+	}
+
+	private void onSucessfulRegistration(String number) {
+	MainPrefs.setMyNo(number, getApplicationContext());
 		
-		dialog.dismiss();
 
 		dialog = MainStaticElements.createProgressDialog("Logging in", this);
 		dialog.show();
@@ -58,8 +86,7 @@ public class ActivitySignup extends Activity {
 		unregisterReceivers();
 		registerReceivers();
 
-		startService(new Intent(this, InitMusicDb.class));
-
+		startService(new Intent(this, InitMusicDb.class));		
 	}
 
 	private void unregisterReceivers() {
