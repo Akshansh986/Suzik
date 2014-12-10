@@ -186,7 +186,8 @@ import com.blackMonster.suzik.util.ServerUtils;
 		private static final String P_R_SONG_LIST = "songData";
 		private static final String P_R_SERVER_ID = "id";
 		private static final String P_R_FPRINT = "fingerprint";
-		private static final String P_R_LINK = "album_art_link";
+		private static final String P_R_ALUBMART_LINK = "album_art_link";
+		private static final String P_R_SONG_LINK = "song_link";
 		private static final String P_R_TITLE = "title";
 		private static final String P_R_ARTIST = "artist";
 		private static final String P_R_ALBUM = "album";
@@ -216,9 +217,8 @@ import com.blackMonster.suzik.util.ServerUtils;
 						rObj.getString(P_R_ARTIST), rObj.getString(P_R_ALBUM),
 						rObj.getLong(P_R_DURATION));
 
-				
 				result.add(new InAppSongData(null, rObj.getLong(P_R_SERVER_ID),song, rObj
-						.getString(P_R_FPRINT), rObj.getString(P_R_LINK), null));
+						.getString(P_R_FPRINT), rObj.getString(P_R_ALUBMART_LINK),rObj.getString(P_R_SONG_LINK), null));
 
 			}
 
