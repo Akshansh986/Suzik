@@ -1,6 +1,7 @@
 package com.blackMonster.suzik.musicstore.userActivity;
 
 import java.util.HashMap;
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -17,11 +18,12 @@ import com.blackMonster.suzik.musicstore.module.UserActivity;
 
 class ServerHelper {
 
-	public static final String TAG = "Timeline.ServerHelper";
+	public static final String TAG = "UserActivity.ServerHelper";
 
 	static HashMap<Long, Integer> postUserActivity(
 			List<Pair<UserActivity, Long>> postParams) throws JSONException,
 			InterruptedException, ExecutionException {
+		LOGD(TAG,"postUserActivity");
 		//if (true) return dummyResponse(postParams);
 		JSONObject postJson = JsonHelper.UserActivityJson.toJson(postParams);
 

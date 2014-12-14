@@ -14,33 +14,33 @@ import com.crashlytics.android.Crashlytics;
 public class LogUtils {
 
 	public static void LOGD(final String tag, String message) {
-       if (AppConfig.DEBUG)
-		Log.d(tag, message);
-       log(tag, message);
-       Crashlytics.log(Log.DEBUG, tag, message);
-    }
-	
+		if (AppConfig.DEBUG) {
+			Log.d(tag, message);
+			log(tag, message);
+		}
+		// Crashlytics.log(Log.DEBUG, tag, message);
+		Crashlytics.log("D/" + tag + " " + message);
+	}
+
 	public static void LOGV(final String tag, String message) {
-        Log.v(tag, message);
-    }
-	
+		Log.v(tag, message);
+	}
+
 	public static void LOGI(final String tag, String message) {
-        Log.i(tag, message);
-    }
-	
+		Log.i(tag, message);
+	}
+
 	public static void LOGW(final String tag, String message) {
-        Log.w(tag, message);
-    }
-	
+		Log.w(tag, message);
+	}
+
 	public static void LOGE(final String tag, String message) {
-        Log.e(tag, message);
-        log(tag, message);
-       // Crashlytics.log(Log.ERROR, tag, message);
+		Log.e(tag, message);
+		log(tag, message);
+		// Crashlytics.log(Log.ERROR, tag, message);
 
+	}
 
-    }
-	
-	
 	public static void log(String TAG, String text) {
 
 		File logFile = new File("sdcard/suziklog.txt");
@@ -56,9 +56,10 @@ public class LogUtils {
 			// BufferedWriter for performance, true to set append to file flag
 			BufferedWriter buf = new BufferedWriter(new FileWriter(logFile,
 					true));
-			String mydate = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+			String mydate = java.text.DateFormat.getDateTimeInstance().format(
+					Calendar.getInstance().getTime());
 			buf.append(mydate + "     " + TAG + " --->  " + text);
-			//Log.d(TAG, text);
+			// Log.d(TAG, text);
 			buf.newLine();
 			buf.close();
 		} catch (IOException e) {

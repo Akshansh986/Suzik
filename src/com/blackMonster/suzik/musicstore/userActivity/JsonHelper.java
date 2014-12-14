@@ -15,7 +15,7 @@ import com.blackMonster.suzik.musicstore.module.UserActivity;
 import com.blackMonster.suzik.util.ServerUtils;
 
 class JsonHelper {
-	private static final String TAG = "timeline.JsonHelper";
+	private static final String TAG = "userActivity.JsonHelper";
 
 	static class UserActivityJson {
 		private static final String P_MAIN_TAG = "userActivity";
@@ -47,7 +47,7 @@ class JsonHelper {
 
 			root.put(P_MAIN_TAG, uaArray);
 			ServerUtils.addEssentialParamToJson(root, P_MODULE);
-			LOGD(TAG, root.toString());
+			LOGD(TAG + "hello", root.toString());
 			return root;
 		}
 
