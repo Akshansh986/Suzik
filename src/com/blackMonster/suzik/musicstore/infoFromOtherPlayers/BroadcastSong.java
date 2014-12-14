@@ -46,5 +46,14 @@ public class BroadcastSong extends Song{
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "BroadcastSong [id=" + id + ", streaming=" + streaming
+				+ ", toString()=" + super.toString() + "]";
+	}
+	
+	
+	
+
 	
 }

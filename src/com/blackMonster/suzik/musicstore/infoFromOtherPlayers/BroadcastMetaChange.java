@@ -9,13 +9,19 @@ public class BroadcastMetaChange extends MusicBroadcastManager {
 	@Override
 	public void run(Context context) {
 		Log.d(TAG, "run");
-		if (!isPlaying())
-			return;
-		if (PlayingSong.isVirtuallyCompleted(context))
-			PlayingSong.moveToCompleted(System.currentTimeMillis(), context);
+		if (isPlaying()) {
+			if (PlayingSong.isVirtuallyCompleted(context))
+				PlayingSong
+						.moveToCompleted(System.currentTimeMillis(), context);
 
-		setPlayingSong(context);
+			setPlayingSong(context);
+		}
+		setMetaChangePrefs(context);
+	}
 
+	private void setMetaChangePrefs(Context context) {
+		Log.i(TAG, "setplayingsong");
+		MetaChangePrefs.setAll(getSong(), context);		
 	}
 
 	private void setPlayingSong(Context context) {
