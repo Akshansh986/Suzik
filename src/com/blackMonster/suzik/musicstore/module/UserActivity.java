@@ -13,15 +13,17 @@ public class UserActivity {
 
 	public static final int STREAMING_TRUE = 1;
 	public static final int STREAMING_FALSE = 0;
-
+	
+	private Song song;
 	private Long id;
 	private long songId, completedTS;
 	private int streaming;
 	private int action;
 
-	public UserActivity(Long id, long songId, int action, int streaming,
+	public UserActivity(Song song, Long id, long songId, int action, int streaming,
 			long completedTS) {
 		super();
+		this.song = song;
 		this.id = id;
 		this.songId = songId;
 		this.action = action;
@@ -31,6 +33,10 @@ public class UserActivity {
 
 	public Long id() {
 		return id;
+	}
+	
+	public Song song() {
+		return song;
 	}
 
 	public long songId() {

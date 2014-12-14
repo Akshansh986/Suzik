@@ -60,7 +60,7 @@ private static final  String TAG = "AddedSongsResponseHandler";
 				QueueAddedSongs.remove(currQd.getId(), this);
 
 				if (MainPrefs.isFirstTimeMusicSyncDone(this)) {
-					UserActivityManager.add(new UserActivity(null, id, UserActivity.ACTION_OUT_APP_DOWNLOAD, UserActivity.STREAMING_FALSE, System.currentTimeMillis()), this);
+					UserActivityManager.add(new UserActivity(currQd.getSong(),null, id, UserActivity.ACTION_OUT_APP_DOWNLOAD, UserActivity.STREAMING_FALSE, System.currentTimeMillis()), this);
 				}
 			
 			}

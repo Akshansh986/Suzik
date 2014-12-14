@@ -187,7 +187,7 @@ import com.blackMonster.suzik.util.ServerUtils;
 		private static final String P_R_SERVER_ID = "id";
 		private static final String P_R_FPRINT = "fingerprint";
 		private static final String P_R_ALUBMART_LINK = "album_art_link";
-		private static final String P_R_SONG_LINK = "song_link";
+		private static final String P_R_SONG_LINK = "album_art_link";
 		private static final String P_R_TITLE = "title";
 		private static final String P_R_ARTIST = "artist";
 		private static final String P_R_ALBUM = "album";
