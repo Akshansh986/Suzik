@@ -3,6 +3,7 @@ package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 import android.content.Context;
 import android.util.Log;
 
+import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
 
@@ -96,7 +97,11 @@ public class PlayingSong {
 		Log.i(TAG, "movetocompleted");
 		TableCompletedSongs.insert(PlayingSong.getSong(context), completedTS,
 				context);
-		UserActivityManager.add(new UserActivity(null, PlayingSong.getSong(context).getId(), UserActivity.ACTION_OUT_APP_PLAYED, PlayingSong.getSong(context).isStreaming(), System.currentTimeMillis()), context);
+		Song song = new Song(PlayingSong.getSong(context).getTitle(),
+				PlayingSong.getSong(context).getArtist(), PlayingSong
+						.getSong(context).getAlbum(), PlayingSong
+						.getSong(context).getDuration());
+		UserActivityManager.add(new UserActivity(song,null, PlayingSong.getSong(context).getId(), UserActivity.ACTION_OUT_APP_PLAYED, PlayingSong.getSong(context).isStreaming(), System.currentTimeMillis()), context);
 		PlayingSong.reset(context);
 
 	}

@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.blackMonster.suzik.DbHelper;
+import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 
 public class QueueUserActivity {
@@ -21,15 +22,21 @@ public class QueueUserActivity {
 	private static final String C_ACTION = "action";
 	private static final String C_STREAMING = "STREAMING";
 	private static final String C_COMPLETED_TS = "COMPLETED_TS";
+	
+	private static final String C_TITLE = "title";
+	private static final String C_ARTIST = "artist";
+	private	static final String C_ALBUM = "album";
+	private static final String C_DURATION = "duration";
+	
 
 	private static final String TABLE = "TableUserActivityQueue";
 
 	public static void createTable(SQLiteDatabase db) {
 		String sql = String
 				.format("create table %s"
-						+ "(%s INTEGER PRIMARY KEY AUTOINCREMENT,%s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER)",
+						+ "(%s INTEGER PRIMARY KEY AUTOINCREMENT,%s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s text, %s text, %s text, %s INTEGER)",
 						TABLE, C_ID, C_SONG_ID, C_ACTION, C_STREAMING,
-						C_COMPLETED_TS);
+						C_COMPLETED_TS, C_TITLE, C_ARTIST, C_ALBUM, C_DURATION);
 		db.execSQL(sql);
 	}
 
@@ -43,7 +50,14 @@ public class QueueUserActivity {
 			allActivity = new ArrayList<UserActivity>();
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				allActivity.add(new UserActivity(cursor.getLong(cursor
+				
+				Song song = new Song(cursor.getString(cursor
+						.getColumnIndex(C_TITLE)), cursor.getString(cursor
+						.getColumnIndex(C_ARTIST)), cursor.getString(cursor
+						.getColumnIndex(C_ALBUM)), cursor.getLong(cursor
+						.getColumnIndex(C_DURATION)));
+				
+				allActivity.add(new UserActivity(song, cursor.getLong(cursor
 						.getColumnIndex(C_ID)), cursor.getLong(cursor
 						.getColumnIndex(C_SONG_ID)), cursor.getInt(cursor
 						.getColumnIndex(C_ACTION)), cursor.getInt(cursor
@@ -78,6 +92,11 @@ public class QueueUserActivity {
 		values.put(C_ACTION, data.action());
 		values.put(C_STREAMING, data.getStreaming());
 		values.put(C_COMPLETED_TS, data.completedTS());
+		
+		values.put(C_TITLE,data.song().getTitle());
+		values.put(C_ARTIST, data.song().getArtist());
+		values.put(C_ALBUM, data.song().getAlbum());
+		values.put(C_DURATION, data.song().getDuration());
 
 		return db.insert(TABLE, null, values) > -1;
 

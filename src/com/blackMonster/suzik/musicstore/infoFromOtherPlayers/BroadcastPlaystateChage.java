@@ -38,7 +38,9 @@ public class BroadcastPlaystateChage extends MusicBroadcastManager {
 			duration = song.getDuration();
 			playing = intent.getBooleanExtra(P_PLAYING, false);
 			streaming = song.isStreaming();
-			LOGD(TAG,"track or artist is null, using metaPrefs "+ song.toString()	);
+			LOGD(TAG,
+					"track or artist is null, using metaPrefs "
+							+ song.toString());
 		} else {
 			super.fixBroadcastParameters(intent, context);
 		}
@@ -63,7 +65,7 @@ public class BroadcastPlaystateChage extends MusicBroadcastManager {
 
 		long startTs = System.currentTimeMillis();
 		PlayingSong.set(getSong(), pastPlayed, startTs, context);
-		
+
 		MetaChangePrefs.setAll(getSong(), context);
 	}
 
@@ -78,8 +80,14 @@ public class BroadcastPlaystateChage extends MusicBroadcastManager {
 			if (PlayingSong.isCompleted(context)) {
 				TableCompletedSongs.insert(PlayingSong.getSong(context),
 						System.currentTimeMillis(), context);
+
+				Song song = new Song(PlayingSong.getSong(context).getTitle(),
+						PlayingSong.getSong(context).getArtist(), PlayingSong
+								.getSong(context).getAlbum(), PlayingSong
+								.getSong(context).getDuration());
+
 				UserActivityManager.add(
-						new UserActivity(null, PlayingSong.getSong(context)
+						new UserActivity(song,null, PlayingSong.getSong(context)
 								.getId(), UserActivity.ACTION_OUT_APP_PLAYED,
 								PlayingSong.getSong(context).isStreaming(),
 								System.currentTimeMillis()), context);
