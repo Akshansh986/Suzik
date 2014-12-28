@@ -42,7 +42,7 @@
         </activity>
         
         <activity android:name="com.blackMonster.suzik.ui.ActivityTimeline"
-              android:screenOrientation="portrait">
+              >
         
         </activity>
 

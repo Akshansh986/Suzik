@@ -10,12 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageLoader.ImageContainer;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
+import com.blackMonster.suzik.ui.imagePreload.ImagePreloader;
 
 public class TimelineAdapter extends BaseAdapter {	
 	private static final String TAG = "TimelineAdapter";
@@ -23,8 +28,11 @@ public class TimelineAdapter extends BaseAdapter {
 	private LayoutInflater inflater;
 	private List<TimelineItem> timelineItems;
 	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+	
+	ImagePreloader imagePreloader;
 
 	public TimelineAdapter(Activity activity, List<TimelineItem> timelineItems) {
+		imagePreloader = new ImagePreloader(imageLoader, timelineItems);
 		this.activity = activity;
 		this.timelineItems = timelineItems;
 	}
@@ -69,7 +77,7 @@ public class TimelineAdapter extends BaseAdapter {
 		TextView title = (TextView) convertView.findViewById(R.id.song_title);
 		TextView artist = (TextView) convertView.findViewById(R.id.song_artist);
 		
-		FeedImageView feedImageView = (FeedImageView) convertView
+		final ImageView imageView = (ImageView) convertView
 				.findViewById(R.id.album_art);
 
 		TimelineItem item = timelineItems.get(position);
@@ -84,22 +92,38 @@ public class TimelineAdapter extends BaseAdapter {
 		}
 
 		if (item.getMediumAlbumArt()!= null) {
-			feedImageView.setImageUrl(item.getMediumAlbumArt(), imageLoader);
-			feedImageView.setVisibility(View.VISIBLE);
-			feedImageView
-					.setResponseObserver(new FeedImageView.ResponseObserver() {
+			imagePreloader.insert(imageView, position, item.getMediumAlbumArt());
+			
+		/*ImageContainer newContainer = imageLoader.get(item.getMediumAlbumArt(),
+					new ImageListener() {
 						@Override
-						public void onError() {
+						public void onErrorResponse(VolleyError error) {
+							
 						}
 
 						@Override
-						public void onSuccess() {
+						public void onResponse(final ImageContainer response,
+								boolean isImmediate) {
+							imageView.setImageBitmap(response.getBitmap());
+						
 						}
 					});
-		} else {
-			feedImageView.setVisibility(View.GONE);
+			*/
 		}
-	
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
 		/*// Feed image
 		if (item.getMediumAlbumArt() != null) {
 			feedImageView.setImageUrl(item.getMediumAlbumArt(), imageLoader);

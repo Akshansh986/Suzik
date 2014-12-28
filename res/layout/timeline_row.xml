@@ -6,7 +6,7 @@
     android:background="@color/feed_bg"
     android:orientation="vertical" >
 
-    <com.blackMonster.suzik.ui.FeedImageView
+    <ImageView
         android:id="@+id/album_art"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -196,9 +196,11 @@ public abstract class Syncer extends IntentService {
 	private void broadcastResult(int result) {
 		if (getBroadcastString() == null)
 			return;
+	
 		Intent intent = new Intent(getBroadcastString()).putExtra(
 				getBroadcastString(), result);
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+		
 
 	}
 

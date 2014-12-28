@@ -76,8 +76,8 @@ public class ActivityTimeline extends Activity {
 		pDialog.setMessage("requestin timeline...");
 		pDialog.show();  
 		
-				JSONObject postJson = JsonHelperTimeline.getCredentials();
-//		JSONObject postJson = JsonHelperTimeline.ServerAllSongs.getCredentials();
+//				JSONObject postJson = JsonHelperTimeline.getCredentials();
+		JSONObject postJson = JsonHelperTimeline.ServerAllSongs.getCredentials();
 		
 		JsonObjectRequest jsonReq = new JsonObjectRequest(Method.POST,
 				AppConfig.MAIN_URL, postJson, new Response.Listener<JSONObject>() {
@@ -88,8 +88,8 @@ public class ActivityTimeline extends Activity {
 						if (response != null) {
 						
 							try {
-//								timelineItems = JsonHelperTimeline.ServerAllSongs.parseTimelineItems(response);
-								timelineItems = JsonHelperTimeline.parseTimelineItems(response);
+								timelineItems = JsonHelperTimeline.ServerAllSongs.parseTimelineItems(response);
+//								timelineItems = JsonHelperTimeline.parseTimelineItems(response);
 								adapter.setData(timelineItems);
 								adapter.notifyDataSetChanged();
 							
