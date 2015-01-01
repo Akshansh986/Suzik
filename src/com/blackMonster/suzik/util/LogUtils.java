@@ -17,7 +17,7 @@ public class LogUtils {
        if (AppConfig.DEBUG)
 		Log.d(tag, message);
        log(tag, message);
-       Crashlytics.log(Log.DEBUG, tag, message);
+//       Crashlytics.log(Log.DEBUG, tag, message);
     }
 	
 	public static void LOGV(final String tag, String message) {

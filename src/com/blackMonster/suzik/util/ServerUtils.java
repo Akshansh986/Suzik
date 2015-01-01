@@ -17,7 +17,7 @@ public class ServerUtils {
 			throws JSONException {
 
 		root.put(P_MY_NUMBER,Utils.formatPhoneNumberForJson(MainPrefs.getMyNo(AppController.getInstance().getApplicationContext())));
-//		root.put(P_MY_NUMBER, "1191234");
+//		root.put(P_MY_NUMBER, "6666666666");
 
 		root.put(P_MODULE, module);
 		return root;
@@ -27,7 +27,7 @@ public class ServerUtils {
 			throws JSONException {
 
 		root.put(P_MY_NUMBER,Utils.formatPhoneNumberForJson(MainPrefs.getMyNo(AppController.getInstance().getApplicationContext())));
-//		root.put(P_MY_NUMBER, "1191234");
+//		root.put(P_MY_NUMBER, "6666666666");
 
 		root.put(P_MODULE, module);
 		root.put(P_CMD, cmd);

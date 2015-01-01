@@ -41,6 +41,12 @@ public class TimelineAdapter extends BaseAdapter {
 		this.timelineItems = timelineItems;
 
 	}
+	
+	@Override
+	public void notifyDataSetChanged() {
+		super.notifyDataSetChanged();
+		imagePreloader.changeDataset(timelineItems);
+	}
 
 	@Override
 	public int getCount() {
@@ -61,7 +67,7 @@ public class TimelineAdapter extends BaseAdapter {
 	@SuppressLint("NewApi")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Log.d("TimelineAdapter", "getview : " + position);
+		Log.i("TimelineAdapter", "getview : " + position);
 		if (inflater == null)
 			inflater = (LayoutInflater) activity
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

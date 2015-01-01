@@ -1,6 +1,7 @@
 package com.blackMonster.suzik.ui;
 
 import java.util.ArrayList;
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import java.util.List;
 
 import org.json.JSONException;
@@ -80,11 +81,11 @@ public class ActivityTimeline extends Activity {
 		JSONObject postJson = JsonHelperTimeline.ServerAllSongs.getCredentials();
 		
 		JsonObjectRequest jsonReq = new JsonObjectRequest(Method.POST,
-				AppConfig.MAIN_URL, postJson, new Response.Listener<JSONObject>() {
+				"https://dl.dropboxusercontent.com/u/95984737/json.txt", postJson, new Response.Listener<JSONObject>() {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.d(TAG, "Response: " + response.toString());
+						LOGD(TAG, "Response: " + response.toString());
 						if (response != null) {
 						
 							try {
