@@ -88,67 +88,65 @@ LOGD(TAG, song.toString());
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	static class ServerAllSongs {
+	public static class ServerAllSongs {
 		private static final String P_MODULE = "music";
 		private static final String P_CMD = "getSongsList";
 
 		private static final String P_R_SONG_LIST = "songData";
 		private static final String P_R_SERVER_ID = "id";
 		private static final String P_R_FPRINT = "fingerprint";
-		private static final String P_R_ALUBMART_LINK = "album_art_link";
-		private static final String P_R_SONG_LINK = "song_link";
+		private static final String P_R_LINK = "album_art_link";
 		private static final String P_R_TITLE = "title";
 		private static final String P_R_ARTIST = "artist";
 		private static final String P_R_ALBUM = "album";
 		private static final String P_R_DURATION = "duration";
 
-		static JSONObject getCredentials() throws JSONException {
+		public static JSONObject getCredentials() throws JSONException {
 			JSONObject root = new JSONObject();
 			ServerUtils.addEssentialParamToJson(root, P_MODULE, P_CMD);
 			LOGD(TAG, root.toString());
 			return root;
 
 		}
+		
+		
+		public static List<TimelineItem> parseTimelineItems(JSONObject response) throws JSONException {
 
-		static List<InAppSongData> parseResponse(JSONObject response)
-				throws JSONException {
-
-			List<InAppSongData> result = new ArrayList<InAapSongTable.InAppSongData>();
+			List<TimelineItem> result = new ArrayList<TimelineItem>();
 
 			JSONArray responseArray = response.getJSONArray(P_R_SONG_LIST);
 
 			Song song;
 			int n = responseArray.length();
-			for (int i = 0; i < n ; i++) {
-				JSONObject rObj = (JSONObject) responseArray.get(i);
-
-				song = new Song(rObj.getString(P_R_TITLE),
-						rObj.getString(P_R_ARTIST), rObj.getString(P_R_ALBUM),
-						rObj.getLong(P_R_DURATION));
-
-				result.add(new InAppSongData(null, rObj.getLong(P_R_SERVER_ID),song, rObj
-						.getString(P_R_FPRINT), rObj.getString(P_R_ALUBMART_LINK),rObj.getString(P_R_SONG_LINK), null));
-
+			for (int i = 0; i < n; i++) {
+				JSONObject o = (JSONObject) responseArray.get(i);
+				song = new Song(o.getString(P_R_TITLE),
+						o.isNull(P_R_ARTIST) ? null: o.getString(P_R_ARTIST), 
+						o.isNull(P_R_ALBUM) ? null: o.getString(P_R_ALBUM), o.getLong(P_R_DURATION));
+				
+				result.add(new TimelineItem(song, o.getLong(P_R_SERVER_ID), o.isNull(P_R_LINK) ? null: o.getString(P_R_LINK),
+						o.getString(P_R_LINK)));
 			}
 
 			return result;
 
 		}
 
+		
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
 	
 	
 	

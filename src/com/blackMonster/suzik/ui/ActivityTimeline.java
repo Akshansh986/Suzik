@@ -1,5 +1,6 @@
 package com.blackMonster.suzik.ui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +12,13 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,7 +34,7 @@ import com.blackMonster.suzik.musicstore.Timeline.JsonHelperTimeline;
 import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
 import com.blackMonster.suzik.sync.ContentObserverService;
 
-public class ActivityTimeline extends Activity {
+public class ActivityTimeline extends Activity implements OnItemClickListener{
 	private static final String TAG = "ActivityTimeline";
 
 	ListView listView;
@@ -36,7 +42,7 @@ public class ActivityTimeline extends Activity {
 	TimelineAdapter adapter;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)  {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
 		startService(new Intent(this, ContentObserverService.class));
@@ -45,6 +51,8 @@ public class ActivityTimeline extends Activity {
 		
 		listView = (ListView) findViewById(R.id.timeline_list);
 		timelineItems = new ArrayList<TimelineItem>();
+		listView.setOnItemClickListener(this);
+	
 		
 
 		/*listView.setOnScrollListener(new EndlessScrollListener() {
@@ -127,6 +135,61 @@ public class ActivityTimeline extends Activity {
 
 		AppController.getInstance().addToRequestQueue(jsonReq);
 
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1,final int position, long arg3) {
+		
+		Log.d(TAG,"fsdf " + position + timelineItems.get(position).getSongUrl());
+		
+
+		new Thread() {
+			public void run() {
+				try {
+					play( timelineItems.get(position).getSongUrl());
+				} catch (Exception e) {
+				}
+			}
+
+		}.start();
+
+		
+		
+		
+		
+		
+	}
+	
+	
+	void play(String url) {
+		MediaPlayer mediaPlayer = new MediaPlayer();
+		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		try {
+			mediaPlayer.setDataSource(url);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			mediaPlayer.prepare();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // might take long! (for buffering, etc)
+		mediaPlayer.start();
+		
 	}
 
 		

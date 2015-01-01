@@ -9,14 +9,25 @@ import java.util.concurrent.ExecutionException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.Request.Method;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
+import com.blackMonster.suzik.R;
+import com.blackMonster.suzik.musicstore.Timeline.JsonHelperTimeline;
 import com.blackMonster.suzik.sync.music.AndroidMusicHelper.AndroidData;
 import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
+import com.blackMonster.suzik.ui.ActivityTimeline;
 
 
 
@@ -49,26 +60,55 @@ import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
 		boolean result = false;
 		JSONObject addedSongsJson = JsonHelper.AddedSong.toJson(addedSongs);
 		LOGD("srverhelop", "josn received");
+		
+		
+		postAsyncronousJson(addedSongsJson);
+		return true;
+		
+//		
+//		RequestFuture<JSONObject> future = RequestFuture.newFuture();
+//		JsonObjectRequest request = new JsonObjectRequest(AppConfig.MAIN_URL,
+//				addedSongsJson, future, future);
+//		AppController.getInstance().addToRequestQueue(request);
+//
+//		try {
+//			LOGD("serverHeloper", "added song sending");
+//			JSONObject response = future.get();
+//			LOGD("SErverheloper", "response : " + response.toString());
+//			return JsonHelper.AddedSong.parseResponse(response);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//			throw e;
+//		} catch (ExecutionException e) {
+//			e.printStackTrace();
+//			throw e;
+//		}
 
-		RequestFuture<JSONObject> future = RequestFuture.newFuture();
-		JsonObjectRequest request = new JsonObjectRequest(AppConfig.MAIN_URL,
-				addedSongsJson, future, future);
-		AppController.getInstance().addToRequestQueue(request);
 
-		try {
-			LOGD("serverHeloper", "added song sending");
-			JSONObject response = future.get();
-			LOGD("SErverheloper", "response : " + response.toString());
-			return JsonHelper.AddedSong.parseResponse(response);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			throw e;
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-			throw e;
-		}
+	}
 
+	private static void postAsyncronousJson(JSONObject addedSongsJson) {
+	
+		JsonObjectRequest jsonReq = new JsonObjectRequest(Method.POST,
+				AppConfig.MAIN_URL, addedSongsJson, new Response.Listener<JSONObject>() {
 
+					@Override
+					public void onResponse(JSONObject response) {
+						Log.d(TAG, "Response: " + response.toString());
+											
+					}
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						VolleyLog.d(TAG, "Error: " + error.getMessage());
+						Log.d(TAG, "Error: " + error.getMessage());
+
+					}
+				});
+
+		AppController.getInstance().addToRequestQueue(jsonReq);
+		
 	}
 
 	static HashMap<String, Long> postFingerPrints(Context context) throws JSONException, InterruptedException,
