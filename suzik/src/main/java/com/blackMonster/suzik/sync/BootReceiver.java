@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.sync.music.SongsSyncer;
 
 public class BootReceiver extends BroadcastReceiver {
@@ -12,10 +13,13 @@ public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        if (!MainPrefs.isLoginDone(context)) return;
+
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
 			LOGD(TAG, "Boot complete");
 			context.startService(new Intent(context, SongsSyncer.class));
-			context.	startService(new Intent(context, ContentObserverService.class));
+			context.startService(new Intent(context, ContentObserverService.class));
 
         }
     }

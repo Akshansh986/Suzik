@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 
+import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.TableAllPlayed;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
@@ -32,7 +33,9 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		String action = intent.getAction();
+
+        if (!MainPrefs.isLoginDone(context)) return;
+        String action = intent.getAction();
 		Log.e(TAG,
 				action + "  " + "started  "
 						+ intent.getBooleanExtra(P_PLAYING, false));
