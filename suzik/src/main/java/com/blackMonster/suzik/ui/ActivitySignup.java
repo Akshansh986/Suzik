@@ -1,6 +1,7 @@
 package com.blackMonster.suzik.ui;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -28,170 +29,184 @@ import com.digits.sdk.android.DigitsException;
 import com.digits.sdk.android.DigitsSession;
 
 public class ActivitySignup extends Activity {
-	private static final String TAG = "ActivitySignup";
+    private static final String TAG = "ActivitySignup";
+    private static final int RUNNING = 1;
+    private static final int STOPPED = 0;
+    private static final int COMPLETED = 2;
 
-	AlertDialog dialog = null;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		LOGD(TAG, "onCreate");
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_signup);
-		
-		
-		DigitsAuthButton digitsButton = (DigitsAuthButton) findViewById(R.id.auth_button);
-	    digitsButton.setCallback(new AuthCallback() {
-	        @Override
-	        public void success(DigitsSession session, String phoneNumber) {
-	        	
-	    		LOGD(TAG, "Sucess " + phoneNumber);
-	    		onSucessfulRegistration(phoneNumber);
+    AlertDialog dialog;
 
-	        }
+    int[] status = new int[2];
+    boolean finalResult;
 
-	        @Override
-	        public void failure(DigitsException exception) {
-	    		LOGD(TAG, "failure");
-	    		Toast.makeText(getBaseContext(), "Registration failed!",
-						Toast.LENGTH_LONG).show();
-	        }
-	    });
+    private void resetGlobals() {
+        status[0] = STOPPED;
+        status[1] = STOPPED;
+        finalResult = true;
+        dialog = null;
+    }
 
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        LOGD(TAG, "onCreate");
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_signup);
+        resetGlobals();
+        registerReceivers();
 
-	public void buttonSubmit(View v) {
-		String myNumber;
-		LOGD(TAG,"buttonSubmit");
-		DbHelper.shutDown();
-		if (deleteDatabase(DbHelper.DB_NAME)) LOGD(TAG,"old database deleted");
-		myNumber = ((EditText) findViewById(R.id.signup_number))
-				.getEditableText().toString().trim();
-		if (myNumber.length() != 10) return;
-		
-		hideKeyboard();
-		myNumber = "+91" + myNumber;
+        DigitsAuthButton digitsButton = (DigitsAuthButton) findViewById(R.id.auth_button);
+        digitsButton.setCallback(new AuthCallback() {
+            @Override
+            public void success(DigitsSession session, String phoneNumber) {
 
-		onSucessfulRegistration(myNumber);
-	
+                LOGD(TAG, "Sucess " + phoneNumber);
+                onSuccessfulRegistration(phoneNumber);
 
-	}
+            }
 
-	private void onSucessfulRegistration(String number) {
-	MainPrefs.setMyNo(number, getApplicationContext());
-		
+            @Override
+            public void failure(DigitsException exception) {
+                LOGD(TAG, "failure");
+                Toast.makeText(getBaseContext(), "Registration failed!",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
 
-		dialog = MainStaticElements.createProgressDialog("Logging in", this);
-		dialog.show();
+    }
 
-		unregisterReceivers();
-		registerReceivers();
+    public void buttonSubmit(View v) {
+        String myNumber;
+        LOGD(TAG, "buttonSubmit");
 
-		startService(new Intent(this, InitMusicDb.class));		
-	}
+        myNumber = ((EditText) findViewById(R.id.signup_number))
+                .getEditableText().toString().trim();
+        if (myNumber.length() != 10) return;
 
-	private void unregisterReceivers() {
-		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
-				broadcastContactsSyncResult);
+        hideKeyboard();
+        myNumber = "+91" + myNumber;
 
-		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
-				broadcastInitMusicDbResult);
-	}
+        onSuccessfulRegistration(myNumber);
 
-	private void registerReceivers() {
-		LocalBroadcastManager.getInstance(this)
-				.registerReceiver(
-						broadcastContactsSyncResult,
-						new IntentFilter(
-								ContactsSyncer.BROADCAST_CONTACTS_SYNC_RESULT));
 
-		LocalBroadcastManager.getInstance(this).registerReceiver(
-				broadcastInitMusicDbResult,
-				new IntentFilter(InitMusicDb.BROADCAST_INIT_MUSIC_DB_RESULT));
+    }
 
-	}
 
-	// private int IN_PROGRESS = 1, DONE=2,ERROR=3;
-	// private int initMusicDbStatus = IN_PROGRESS, contactsSyncStatus =
-	// IN_PROGRESS;
-	private BroadcastReceiver broadcastInitMusicDbResult = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			LOGD(TAG, "received : broadcastInitMusicDbResult");
+    private void onSuccessfulRegistration(String number) {
+        clearDatabaseAndPrefs();
+        MainPrefs.setMyNo(number, getApplicationContext());
 
-			LocalBroadcastManager.getInstance(getBaseContext())
-					.unregisterReceiver(broadcastInitMusicDbResult);
+        dialog = MainStaticElements.createProgressDialog(getString(R.string.logging_in), this);
+        dialog.show();
 
-			if (dialog != null)
-				dialog.dismiss();
-			dialog = null;
+        startService(new Intent(this, InitMusicDb.class));
+        status[0] = RUNNING;
 
-			boolean result = intent.getExtras().getBoolean(
-					InitMusicDb.BROADCAST_INIT_MUSIC_DB_RESULT);
+        startService(new Intent(getBaseContext(), ContactsSyncer.class));
+        status[1] = RUNNING;
+    }
 
-			if (result == true) {
-				startService(new Intent(getBaseContext(), ContactsSyncer.class));
-				dialog = MainStaticElements.createProgressDialog("Logging in",
-						ActivitySignup.this);
-				dialog.show();
-				// MainPrefs.setLoginDone(getBaseContext());
-				// startActivity(new Intent(getBaseContext(),
-				// ActivityTimeline.class));
 
-				// Syncer.callFuture(SongsSyncer.class, 10000,
-				// getBaseContext());
-				// finish();
 
-			} else {
-				MainPrefs.setMyNo("123", getBaseContext());
-				Toast.makeText(getBaseContext(), "Error Logging in!",
-						Toast.LENGTH_LONG).show();
-			}
+    private BroadcastReceiver broadcastInitMusicDbResult = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LOGD(TAG, "received : broadcastInitMusicDbResult");
 
-		}
-	};
+            boolean result = intent.getExtras().getBoolean(
+                    InitMusicDb.BROADCAST_INIT_MUSIC_DB_RESULT);
 
-	private BroadcastReceiver broadcastContactsSyncResult = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			LOGD(TAG, "received : broadcastContactsSyncResult");
+            status[0] = COMPLETED;
+            finalResult = finalResult && result;
+            onTaskComplete();
+        }
+    };
 
-			LocalBroadcastManager.getInstance(getBaseContext())
-					.unregisterReceiver(broadcastContactsSyncResult);
+    private BroadcastReceiver broadcastContactsSyncResult = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LOGD(TAG, "received : broadcastContactsSyncResult");
 
-			if (dialog != null)
-				dialog.dismiss();
-			dialog = null;
+            boolean result = intent.getExtras().getInt(
+                    ContactsSyncer.BROADCAST_CONTACTS_SYNC_RESULT) == Syncer.STATUS_OK;
 
-			boolean result = intent.getExtras().getInt(
-					ContactsSyncer.BROADCAST_CONTACTS_SYNC_RESULT) == Syncer.STATUS_OK;
-			if (result == true) {
-				MainPrefs.setLoginDone(getBaseContext());
-				startActivity(new Intent(getBaseContext(),
-						ActivityTimeline.class));
+            status[1] = COMPLETED;
+            finalResult = finalResult && result;
+            onTaskComplete();
+        }
 
-				Syncer.callFuture(SongsSyncer.class, 10000, getBaseContext());
-				finish();
 
-			} else {
-				MainPrefs.setMyNo("123", getBaseContext());
-				Toast.makeText(getBaseContext(), "Error Logging in!",
-						Toast.LENGTH_LONG).show();
-			}
+    };
 
-		}
-	};
 
-	protected void onDestroy() {
-		super.onDestroy();
-		unregisterReceivers();
-	};
+    void onTaskComplete() {
 
-	private void hideKeyboard() {
-		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		View focus = getCurrentFocus();
-		if (focus != null)
-			inputMethodManager.hideSoftInputFromWindow(focus.getWindowToken(),
-					InputMethodManager.HIDE_NOT_ALWAYS);
-	}
+        if (status[0] == COMPLETED && status[1] == COMPLETED) {
+
+            if (dialog != null)
+                dialog.dismiss();
+            dialog = null;
+
+            if (finalResult) {
+                MainPrefs.setLoginDone(getBaseContext());
+                startActivity(new Intent(getBaseContext(),
+                        ActivityTimeline.class));
+                Syncer.callFuture(SongsSyncer.class, 10000, getBaseContext());
+                finish();
+
+            } else {
+                Toast.makeText(getBaseContext(),R.string.loggingIn_error,
+                        Toast.LENGTH_LONG).show();
+                resetGlobals();
+                clearDatabaseAndPrefs();
+            }
+        }
+    }
+
+    void clearDatabaseAndPrefs() {
+        DbHelper.shutDown();
+        if (deleteDatabase(DbHelper.DB_NAME))
+            LOGD(TAG, "old database deleted");
+        MainPrefs.clearAll(this);
+    }
+
+
+
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceivers();
+    }
+
+
+
+    private void hideKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        View focus = getCurrentFocus();
+        if (focus != null)
+            inputMethodManager.hideSoftInputFromWindow(focus.getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+
+    private void unregisterReceivers() {
+        LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
+                broadcastContactsSyncResult);
+
+        LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
+                broadcastInitMusicDbResult);
+    }
+
+    private void registerReceivers() {
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(
+                        broadcastContactsSyncResult,
+                        new IntentFilter(
+                                ContactsSyncer.BROADCAST_CONTACTS_SYNC_RESULT));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                broadcastInitMusicDbResult,
+                new IntentFilter(InitMusicDb.BROADCAST_INIT_MUSIC_DB_RESULT));
+
+    }
 
 }

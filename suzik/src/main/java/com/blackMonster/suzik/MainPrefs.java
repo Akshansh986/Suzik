@@ -21,6 +21,11 @@ public class MainPrefs {
 		initPrefInstance(context);
 		return prefs;
 	}
+
+    public static void clearAll(Context context) {
+        initPrefInstance(context);
+        prefs.edit().clear().commit();
+    }
 	
 	
 	public static void setCallOnNetAvailable(String caller, boolean value, Context context){
