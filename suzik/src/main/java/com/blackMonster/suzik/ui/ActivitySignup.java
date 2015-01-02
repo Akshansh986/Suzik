@@ -102,7 +102,8 @@ public class ActivitySignup extends Activity {
         startService(new Intent(this, InitMusicDb.class));
         status[0] = RUNNING;
 
-        startService(new Intent(getBaseContext(), ContactsSyncer.class));
+        startService(new Intent(getBaseContext(), ContactsSyncer.class).
+                putExtra(Syncer.SHOULD_RETRY,false));
         status[1] = RUNNING;
     }
 
