@@ -53,7 +53,6 @@ public class ActivityTimeline extends Activity implements OnItemClickListener{
 		timelineItems = new ArrayList<TimelineItem>();
 		listView.setOnItemClickListener(this);
 	
-		
 
 		/*listView.setOnScrollListener(new EndlessScrollListener() {
 

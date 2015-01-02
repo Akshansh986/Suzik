@@ -13,7 +13,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	//	Crashlytics.start(this);
-		
+
 		if (MainPrefs.isLoginDone(this)) {
 			startActivity(new Intent(this, ActivityTimeline.class));
 		} else {
