@@ -7,5 +7,6 @@
     <string name="emptpy_timeline">Opps! seems like you don\'t have any friend on suzik.</string>
     <string name="loggingIn_error">Something went wrong, try again!</string>
     <string name="logging_in">Logging in...</string>
+    <string name="device_offline">Please connect to internet!</string>
 
 </resources>

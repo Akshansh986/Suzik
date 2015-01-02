@@ -23,6 +23,7 @@ import com.blackMonster.suzik.sync.Syncer;
 import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
 import com.blackMonster.suzik.sync.music.InitMusicDb;
 import com.blackMonster.suzik.sync.music.SongsSyncer;
+import com.blackMonster.suzik.util.NetworkUtils;
 import com.digits.sdk.android.AuthCallback;
 import com.digits.sdk.android.DigitsAuthButton;
 import com.digits.sdk.android.DigitsException;
@@ -93,6 +94,12 @@ public class ActivitySignup extends Activity {
 
 
     private void onSuccessfulRegistration(String number) {
+
+        if (!NetworkUtils.isInternetAvailable(this)) {
+            Toast.makeText(this,R.string.device_offline,Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         clearDatabaseAndPrefs();
         MainPrefs.setMyNo(number, getApplicationContext());
 
@@ -103,7 +110,7 @@ public class ActivitySignup extends Activity {
         status[0] = RUNNING;
 
         startService(new Intent(getBaseContext(), ContactsSyncer.class).
-                putExtra(Syncer.SHOULD_RETRY,false));
+                putExtra(Syncer.SHOULD_RETRY, false));
         status[1] = RUNNING;
     }
 

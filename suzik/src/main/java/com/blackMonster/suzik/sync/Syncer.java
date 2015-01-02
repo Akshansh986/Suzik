@@ -42,7 +42,7 @@ public abstract class Syncer extends IntentService {
 
 
     public static final String SHOULD_RETRY = "shudRtry";
-    boolean shouldRetry = true;
+    private boolean shouldRetry = true;
 	private int[] retryTimes={1,5,20,120,360,720,1440,1440}; //In minutes
 
 	public Syncer() {
