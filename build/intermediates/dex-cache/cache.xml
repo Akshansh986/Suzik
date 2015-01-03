@@ -72,6 +72,13 @@
         <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-29652817717d8b739cb56a471154dd5e11c5c469.jar" />
     </item>
     <item
+        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="00b0b7233e1ec64acebfac40d4983d32d4712426">
+        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-1a2d7e5c18260a92a246f11aff8bc69839cb9db3.jar" />
+    </item>
+    <item
         jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.twitter.sdk.android/twitter/1.1.1/classes.jar"
         jumboMode="false"
         revision="21.1.2"

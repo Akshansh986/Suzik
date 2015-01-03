@@ -158,7 +158,7 @@ public class ActivitySignup extends ActionBarActivity {
             if (finalResult) {
                 MainPrefs.setLoginDone(getBaseContext());
                 startActivity(new Intent(getBaseContext(),
-                        TimelineFragement.class));
+                        MainActivity.class));
                 Syncer.callFuture(SongsSyncer.class, 10000, getBaseContext());
                 finish();
 
