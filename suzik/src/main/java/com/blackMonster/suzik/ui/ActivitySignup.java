@@ -2,7 +2,6 @@ package com.blackMonster.suzik.ui;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -17,19 +17,19 @@ import android.widget.Toast;
 
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.MainPrefs;
-import com.blackMonster.suzik.MainStaticElements;
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.sync.Syncer;
 import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
 import com.blackMonster.suzik.sync.music.InitMusicDb;
 import com.blackMonster.suzik.sync.music.SongsSyncer;
 import com.blackMonster.suzik.util.NetworkUtils;
+import com.blackMonster.suzik.util.UiUtils;
 import com.digits.sdk.android.AuthCallback;
 import com.digits.sdk.android.DigitsAuthButton;
 import com.digits.sdk.android.DigitsException;
 import com.digits.sdk.android.DigitsSession;
 
-public class ActivitySignup extends Activity {
+public class ActivitySignup extends ActionBarActivity {
     private static final String TAG = "ActivitySignup";
     private static final int RUNNING = 1;
     private static final int STOPPED = 0;
@@ -103,7 +103,7 @@ public class ActivitySignup extends Activity {
         clearDatabaseAndPrefs();
         MainPrefs.setMyNo(number, getApplicationContext());
 
-        dialog = MainStaticElements.createProgressDialog(getString(R.string.logging_in), this);
+        dialog = UiUtils.createProgressDialog(getString(R.string.logging_in), this);
         dialog.show();
 
         startService(new Intent(this, InitMusicDb.class));
@@ -158,7 +158,7 @@ public class ActivitySignup extends Activity {
             if (finalResult) {
                 MainPrefs.setLoginDone(getBaseContext());
                 startActivity(new Intent(getBaseContext(),
-                        ActivityTimeline.class));
+                        TimelineFragement.class));
                 Syncer.callFuture(SongsSyncer.class, 10000, getBaseContext());
                 finish();
 

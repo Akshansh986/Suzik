@@ -29,7 +29,9 @@
             
         </activity>
 
-        <activity android:name="com.blackMonster.suzik.ui.MainActivity" >
+        <activity android:name=".ui.MainActivity"></activity>
+
+        <activity android:name=".ui.DeciderActivity" >
               <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,10 +39,6 @@
             </intent-filter>
         </activity>
         
-        <activity android:name="com.blackMonster.suzik.ui.ActivityTimeline"
-              android:screenOrientation="portrait">
-        
-        </activity>
 
 
 
