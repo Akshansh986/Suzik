@@ -107,6 +107,13 @@
         <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-aded504a29d625432d58d41507b4b58b5f11a086.jar" />
     </item>
     <item
+        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.android.support/palette-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="926692214530f39eaed89159237d26cdc0ae6e48">
+        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-42751378ba8dc43d708cdf7ade9a557a76e0c2cb.jar" />
+    </item>
+    <item
         jar="/Users/akshanshsingh/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/1.6.1/efb0a36546aa8857ab8df358b106c1817e03cbee/retrofit-1.6.1.jar"
         jumboMode="false"
         revision="21.1.2"

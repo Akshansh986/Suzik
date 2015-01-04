@@ -16,7 +16,9 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Cache;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -32,17 +35,27 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
+import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicstore.Timeline.JsonHelperTimeline;
 import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
 import com.blackMonster.suzik.sync.ContentObserverService;
 
-public class TimelineFragement extends Fragment implements OnItemClickListener{
-	private static final String TAG = "ActivityTimeline";
+public class TimelineFragement extends Fragment implements OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+    private static final String TAG = "ActivityTimeline";
+    public static final String FRAGMENT_TAG = "timelineFragementTag";
 
-	ListView listView;
-	List<TimelineItem> timelineItems;
-	TimelineAdapter adapter;
+    ListView listView;
+    List<TimelineItem> timelineItems;
+    TimelineAdapter adapter;
+    SwipeRefreshLayout swipeLayout;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // retain this fragment
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,6 +63,9 @@ public class TimelineFragement extends Fragment implements OnItemClickListener{
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.list_view,
                 container, false);
+
+
+        initSwipeRefreshLayout(rootView);
 
         getActivity().startService(new Intent(getActivity(), ContentObserverService.class));
 
@@ -61,6 +77,8 @@ public class TimelineFragement extends Fragment implements OnItemClickListener{
         try {
             adapter = new TimelineAdapter(getActivity(), timelineItems);
             listView.setAdapter(adapter);
+            loadInitData();
+            setSwipeLayoutRefreshing();
             loadData();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -71,156 +89,159 @@ public class TimelineFragement extends Fragment implements OnItemClickListener{
 
     }
 
-//    @Override
-//	protected void onCreate(Bundle savedInstanceState)  {
-//		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.list_view);
-//		startService(new Intent(this, ContentObserverService.class));
-//		//startService(new Intent(this, InitMusicDb.class));
-//		//startService(new Intent(this, ContactsSyncer.class));
-//
-//		listView = (ListView) findViewById(R.id.timeline_list);
-//		timelineItems = new ArrayList<TimelineItem>();
-//		listView.setOnItemClickListener(this);
-//
-//
-//
-//		/*listView.setOnScrollListener(new EndlessScrollListener() {
-//
-//			@Override
-//			public void onLoadMore(int page, int totalItemsCount) {
-//				Log.d(TAG, "onLoadMore called     page : " + page
-//						+ " totalItemsCount " + totalItemsCount);
-//				 fetchMoreData();
-//
-//			}
-//
-//		});*/
-//
-//
-//		try {
-//			adapter = new TimelineAdapter(this, timelineItems);
-//			listView.setAdapter(adapter);
-//			loadData();
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//	}
+    private void loadInitData() {
 
-	private void loadData() throws JSONException {
+        try {
+            String data = MainPrefs.getTimelineCache(getActivity());
+            if (data.equals("")) return;
+            setData(new JSONObject(data));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-		
-		final ProgressDialog pDialog = new ProgressDialog(getActivity());
-		pDialog.setMessage("requestin timeline...");
-		pDialog.show();  
-		
-				JSONObject postJson = JsonHelperTimeline.getCredentials();
+    }
+
+
+    private void loadData() throws JSONException {
+
+        JSONObject postJson = JsonHelperTimeline.getCredentials();
 //		JSONObject postJson = JsonHelperTimeline.ServerAllSongs.getCredentials();
-		
-		JsonObjectRequest jsonReq = new JsonObjectRequest(Method.POST,
-				AppConfig.MAIN_URL, postJson, new Response.Listener<JSONObject>() {
 
-					@Override
-					public void onResponse(JSONObject response) {
-						Log.d(TAG, "Response: " + response.toString());
-						if (response != null) {
-						
-							try {
-//								timelineItems = JsonHelperTimeline.ServerAllSongs.parseTimelineItems(response);
-								timelineItems = JsonHelperTimeline.parseTimelineItems(response);
-								adapter.setData(timelineItems);
-								adapter.notifyDataSetChanged();
-							
-								if (timelineItems.isEmpty())  {
-									new AlertDialog.Builder(getActivity())
-								      .setMessage(R.string.emptpy_timeline)
-								    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-								        public void onClick(DialogInterface dialog, int which) { 
-								            // continue with delete
-								        }
-								     }).show();
-								}
-								
-							} catch (JSONException e) {
-								Toast.makeText(getActivity().getBaseContext(), "Unexpected response from server", Toast.LENGTH_LONG).show();
-								e.printStackTrace();
-							}
+        JsonObjectRequest jsonReq = new JsonObjectRequest(Method.POST,
+                AppConfig.MAIN_URL, postJson, new Response.Listener<JSONObject>() {
 
-						}
-						
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, "Response: " + response.toString());
+                swipeLayout.setRefreshing(false);
 
-						
-						pDialog.dismiss();
-					}
-				}, new Response.ErrorListener() {
+                if (response != null) {
 
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						Toast.makeText(getActivity().getBaseContext(), "Unable to load timeline", Toast.LENGTH_LONG).show();
-						VolleyLog.d(TAG, "Error: " + error.getMessage());
-						Log.d(TAG, "Error: " + error.getMessage());
+                    try {
+                        setData(response);
+                        MainPrefs.setTimelineCache(response.toString(), getActivity());
+                        if (timelineItems.isEmpty()) {
+                            new AlertDialog.Builder(getActivity())
+                                    .setMessage(R.string.emptpy_timeline)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // continue with delete
+                                        }
+                                    }).show();
+                        }
 
-					}
-				});
 
-		AppController.getInstance().addToRequestQueue(jsonReq);
+                    } catch (JSONException e) {
+                        Toast.makeText(getActivity().getBaseContext(), "Unexpected response from server", Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
+                    }
 
-	}
+                }
 
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1,final int position, long arg3) {
-		
-		Log.d(TAG,"fsdf " + position + timelineItems.get(position).getSongUrl());
-		
 
-		new Thread() {
-			public void run() {
-				try {
-					play( timelineItems.get(position).getSongUrl());
-				} catch (Exception e) {
-				}
-			}
+            }
+        }, new Response.ErrorListener() {
 
-		}.start();
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                swipeLayout.setRefreshing(false);
+                Toast.makeText(getActivity().getBaseContext(), "Unable to load timeline", Toast.LENGTH_LONG).show();
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Log.d(TAG, "Error: " + error.getMessage());
 
-		
-		
-		
-		
-		
-	}
-	
-	
-	void play(String url) {
-		MediaPlayer mediaPlayer = new MediaPlayer();
-		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-		try {
-			mediaPlayer.setDataSource(url);
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			mediaPlayer.prepare();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} // might take long! (for buffering, etc)
-		mediaPlayer.start();
-		
-	}
+            }
+        });
+        jsonReq.setShouldCache(false);
+        AppController.getInstance().addToRequestQueue(jsonReq);
 
-		
+    }
+
+
+    private void setData(JSONObject response) throws JSONException {
+//        timelineItems = JsonHelperTimeline.ServerAllSongs.parseTimelineItems(response);
+
+        timelineItems = JsonHelperTimeline.parseTimelineItems(response);
+        adapter.setData(timelineItems);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> arg0, View arg1, final int position, long arg3) {
+
+        Log.d(TAG, "fsdf " + position + timelineItems.get(position).getSongUrl());
+
+
+        new Thread() {
+            public void run() {
+                try {
+                    play(timelineItems.get(position).getSongUrl());
+                } catch (Exception e) {
+                }
+            }
+
+        }.start();
+
+
+    }
+
+
+    void play(String url) {
+        MediaPlayer mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mediaPlayer.setDataSource(url);
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        try {
+            mediaPlayer.prepare();
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } // might take long! (for buffering, etc)
+        mediaPlayer.start();
+
+    }
+
+
+    @Override
+    public void onRefresh() {
+        try {
+            loadData();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initSwipeRefreshLayout(View view) {
+        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeLayout.setOnRefreshListener(this);
+
+        swipeLayout.setColorSchemeResources(R.color.primary,
+                R.color.primary,
+                R.color.accent,
+                R.color.accent);
+    }
+
+    private void setSwipeLayoutRefreshing() {
+        TypedValue typed_value = new TypedValue();
+        getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
+        swipeLayout.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
+        swipeLayout.setRefreshing(true);
+    }
+
+
 }

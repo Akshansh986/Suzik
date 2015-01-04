@@ -5,11 +5,14 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -66,8 +69,8 @@ public class TimelineAdapter extends BaseAdapter {
 		
 		
 		
-		TextView title = (TextView) convertView.findViewById(R.id.song_title);
-		TextView artist = (TextView) convertView.findViewById(R.id.song_artist);
+		final TextView title = (TextView) convertView.findViewById(R.id.song_title);
+		final TextView artist = (TextView) convertView.findViewById(R.id.song_artist);
 		
 		FeedImageView feedImageView = (FeedImageView) convertView
 				.findViewById(R.id.album_art);
@@ -86,14 +89,35 @@ public class TimelineAdapter extends BaseAdapter {
 		if (item.getMediumAlbumArt()!= null) {
 			feedImageView.setImageUrl(item.getMediumAlbumArt(), imageLoader);
 			feedImageView.setVisibility(View.VISIBLE);
-			feedImageView
+            final View finalConvertView = convertView;
+            feedImageView
 					.setResponseObserver(new FeedImageView.ResponseObserver() {
 						@Override
 						public void onError() {
 						}
 
 						@Override
-						public void onSuccess() {
+						public void onSuccess(Bitmap bitmap) {
+//                            if (bitmap == null) return;
+//                            Palette.generateAsync(bitmap,
+//                                    new Palette.PaletteAsyncListener() {
+//                                        @Override
+//                                        public void onGenerated(Palette palette) {
+//                                            Palette.Swatch vibrant =
+//                                                    palette.getVibrantSwatch();
+//                                            if (vibrant != null) {
+//                                                // If we have a vibrant color
+//                                                // update the title TextView
+//
+//                                                (finalConvertView.findViewById(R.id.ll_title_artist))
+//                                                        .setBackgroundColor(
+//                                                                vibrant.getRgb());
+//
+//                                                title.setTextColor(vibrant.getTitleTextColor());
+//                                                artist.setTextColor(vibrant.getTitleTextColor());
+//                                            }
+//                                        }
+//                                    });
 						}
 					});
 		} else {

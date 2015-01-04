@@ -1,6 +1,7 @@
 package com.blackMonster.suzik.ui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
@@ -17,7 +18,7 @@ public class FeedImageView extends ImageView {
 	public interface ResponseObserver {
 		public void onError();
 
-		public void onSuccess();
+		public void onSuccess(Bitmap bitmap);
 	}
 
 	private ResponseObserver mObserver;
@@ -65,21 +66,7 @@ public class FeedImageView extends ImageView {
 		super(context, attrs, defStyle);
 	}
 
-	/**
-	 * Sets URL of the image that should be loaded into this view. Note that
-	 * calling this will immediately either set the cached image (if available)
-	 * or the default image specified by
-	 * {@link VolleyImageView#setDefaultImageResId(int)} on the view.
-	 * 
-	 * NOTE: If applicable, {@link VolleyImageView#setDefaultImageResId(int)}
-	 * and {@link VolleyImageView#setErrorImageResId(int)} should be called
-	 * prior to calling this function.
-	 * 
-	 * @param url
-	 *            The URL that should be loaded into this ImageView.
-	 * @param imageLoader
-	 *            ImageLoader that will be used to make the request.
-	 */
+
 	public void setImageUrl(String url, ImageLoader imageLoader) {
 		mUrl = url;
 		mImageLoader = imageLoader;
@@ -198,7 +185,7 @@ public class FeedImageView extends ImageView {
 						}
 
 						if (mObserver != null) {
-							mObserver.onSuccess();
+							mObserver.onSuccess(response.getBitmap());
 
 						}
 					}

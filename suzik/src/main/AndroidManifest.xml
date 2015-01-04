@@ -29,7 +29,8 @@
             
         </activity>
 
-        <activity android:name=".ui.MainActivity"></activity>
+        <activity android:name=".ui.MainActivity"
+            android:configChanges="orientation|keyboardHidden"></activity>
 
         <activity android:name=".ui.DeciderActivity" >
               <intent-filter>
