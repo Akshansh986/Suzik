@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.blackMonster.suzik.MainPrefs;
+import com.blackMonster.suzik.ui.Screens.ActivitySignup;
+import com.blackMonster.suzik.ui.Screens.MainActivity;
 
 public class DeciderActivity extends Activity {
 	private static final String TAG = "MainActivity";

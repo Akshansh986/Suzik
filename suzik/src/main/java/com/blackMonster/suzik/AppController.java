@@ -38,6 +38,7 @@ public class AppController extends Application {
 	    	Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
 		Crashlytics.setUserIdentifier(MainPrefs.getMyNo(this));
 		mInstance = this;
+
 	}
 
 	public static synchronized AppController getInstance() {

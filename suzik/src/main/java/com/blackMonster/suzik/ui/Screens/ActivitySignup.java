@@ -1,4 +1,4 @@
-package com.blackMonster.suzik.ui;
+package com.blackMonster.suzik.ui.Screens;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 

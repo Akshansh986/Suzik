@@ -1,4 +1,4 @@
-package com.blackMonster.suzik.ui;
+package com.blackMonster.suzik.ui.Screens;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,7 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -27,7 +26,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.volley.Cache;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -40,6 +38,7 @@ import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicstore.Timeline.JsonHelperTimeline;
 import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
 import com.blackMonster.suzik.sync.ContentObserverService;
+import com.blackMonster.suzik.ui.TimelineAdapter;
 
 public class TimelineFragement extends Fragment implements OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = "ActivityTimeline";
@@ -61,7 +60,7 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.list_view,
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.timeline_view,
                 container, false);
 
 
@@ -69,7 +68,7 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
 
         getActivity().startService(new Intent(getActivity(), ContentObserverService.class));
 
-        listView = (ListView) rootView.findViewById(R.id.timeline_list);
+        listView = (ListView) rootView.findViewById(R.id.timeline_list_view);
         timelineItems = new ArrayList<TimelineItem>();
         listView.setOnItemClickListener(this);
 
@@ -104,8 +103,8 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
 
     private void loadData() throws JSONException {
 
-        JSONObject postJson = JsonHelperTimeline.getCredentials();
-//		JSONObject postJson = JsonHelperTimeline.ServerAllSongs.getCredentials();
+//        JSONObject postJson = JsonHelperTimeline.getCredentials();
+		JSONObject postJson = JsonHelperTimeline.ServerAllSongs.getCredentials();
 
         JsonObjectRequest jsonReq = new JsonObjectRequest(Method.POST,
                 AppConfig.MAIN_URL, postJson, new Response.Listener<JSONObject>() {
@@ -158,9 +157,9 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
 
 
     private void setData(JSONObject response) throws JSONException {
-//        timelineItems = JsonHelperTimeline.ServerAllSongs.parseTimelineItems(response);
+        timelineItems = JsonHelperTimeline.ServerAllSongs.parseTimelineItems(response);
 
-        timelineItems = JsonHelperTimeline.parseTimelineItems(response);
+//        timelineItems = JsonHelperTimeline.parseTimelineItems(response);
         adapter.setData(timelineItems);
         adapter.notifyDataSetChanged();
     }
