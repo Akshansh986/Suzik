@@ -134,6 +134,16 @@ public class InAapSongTable {
 		return inAppSongDataSet;
 	}
 
+    public static Cursor getAllDataCursor(Context context) {
+        SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT id as _id,'0' as identifier, t1.*, t2.* FROM "+ InAapSongTable.TABLE +" t1, "+  AllSongsTable.TABLE +" t2 WHERE t1."+ InAapSongTable.C_ID +" = t2."+ AllSongsTable.C_LOCAL_ID,
+                null);
+
+        return cursor;
+    }
+
 	public static void insert(InAppSongData inAppSongData, Context context) {
 		LOGD(TABLE, "insert");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
@@ -166,12 +176,12 @@ public class InAapSongTable {
 	 * context) { LOGD(TABLE, "update"); SQLiteDatabase db =
 	 * DbHelper.getInstance(context).getWritableDatabase();
 	 * 
-	 * ContentValues values = new ContentValues(); values.put(C_FPRINT,
-	 * newInAppSongData.getfPrint()); values.put(C_LINK,
-	 * newInAppSongData.getLink()); values.put(C_LOCATION,
+	 * ContentValues searchable = new ContentValues(); searchable.put(C_FPRINT,
+	 * newInAppSongData.getfPrint()); searchable.put(C_LINK,
+	 * newInAppSongData.getLink()); searchable.put(C_LOCATION,
 	 * newInAppSongData.getLocation());
 	 * 
-	 * if (db.update(TABLE, values, C_ID + "='" + newInAppSongData.getId() +
+	 * if (db.update(TABLE, searchable, C_ID + "='" + newInAppSongData.getId() +
 	 * "'", null) > 0) { return AllSongsTable.update(newInAppSongData.getId(),
 	 * newInAppSongData.getSong(), context); } else return false;
 	 * 

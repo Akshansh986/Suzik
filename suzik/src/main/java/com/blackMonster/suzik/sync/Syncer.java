@@ -58,7 +58,8 @@ public abstract class Syncer extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		LOGD(TAG, "onHandleIntent " + getClass().getSimpleName());
-        shouldRetry = intent.getBooleanExtra(SHOULD_RETRY,true);
+        if (intent != null) shouldRetry = intent.getBooleanExtra(SHOULD_RETRY,true);
+
         LOGD(TAG,"retry : " + shouldRetry);
         syncNow();
 	}
