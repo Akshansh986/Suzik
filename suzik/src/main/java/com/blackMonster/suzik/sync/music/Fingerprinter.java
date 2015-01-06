@@ -55,8 +55,9 @@ class Fingerprinter{
 		}
 		@Override
 		public void GNResultReady(GNFingerprintResult result) {
-			
-			try {
+            LOGD(TAG,"Response received");
+
+            try {
 				startSignal.await();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -91,7 +92,8 @@ class Fingerprinter{
 		}
 		
 		private void onError() {
-			fpErrorSong.add(androidSong);
+            LOGE(TAG,"Error : fingerprint failure");
+            fpErrorSong.add(androidSong);
 			songList.remove(androidSong);
 		}
 

@@ -16,7 +16,7 @@ public class AndroidMusicHelper {
 	public static Uri URI = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
 
-	 static List<AndroidData> getAllMySongs(Context context)
+	  static List<AndroidData> getAllMySongs(Context context)
 			throws Exception {
 		List<AndroidData> androidDataSet = null;
 
@@ -49,8 +49,8 @@ public class AndroidMusicHelper {
 
 				String path = cursor.getString(cursor
 						.getColumnIndex(MediaStore.Audio.Media.DATA));
-				path = path.replace("/storage/emulated/0", "");
-				path = "/sdcard" + path;
+//				path = path.replace("/storage/emulated /0", "");
+//				path = "/sdcard" + path;
 				
 				String fileName = cursor.getString(cursor
 						.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));

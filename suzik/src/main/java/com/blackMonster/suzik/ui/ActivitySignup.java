@@ -8,8 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -51,6 +53,8 @@ public class ActivitySignup extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LOGD(TAG, "onCreate");
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         resetGlobals();
@@ -102,6 +106,10 @@ public class ActivitySignup extends ActionBarActivity {
 
         clearDatabaseAndPrefs();
         MainPrefs.setMyNo(number, getApplicationContext());
+
+//       	startService(new Intent(this, SongsSyncer.class));
+
+
 
         dialog = UiUtils.createProgressDialog(getString(R.string.logging_in), this);
         dialog.show();
