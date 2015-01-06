@@ -4,18 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.blackMonster.suzik.MainPrefs;
-import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
 
-public class MainActivity extends Activity {
+public class DeciderActivity extends Activity {
 	private static final String TAG = "MainActivity";
 			    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	//	Crashlytics.start(this);
-
+		
 		if (MainPrefs.isLoginDone(this)) {
-			startActivity(new Intent(this, ActivityTimeline.class));
+			startActivity(new Intent(this, MainActivity.class));
 		} else {
 			startActivity(new Intent(this,ActivitySignup.class));
 		}

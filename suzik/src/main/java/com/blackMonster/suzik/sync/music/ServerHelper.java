@@ -9,11 +9,8 @@ import java.util.concurrent.ExecutionException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -23,15 +20,11 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
-import com.blackMonster.suzik.R;
-import com.blackMonster.suzik.musicstore.Timeline.JsonHelperTimeline;
 import com.blackMonster.suzik.sync.music.AndroidMusicHelper.AndroidData;
 import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
-import com.blackMonster.suzik.ui.ActivityTimeline;
 
 
-
- class ServerHelper {
+class ServerHelper {
 	
 	public static final String TAG ="ServerHelper";
 	

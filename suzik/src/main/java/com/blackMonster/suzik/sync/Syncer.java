@@ -40,8 +40,10 @@ public abstract class Syncer extends IntentService {
 	public static final int STATUS_ERROR = 2;
 	public static final int STATUS_DEVICE_OFFLINE = 3;
 
-	 int[] retryTimes={1,5,20,120,360,720,1440,1440}; //In minutes
-//	int[] retryTimes = { 1, 1, 1, 1 }; // In minutes
+
+    public static final String SHOULD_RETRY = "shudRtry";
+    private boolean shouldRetry = true;
+	private int[] retryTimes={1,5,20,120,360,720,1440,1440}; //In minutes
 
 	public Syncer() {
 		super(TAG);
@@ -56,14 +58,17 @@ public abstract class Syncer extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		LOGD(TAG, "onHandleIntent " + getClass().getSimpleName());
-		syncNow();
+        if (intent != null) shouldRetry = intent.getBooleanExtra(SHOULD_RETRY,true);
+
+        LOGD(TAG,"retry : " + shouldRetry);
+        syncNow();
 	}
 
 	private void syncNow() {
 
 		if (!NetworkUtils.isInternetAvailable(this)) {
 			LOGD(TAG, "Net not available");
-			MainPrefs.setCallOnNetAvailable(
+			if (shouldRetry) MainPrefs.setCallOnNetAvailable(
 					getOnNetAvailablePrefsName(getClass()), true, this);
 			broadcastResult(STATUS_DEVICE_OFFLINE);
 			return;
@@ -88,7 +93,8 @@ public abstract class Syncer extends IntentService {
 
 	private void onSucess() {
 		broadcastResult(STATUS_OK);
-		MainPrefs.setSyncFailureCount(getSyncFailureCountPrefsName(getClass()),
+
+        if (shouldRetry) MainPrefs.setSyncFailureCount(getSyncFailureCountPrefsName(getClass()),
 				0, this);
 	}
 
@@ -96,7 +102,9 @@ public abstract class Syncer extends IntentService {
 		LOGD(TAG, "failedSync " + getClass().getSimpleName());
 		broadcastResult(STATUS_ERROR);
 
-		incrementFailureCount();
+        if (!shouldRetry) return;
+
+        incrementFailureCount();
 		Long time = getNextRetryTimeInMs();
 		if (time != null) {
 			callFuture(time);

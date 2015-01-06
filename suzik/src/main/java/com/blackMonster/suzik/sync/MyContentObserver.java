@@ -7,6 +7,8 @@ import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
 
+import com.blackMonster.suzik.MainPrefs;
+
 public abstract class MyContentObserver extends ContentObserver{
 	private Context context;
 	public MyContentObserver(Handler handler, Context context) {
@@ -20,7 +22,9 @@ public abstract class MyContentObserver extends ContentObserver{
 	
 	@Override
 	public void onChange(boolean selfChange, Uri uri) {
-		LOGD(getClass().getSimpleName(), "onChange");
+
+        if (!MainPrefs.isLoginDone(context)) return;
+        LOGD(getClass().getSimpleName(), "onChange");
 		Syncer.batchRequest(onContentChange(), context);
 	}
 	

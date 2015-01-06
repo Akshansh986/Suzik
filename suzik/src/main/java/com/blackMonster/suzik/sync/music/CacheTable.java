@@ -128,10 +128,10 @@ class CacheTable {
 		LOGD(TABLE, "update");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
-		ContentValues values = new ContentValues();
-		values.put(C_FPRINT, newCacheData.getfPrint());
-		values.put(C_FILENAME, newCacheData.getFileName());
-		if (db.update(TABLE, values, C_ID + "='" + newCacheData.getId() + "'", null) > 0) {
+		ContentValues searchable = new ContentValues();
+		searchable.put(C_FPRINT, newCacheData.getfPrint());
+		searchable.put(C_FILENAME, newCacheData.getFileName());
+		if (db.update(TABLE, searchable, C_ID + "='" + newCacheData.getId() + "'", null) > 0) {
 			return AllSongsTable.update(newCacheData.getId(),
 					newCacheData.getSong(), context);
 		} else

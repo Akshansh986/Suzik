@@ -11,15 +11,15 @@ import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.util.DbUtils;
 
- class AllSongsTable {
+ public class AllSongsTable {
 
 	private static final String TAG = "AllSongsTable";
-	 static final String C_LOCAL_ID = "localId";
-	 static final String C_SERVER_ID = "serverId";
-	 static final String C_TITLE = "title";
-	 static final String C_ARTIST = "artist";
-	 static final String C_ALBUM = "album";
-	 static final String C_DURATION = "duration";
+    public static final String C_LOCAL_ID = "localId";
+    public static final String C_SERVER_ID = "serverId";
+    public static final String C_TITLE = "title";
+    public static final String C_ARTIST = "artist";
+    public static final String C_ALBUM = "album";
+    public static final String C_DURATION = "duration";
 	
 	 static final String TABLE = "allSongsTable";
 
@@ -120,13 +120,13 @@ import com.blackMonster.suzik.util.DbUtils;
 		LOGD(TABLE, "update");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
-		ContentValues values = new ContentValues();
+		ContentValues searchable = new ContentValues();
 
-		values.put(C_TITLE, newSong.getTitle());
-		values.put(C_ARTIST, newSong.getArtist());
-		values.put(C_ALBUM, newSong.getAlbum());
-		values.put(C_DURATION, newSong.getDuration());
-		return db.update(TABLE, values,  C_LOCAL_ID + "='" + id + "'" ,null) > 0;
+		searchable.put(C_TITLE, newSong.getTitle());
+		searchable.put(C_ARTIST, newSong.getArtist());
+		searchable.put(C_ALBUM, newSong.getAlbum());
+		searchable.put(C_DURATION, newSong.getDuration());
+		return db.update(TABLE, searchable,  C_LOCAL_ID + "='" + id + "'" ,null) > 0;
 		
 	}
 	*/

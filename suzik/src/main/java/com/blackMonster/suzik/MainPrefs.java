@@ -8,10 +8,10 @@ public class MainPrefs {
 	public static final String MY_NO = "MY_NO";
 	public static final String FIRST_TIME_MUSIC_SYNC = "firstMusicSync";
 	private static final String LOGIN_DONE = "loginDone";
+    private static final String TIMELINE_CACHE = "timelineCache";
 
 
-	
-	private static SharedPreferences prefs=null;
+    private static SharedPreferences prefs=null;
 
 	private static void initPrefInstance(Context context) {
 		if (prefs == null) prefs = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
@@ -21,6 +21,11 @@ public class MainPrefs {
 		initPrefInstance(context);
 		return prefs;
 	}
+
+    public static void clearAll(Context context) {
+        initPrefInstance(context);
+        prefs.edit().clear().commit();
+    }
 	
 	
 	public static void setCallOnNetAvailable(String caller, boolean value, Context context){
@@ -76,6 +81,16 @@ public class MainPrefs {
 		initPrefInstance(context);
 		return prefs.getString(MY_NO, "123");
 	}
+
+    public static void setTimelineCache(String data, Context context){
+        initPrefInstance(context);
+        prefs.edit().putString(TIMELINE_CACHE, data).commit();
+    }
+
+    public static String getTimelineCache(Context context){
+        initPrefInstance(context);
+        return prefs.getString(TIMELINE_CACHE, "");
+    }
 	
 	
 	

@@ -35,7 +35,7 @@ public class AppController extends Application {
 		super.onCreate();
 		final TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
 		Log.d(TAG, "oncreate");
-		Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
+	    	Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
 		Crashlytics.setUserIdentifier(MainPrefs.getMyNo(this));
 		mInstance = this;
 	}

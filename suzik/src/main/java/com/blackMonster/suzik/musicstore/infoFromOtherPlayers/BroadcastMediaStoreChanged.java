@@ -1,6 +1,7 @@
 package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 
 
+import com.blackMonster.suzik.MainPrefs;
 import com.crashlytics.android.Crashlytics;
 
 import android.content.BroadcastReceiver;
@@ -14,6 +15,8 @@ public class BroadcastMediaStoreChanged extends BroadcastReceiver{
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+
+        if (!MainPrefs.isLoginDone(context)) return;
 		String action = intent.getAction();
 		Log.i(TAG, action + "  " + "started");
 

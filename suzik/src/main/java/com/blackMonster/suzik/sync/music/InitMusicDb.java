@@ -35,7 +35,6 @@ public class InitMusicDb extends IntentService {
 			InAapSongTable.insert(songList, this);
 			LOGD(TAG, "in app insert complete");
 			broadcastResult(BROADCAST_INIT_MUSIC_DB_RESULT, true);
-			//startService(new Intent(this, SongsSyncer.class));
 		} catch (Exception e) {
 			e.printStackTrace();
 			Crashlytics.logException(e);

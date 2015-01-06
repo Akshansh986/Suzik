@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.util.NetworkUtils;
 
 public class ConnectivityChangeReceiver extends BroadcastReceiver {
@@ -12,7 +13,10 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		if (intent.getAction().equals("android.net.conn.CONNECTIVITY_CHANGE")) {
+        if (!MainPrefs.isLoginDone(context)) return;
+
+
+        if (intent.getAction().equals("android.net.conn.CONNECTIVITY_CHANGE")) {
 			LOGD(TAG, "connectivity change");
 			if (NetworkUtils.isInternetAvailable(context)) {
 				LOGD(TAG, "Net available");

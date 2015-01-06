@@ -23,17 +23,16 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity
-            android:name="com.blackMonster.suzik.ActivityFriends"
-            android:label="@string/app_name" >
-        </activity>
+
         <activity android:name="com.blackMonster.suzik.ui.ActivitySignup" 
             android:screenOrientation="portrait">
             
         </activity>
-        <activity android:name="com.blackMonster.suzik.ActivitySongsList" >
-        </activity>
-        <activity android:name="com.blackMonster.suzik.ui.MainActivity" >
+
+        <activity android:name=".ui.MainActivity"
+            android:configChanges="orientation|keyboardHidden"></activity>
+
+        <activity android:name=".ui.DeciderActivity" >
               <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,13 +40,8 @@
             </intent-filter>
         </activity>
         
-        <activity android:name="com.blackMonster.suzik.ui.ActivityTimeline"
-              android:screenOrientation="portrait">
-        
-        </activity>
 
-        <service android:name="com.blackMonster.suzik.sync.contacts.ServiceSendMyContacts" >
-        </service>
+
 
         <activity android:name="com.blackMonster.suzik.musicstore.infoFromOtherPlayers.ActivityTest" >
         </activity>
