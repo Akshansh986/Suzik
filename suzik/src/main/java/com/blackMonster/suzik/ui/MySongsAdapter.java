@@ -78,7 +78,7 @@ public class MySongsAdapter extends BaseAdapter {
         return position;
     }
 
-    public int getActualPosition(int position) {
+    public int getActualCursorPosition(int position) {
         if (position >= inappCount) return position - inappCount;
         else return position;
     }
@@ -98,7 +98,7 @@ public class MySongsAdapter extends BaseAdapter {
         String title, artist;
         int pos;
         if (isAndroidSong(position)) {
-            pos = getActualPosition(position);
+            pos = getActualCursorPosition(position);
             LOGD(TAG, "outapp " + position + "  " + pos);
             androidCurosr.moveToPosition(pos);
             LOGD(TAG, "done " + position + "  " + pos);
@@ -114,7 +114,7 @@ public class MySongsAdapter extends BaseAdapter {
 
         } else {
             LOGD(TAG, "inapp " + position);
-             pos = getActualPosition(position);
+             pos = getActualCursorPosition(position);
             inappCursor.moveToPosition(pos);
             title = inappCursor.getString(inappCursor.getColumnIndex(AllSongsTable.C_TITLE));
             artist = inappCursor.getString(inappCursor.getColumnIndex(AllSongsTable.C_ARTIST));

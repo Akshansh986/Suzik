@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.MenuItemCompat;
@@ -15,7 +14,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +23,8 @@ import com.blackMonster.suzik.R;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
+
+//TODO set Actionbar title on different fragments.
 
 public class MainSliderActivity  extends ActionBarActivity implements View.OnClickListener{
     public static final String TAG = "MainSliderActivity";

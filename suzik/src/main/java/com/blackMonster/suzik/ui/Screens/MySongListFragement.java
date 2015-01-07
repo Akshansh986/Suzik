@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,6 +85,8 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, final int position, long arg3) {
+
+        LOGD(TAG," "+ position);
 
 //        Log.d(TAG, "fsdf " + position + timelineItems.get(position).getSongUrl());
 //
