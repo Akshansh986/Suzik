@@ -15,6 +15,8 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
@@ -38,8 +40,11 @@ public static final String TAG = "SearchReslultActivity";
     public void onCreate(Bundle savedInstanceState) {
         LOGD(TAG,"oncreate");
         super.onCreate(savedInstanceState);
-
+        getSupportActionBar().setTitle("");
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.main_activity);
+
+
 
 //        handleIntent(getIntent());
 
@@ -51,31 +56,45 @@ public static final String TAG = "SearchReslultActivity";
     }
 
 
-
     public boolean onCreateOptionsMenu(Menu menu) {
+        LOGD(TAG,"oncreateOptionsmenu");
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.search);
 
         // Associate searchable configuration with the SearchView
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setOnQueryTextListener(this);
-//        (menu.findItem(R.id.search)).setOnActionExpandListener(this);
+        searchView.setIconifiedByDefault(false);
+        searchView.setIconified(false);
+        MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener(){
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                finish();
+                return true;
+            }
 
-//        MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.search),this);
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+        });
 
-        (menu.findItem(R.id.search)).expandActionView();
+        menuItem.expandActionView();
         return true;
     }
 
     @Override
     public boolean onQueryTextSubmit(String s) {
         LOGD(TAG,s);
-        return false;
+        return true;
     }
 
     @Override
@@ -83,7 +102,7 @@ public static final String TAG = "SearchReslultActivity";
         LOGD(TAG,"change " + s);
         if (s.length() <=1 ) {
             fragment.setData(null,null);
-            return false;
+            return true;
         }
 
 
@@ -113,11 +132,11 @@ public static final String TAG = "SearchReslultActivity";
     }
 
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        finish();
+//    }
 
 
 }
