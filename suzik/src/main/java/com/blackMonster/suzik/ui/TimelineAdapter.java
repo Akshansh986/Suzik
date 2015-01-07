@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,8 @@ import com.android.volley.toolbox.ImageLoader;
 import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 public class TimelineAdapter extends BaseAdapter {	
 	private static final String TAG = "TimelineAdapter";
@@ -86,6 +89,8 @@ public class TimelineAdapter extends BaseAdapter {
 			artist.setText(item.getSong().getArtist());
 		}
 
+//TODO getLocal albumart if inAppMirror is available in timeline item.
+
 		if (item.getMediumAlbumArt()!= null) {
 			feedImageView.setImageUrl(item.getMediumAlbumArt(), imageLoader);
 			feedImageView.setVisibility(View.VISIBLE);
@@ -123,34 +128,25 @@ public class TimelineAdapter extends BaseAdapter {
 		} else {
 			feedImageView.setVisibility(View.GONE);
 		}
-	
-		/*// Feed image
-		if (item.getMediumAlbumArt() != null) {
-			feedImageView.setImageUrl(item.getMediumAlbumArt(), imageLoader);
-			//LayoutParams lp = new LayoutParams(source)
-			//lp. = (int) (lp.width* .75);
-		//	networkView.setLayoutParams(lp);
-			feedImageView.setVisibility(View.VISIBLE);
-			feedImageView.setDefaultImageResId(R.drawable.album_art);
-			LinearLayout.LayoutParams  lp =  (LayoutParams) feedImageView.getLayoutParams();
-			lp.height = (int) (feedImageView.getWidth() * .75);
-			LOGD(TAG,lp.height + " " + lp.width);
-			feedImageView.setLayoutParams(lp);
-			networkView
-					.setResponseObserver(new FeedImageView.ResponseObserver() {
-						@Override
-						public void onError() {
-						}
 
-						@Override
-						public void onSuccess() {
-						}
-					});
-		} else {
-			feedImageView.setVisibility(View.GONE);
-		}*/
+        ImageView likeButton = (ImageView) convertView.findViewById(R.id.like_icon);
+
+        if (item.isInAppMirrorAvailable()) likeButton.setImageResource(R.drawable.redheart);
+        else likeButton.setImageResource(R.drawable.whiteheart);
+
+
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LOGD(TAG, "buttondownload");
+
+            }
+        });
 
 		return convertView;
 	}
+
+
+
 
 }

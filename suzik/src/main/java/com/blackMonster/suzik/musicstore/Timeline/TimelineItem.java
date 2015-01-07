@@ -1,19 +1,28 @@
 package com.blackMonster.suzik.musicstore.Timeline;
 
+import android.content.Context;
+
 import com.blackMonster.suzik.musicstore.module.Song;
+import com.blackMonster.suzik.sync.music.InAapSongTable;
 
 public class TimelineItem {
 	Song song;
 	long id;
 	String albumArtUrl, songUrl;
+    InAapSongTable.InAppSongData inAppSongMirror;
 
-	public TimelineItem(Song song, long id, String albumArtUrl, String songUrl) {
+	public TimelineItem(Song song, long id, String albumArtUrl, String songUrl, Context context) {
 		super();
 		this.song = song;
 		this.id = id;
 		this.albumArtUrl = albumArtUrl;
 		this.songUrl = songUrl;
+        inAppSongMirror = InAapSongTable.getDataFromServerId(id,context);
 	}
+
+    public boolean isInAppMirrorAvailable() {
+        return inAppSongMirror != null;
+    }
 
 	public Song getSong() {
 		return song;

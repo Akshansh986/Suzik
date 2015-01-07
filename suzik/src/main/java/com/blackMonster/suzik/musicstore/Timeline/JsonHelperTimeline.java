@@ -1,5 +1,7 @@
 package com.blackMonster.suzik.musicstore.Timeline;
 
+import android.content.Context;
+
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 import java.util.ArrayList;
@@ -43,7 +45,7 @@ public class JsonHelperTimeline {
 	
 	
 
-	public static List<TimelineItem> parseTimelineItems(JSONObject response) throws JSONException {
+	public static List<TimelineItem> parseTimelineItems(JSONObject response, Context context) throws JSONException {
 
 		List<TimelineItem> result = new ArrayList<TimelineItem>();
 
@@ -60,7 +62,7 @@ song = new Song(o.getString(P_R_TITLE),
 		
 LOGD(TAG, song.toString());
 			result.add(new TimelineItem(song, o.getLong(P_R_ID), o.isNull(P_R_ALBUM_URL) ? null: o.getString(P_R_ALBUM_URL),
-					o.getString(P_R_SONG_URL)));
+					o.getString(P_R_SONG_URL), context));
 		}
 
 		return result;
@@ -111,7 +113,7 @@ LOGD(TAG, song.toString());
         }
 
 
-       public static List<TimelineItem> parseTimelineItems(JSONObject response) throws JSONException {
+       public static List<TimelineItem> parseTimelineItems(JSONObject response,Context context) throws JSONException {
 
            List<TimelineItem> result = new ArrayList<TimelineItem>();
 
@@ -126,7 +128,7 @@ LOGD(TAG, song.toString());
                        o.isNull(P_R_ALBUM) ? null: o.getString(P_R_ALBUM), o.getLong(P_R_DURATION));
 
                result.add(new TimelineItem(song, o.getLong(P_R_SERVER_ID), o.isNull(P_R_ALUBMART_LINK) ? null: o.getString(P_R_ALUBMART_LINK),
-                       o.getString(P_R_SONG_LINK)));
+                       o.getString(P_R_SONG_LINK), context));
            }
 
            LOGD(TAG,"size "  + result.size());

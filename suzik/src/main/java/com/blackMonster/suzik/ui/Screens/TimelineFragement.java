@@ -157,7 +157,7 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
 
 
     private void setData(JSONObject response) throws JSONException {
-        timelineItems = JsonHelperTimeline.ServerAllSongs.parseTimelineItems(response);
+        timelineItems = JsonHelperTimeline.ServerAllSongs.parseTimelineItems(response,getActivity());
 
 //        timelineItems = JsonHelperTimeline.parseTimelineItems(response);
         adapter.setData(timelineItems);

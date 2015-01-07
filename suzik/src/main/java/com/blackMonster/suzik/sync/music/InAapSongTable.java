@@ -64,7 +64,54 @@ public class InAapSongTable {
 		return inAppSongData;
 	}
 
-	public static InAppSongData getData(String fingerPrint, Context context) {
+
+    public static InAppSongData getDataFromServerId(long serverId, Context context) {
+        SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
+
+//        String[] args = {InAapSongTable.TABLE,AllSongsTable.TABLE,AllSongsTable.C_SERVER_ID,serverId +"",InAapSongTable.C_ID, AllSongsTable.C_LOCAL_ID};
+
+        String query = String.format("SELECT t1.*, t2.* FROM %s t1, %s t2 WHERE t2.%s = %s and t1.%s = t2.%s",
+                InAapSongTable.TABLE,AllSongsTable.TABLE,AllSongsTable.C_SERVER_ID,serverId +"",
+                InAapSongTable.C_ID, AllSongsTable.C_LOCAL_ID);
+
+
+        Cursor cursor = db.rawQuery( query, null);
+
+        InAppSongData inAppSongData = null;
+
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    long id = cursor.getLong(cursor
+                            .getColumnIndex(C_ID));
+                    String fp = cursor.getString(cursor
+                            .getColumnIndex(C_FPRINT));
+                    String albumartLink = cursor.getString(cursor
+                            .getColumnIndex(C_ALBUMART_LINK));
+                    String songLink = cursor.getString(cursor
+                            .getColumnIndex(C_SONG_LINK));
+                    String location = cursor.getString(cursor
+                            .getColumnIndex(C_LOCATION));
+
+
+                    Song song = new Song(cursor.getString(cursor
+                            .getColumnIndex(AllSongsTable.C_TITLE)), cursor.getString(cursor
+                            .getColumnIndex(AllSongsTable.C_ARTIST)), cursor.getString(cursor
+                            .getColumnIndex(AllSongsTable.C_ALBUM)), cursor.getLong(cursor
+                            .getColumnIndex(AllSongsTable.C_DURATION)));
+
+                    inAppSongData = new InAppSongData(id, serverId,
+                            song, fp, albumartLink, songLink, location);
+                }
+                cursor.close();
+            }
+
+
+        return inAppSongData;
+    }
+
+
+
+    public static InAppSongData getData(String fingerPrint, Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
 
 		InAppSongData inAppSongData = null;
@@ -138,7 +185,7 @@ public class InAapSongTable {
         SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT id as _id,'0' as identifier, t1.*, t2.* FROM "+ InAapSongTable.TABLE +" t1, "+  AllSongsTable.TABLE +" t2 WHERE t1."+ InAapSongTable.C_ID +" = t2."+ AllSongsTable.C_LOCAL_ID,
+                "SELECT id as _id, t1.*, t2.* FROM "+ InAapSongTable.TABLE +" t1, "+  AllSongsTable.TABLE +" t2 WHERE t1."+ InAapSongTable.C_ID +" = t2."+ AllSongsTable.C_LOCAL_ID,
                 null);
 
         return cursor;
@@ -148,7 +195,7 @@ public class InAapSongTable {
         SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT id as _id,'0' as identifier, t1.*, t2.* FROM "+
+                "SELECT id as _id, t1.*, t2.* FROM "+
                         InAapSongTable.TABLE +" t1, "+  AllSongsTable.TABLE +" t2 WHERE t1."+ InAapSongTable.C_ID
                         +" = t2."+ AllSongsTable.C_LOCAL_ID + " and t2."+ AllSongsTable.C_TITLE + " LIKE '%" + search + "%'",
                 null);
