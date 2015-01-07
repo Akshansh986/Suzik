@@ -25,7 +25,6 @@ import com.blackMonster.suzik.sync.music.InAapSongTable;
  * Created by akshanshsingh on 05/01/15.
  */
 
-//TODO OnBackPressed is complete jugad, fix it.
 //TODO Image is reloading on keyboard hide and show, which causes flicker. (fix it)
 
 
@@ -72,8 +71,7 @@ public static final String TAG = "SearchReslultActivity";
                 searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setOnQueryTextListener(this);
-        searchView.setIconifiedByDefault(false);
-        searchView.setIconified(false);
+      
         MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener(){
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
