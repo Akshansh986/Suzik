@@ -26,7 +26,7 @@ import java.lang.ref.WeakReference;
  * Created by akshanshsingh on 07/01/15.
  */
 //TODO implemented in complete jugad form, use other library or fix it (problems: I don't understand code | ugly code | causes image flicker | little lag in scrolling
-
+//TODO image loading is seriously not smooth fix it.
 
 public class LazyImageLoader {
 

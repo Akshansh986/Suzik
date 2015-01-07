@@ -81,7 +81,7 @@ public static final String TAG = "SearchReslultActivity";
     @Override
     public boolean onQueryTextChange(String s) {
         LOGD(TAG,"change " + s);
-        if (s.length() <=2 ) {
+        if (s.length() <=1 ) {
             fragment.setData(null,null);
             return false;
         }
