@@ -37,16 +37,23 @@ public class MySongsAdapter extends BaseAdapter {
         this.context = context;
         inflater = LayoutInflater.from(this.context);
 
-        inappCount = inappCursor.getCount();
-        androidCount = androidCurosr.getCount();
+        setCount();
+
         lazyImageLoader = new LazyImageLoader(context);
+    }
+
+    private void setCount() {
+       if (inappCursor != null) inappCount = inappCursor.getCount();
+        else inappCount = 0;
+
+        if (androidCurosr !=null) androidCount = androidCurosr.getCount();
+        else androidCount = 0;
     }
 
     public void updateCursors(Cursor androidC, Cursor inappCursor) {
         this.androidCurosr = androidC;
         this.inappCursor = inappCursor;
-        inappCount = inappCursor.getCount();
-        androidCount = androidCurosr.getCount();
+        setCount();
         notifyDataSetChanged();
     }
 

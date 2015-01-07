@@ -144,6 +144,18 @@ public class InAapSongTable {
         return cursor;
     }
 
+    public static Cursor getAllDataCursorLike(String search,Context context) {
+        SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT id as _id,'0' as identifier, t1.*, t2.* FROM "+
+                        InAapSongTable.TABLE +" t1, "+  AllSongsTable.TABLE +" t2 WHERE t1."+ InAapSongTable.C_ID
+                        +" = t2."+ AllSongsTable.C_LOCAL_ID + " and t2."+ AllSongsTable.C_TITLE + " LIKE '%" + search + "%'",
+                null);
+
+        return cursor;
+    }
+
 	public static void insert(InAppSongData inAppSongData, Context context) {
 		LOGD(TABLE, "insert");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();

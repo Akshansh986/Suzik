@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.ui.Screens.ActivitySignup;
-import com.blackMonster.suzik.ui.Screens.MainActivity;
+import com.blackMonster.suzik.ui.Screens.MainSliderActivity;
 
 public class DeciderActivity extends Activity {
 	private static final String TAG = "MainActivity";
@@ -16,7 +16,7 @@ public class DeciderActivity extends Activity {
 	//	Crashlytics.start(this);
 		
 		if (MainPrefs.isLoginDone(this)) {
-			startActivity(new Intent(this, MainActivity.class));
+			startActivity(new Intent(this, MainSliderActivity.class));
 		} else {
 			startActivity(new Intent(this,ActivitySignup.class));
 		}

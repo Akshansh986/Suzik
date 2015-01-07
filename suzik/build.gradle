@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         applicationId "com.blackMonster.suzik"
-        minSdkVersion 8
+        minSdkVersion 14
         targetSdkVersion 21
     }
 

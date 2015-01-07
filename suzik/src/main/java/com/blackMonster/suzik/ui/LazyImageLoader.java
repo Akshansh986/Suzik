@@ -25,6 +25,9 @@ import java.lang.ref.WeakReference;
 /**
  * Created by akshanshsingh on 07/01/15.
  */
+//TODO implemented in complete jugad form, use other library or fix it (problems: I don't understand code | ugly code | causes image flicker | little lag in scrolling
+
+
 public class LazyImageLoader {
 
     private static final Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
@@ -250,6 +253,7 @@ public class LazyImageLoader {
 
         private final WeakReference<ImageView> imageViewReference;
         private int data = 0;
+        boolean shouldDeffer = true;
 
         public BitmapWorkerTask(ImageView imageView) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
@@ -266,6 +270,20 @@ public class LazyImageLoader {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
+
+
+                if (shouldDeffer) {
+                    shouldDeffer = false;
+                    final Bitmap bmp = bitmap;
+                    imageViewReference.get().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            onPostExecute(bmp);
+                        }
+                    });
+                    return;
+                }
+
             if (isCancelled()) {
                 bitmap = null;
             }
