@@ -17,12 +17,23 @@ public class TimelineItem {
 		this.id = id;
 		this.albumArtUrl = albumArtUrl;
 		this.songUrl = songUrl;
-        inAppSongMirror = InAapSongTable.getDataFromServerId(id,context);
+        setInAppSongMirrorIfAvailable(context);
 	}
+
+    public void setInAppSongMirrorIfAvailable(Context context) {
+        inAppSongMirror = InAapSongTable.getDataFromServerId(id,context);
+    }
 
     public boolean isInAppMirrorAvailable() {
         return inAppSongMirror != null;
     }
+
+    public InAapSongTable.InAppSongData getInAppSongMirror() {
+        return inAppSongMirror;
+    }
+
+
+
 
 	public Song getSong() {
 		return song;

@@ -2,6 +2,174 @@
 <items version="2" >
 
     <item
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.crashlytics.sdk.android/answers/1.1.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4d100f9e146f538d729d698a994c74c7b5fb886e">
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-63245dd91fd14ea3fa3a6c5173454c56dbc5b8f2.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.twitter.sdk.android/tweet-ui/1.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ca562dfe312795be276130ced15da05478ac8a01">
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-0f6d8ec98e582bc05674f4f37eb62d92f36294ff.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.twitter.sdk.android/tweet-composer/0.7.2/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="5838e4092c53ad68e8d0b996d899133c6446b4af">
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-930fea5f72fe86ec349ad73449092f664e04743c.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/libs/volley.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="d4aaa36e04ee71a83444f8367c97a46fda662d2c">
+        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/volley-d238b4c56e46de5fb58ee9f4128f2a5c69ff639a.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/libs/GN_Music_SDK.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a12d7aadfa13e2703c56884fe674accabf70ec29">
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/GN_Music_SDK-52228f92bf3d31e9a37928069006691724d627d9.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-bc99839a7ab2e286d3ce7ac6c5438cd1848b5386.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-afd15c66667d6d1b5768290329cb93c8fcfba9ac.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/io.fabric.sdk.android/fabric/1.1.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0bb0df3bf333801406f32bdfba678bcbd38cb9ff">
+        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-acd40f6d4eaa7ec124fc3ca5c429fcceab0017af.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.2.4/a60a5e993c98c864010053cb901b7eab25306568/gson-2.2.4.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a60a5e993c98c864010053cb901b7eab25306568">
+        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/gson-2.2.4-6626817ed1097b76e8716f99e12c5c5afca916fc.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-8e9657d6d844f40f70dbdd6c984a31974cd776c5.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics/2.2.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9c91cd2b5773b33e4cfe8ababb6544b54ef40335">
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-25f5c04b7a2957270255a563b5d623d9bf858d0f.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-539fce4f9b7950e6d85d37e083c47b556c4bbba6.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.crashlytics.sdk.android/answers/1.1.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4d100f9e146f538d729d698a994c74c7b5fb886e">
+        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-29652817717d8b739cb56a471154dd5e11c5c469.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.digits.sdk.android/digits/1.1.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e566c8c448420d730e72e0964d4d334606720e60">
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-57dd93594e36c0e590338c6a9394542c919cda31.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-0ac09eccae11cf5e653e66ba6b9df87fcc63edb5.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.twitter.sdk.android/twitter/1.1.1/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0eb65cff39b836d160f09684b3143bbe455762ac">
+        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-ea40f9e25e378ebf1601bd599b3eb2ebd6401dbf.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.crashlytics.sdk.android/beta/1.1.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="86a04f40b5e28f11d108171131bed57ae1443f35">
+        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-98001ebcb38d8991af7e3aa2572dd88ebef1cc50.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.digits.sdk.android/digits/1.1.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e566c8c448420d730e72e0964d4d334606720e60">
+        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-aded504a29d625432d58d41507b4b58b5f11a086.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.android.support/palette-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="926692214530f39eaed89159237d26cdc0ae6e48">
+        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-42751378ba8dc43d708cdf7ade9a557a76e0c2cb.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.twitter.sdk.android/twitter-core/1.1.1/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="145ba6a0fca439b2280d1363753e7268e6a12e6f">
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-d656e08096b9e32c709cecf2abe732667159fa5f.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/1.6.1/efb0a36546aa8857ab8df358b106c1817e03cbee/retrofit-1.6.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="efb0a36546aa8857ab8df358b106c1817e03cbee">
+        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/retrofit-1.6.1-efc74abc108e4f5f56674c65e6f3e14a3882338c.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.twitter.sdk.android/twitter-core/1.1.1/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="145ba6a0fca439b2280d1363753e7268e6a12e6f">
+        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-f62ac1451c523d7835ad8f7f8fb23e1d1d1a7441.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.twitter.sdk.android/tweet-ui/1.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ca562dfe312795be276130ced15da05478ac8a01">
+        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-36b7635b90d5b8fb3b462c495d9e6e8c21351063.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.twitter.sdk.android/twitter/1.1.1/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0eb65cff39b836d160f09684b3143bbe455762ac">
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-f760c7f55d154264d415d68625feb99f3890b1f8.jar" />
+    </item>
+    <item
         jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -30,46 +198,18 @@
         <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/picasso-2.3.2-9ac3afe413843bbd93c88830bf02e6a9475fb2ac.jar" />
     </item>
     <item
-        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/libs/volley.jar"
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/libs/volley.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="d4aaa36e04ee71a83444f8367c97a46fda662d2c">
-        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/volley-d238b4c56e46de5fb58ee9f4128f2a5c69ff639a.jar" />
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/volley-805eae529dd3c6095ff7fccd1c256e79bf5e716b.jar" />
     </item>
     <item
-        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.crashlytics.sdk.android/beta/1.1.0/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
-        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-afd15c66667d6d1b5768290329cb93c8fcfba9ac.jar" />
-    </item>
-    <item
-        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/io.fabric.sdk.android/fabric/1.1.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="0bb0df3bf333801406f32bdfba678bcbd38cb9ff">
-        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-acd40f6d4eaa7ec124fc3ca5c429fcceab0017af.jar" />
-    </item>
-    <item
-        jar="/Users/akshanshsingh/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.2.4/a60a5e993c98c864010053cb901b7eab25306568/gson-2.2.4.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="a60a5e993c98c864010053cb901b7eab25306568">
-        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/gson-2.2.4-6626817ed1097b76e8716f99e12c5c5afca916fc.jar" />
-    </item>
-    <item
-        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
-        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-539fce4f9b7950e6d85d37e083c47b556c4bbba6.jar" />
-    </item>
-    <item
-        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.crashlytics.sdk.android/answers/1.1.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="4d100f9e146f538d729d698a994c74c7b5fb886e">
-        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-29652817717d8b739cb56a471154dd5e11c5c469.jar" />
+        sha1="86a04f40b5e28f11d108171131bed57ae1443f35">
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-b4cffa9d81216c5e702f8c4af672cd99eee1c216.jar" />
     </item>
     <item
         jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.3/classes.jar"
@@ -79,13 +219,6 @@
         <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-1a2d7e5c18260a92a246f11aff8bc69839cb9db3.jar" />
     </item>
     <item
-        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.twitter.sdk.android/twitter/1.1.1/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="0eb65cff39b836d160f09684b3143bbe455762ac">
-        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-ea40f9e25e378ebf1601bd599b3eb2ebd6401dbf.jar" />
-    </item>
-    <item
         jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.twitter.sdk.android/tweet-composer/0.7.2/classes.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -93,39 +226,11 @@
         <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-002eb4ecf2d3a965d45716f7b03af49fa55f6e93.jar" />
     </item>
     <item
-        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.crashlytics.sdk.android/beta/1.1.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="86a04f40b5e28f11d108171131bed57ae1443f35">
-        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-98001ebcb38d8991af7e3aa2572dd88ebef1cc50.jar" />
-    </item>
-    <item
-        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.digits.sdk.android/digits/1.1.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="e566c8c448420d730e72e0964d4d334606720e60">
-        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-aded504a29d625432d58d41507b4b58b5f11a086.jar" />
-    </item>
-    <item
-        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.android.support/palette-v7/21.0.3/classes.jar"
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.android.support/palette-v7/21.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="926692214530f39eaed89159237d26cdc0ae6e48">
-        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-42751378ba8dc43d708cdf7ade9a557a76e0c2cb.jar" />
-    </item>
-    <item
-        jar="/Users/akshanshsingh/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/1.6.1/efb0a36546aa8857ab8df358b106c1817e03cbee/retrofit-1.6.1.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="efb0a36546aa8857ab8df358b106c1817e03cbee">
-        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/retrofit-1.6.1-efc74abc108e4f5f56674c65e6f3e14a3882338c.jar" />
-    </item>
-    <item
-        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.twitter.sdk.android/twitter-core/1.1.1/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="145ba6a0fca439b2280d1363753e7268e6a12e6f">
-        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-f62ac1451c523d7835ad8f7f8fb23e1d1d1a7441.jar" />
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-58d6f85859ce3b720d6a1ad51902fb3b74340d6f.jar" />
     </item>
     <item
         jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics/2.2.0/classes.jar"
@@ -135,11 +240,18 @@
         <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-84b4c0b5ae9d435b45a8a088625394841b1378b7.jar" />
     </item>
     <item
-        jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.twitter.sdk.android/tweet-ui/1.0.3/classes.jar"
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/io.fabric.sdk.android/fabric/1.1.0/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="ca562dfe312795be276130ced15da05478ac8a01">
-        <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-36b7635b90d5b8fb3b462c495d9e6e8c21351063.jar" />
+        sha1="0bb0df3bf333801406f32bdfba678bcbd38cb9ff">
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-ac2d1ad1a0377d8d7f60b1ed0ccc61c68f2929e5.jar" />
+    </item>
+    <item
+        jar="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="00b0b7233e1ec64acebfac40d4983d32d4712426">
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-799c3cbcd67bd46856e48069e042bef81414e87d.jar" />
     </item>
 
 </items>

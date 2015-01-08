@@ -131,7 +131,7 @@ public abstract class Syncer extends IntentService {
 	private Long getNextRetryTimeInMs() {
 		int fail = MainPrefs.getSyncFailureCount(
 				getSyncFailureCountPrefsName(getClass()), this) - 1;
-		if (fail < 0 || fail > retryTimes.length)
+		if (fail < 0 || fail >= retryTimes.length)
 			return null;
 		return retryTimes[fail] * AppConfig.MINUTE_IN_MILLISEC;
 

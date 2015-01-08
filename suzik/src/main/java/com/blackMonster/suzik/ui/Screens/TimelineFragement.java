@@ -1,5 +1,5 @@
 package com.blackMonster.suzik.ui.Screens;
-
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +49,6 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
     TimelineAdapter adapter;
     SwipeRefreshLayout swipeLayout;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // retain this fragment
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -74,7 +68,7 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
 
 
         try {
-            adapter = new TimelineAdapter(getActivity(), timelineItems);
+            adapter = new TimelineAdapter(getActivity(), timelineItems,getActivity());
             listView.setAdapter(adapter);
             loadInitData();
             setSwipeLayoutRefreshing();
@@ -94,6 +88,7 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
             String data = MainPrefs.getTimelineCache(getActivity());
             if (data.equals("")) return;
             setData(new JSONObject(data));
+            LOGD(TAG,(new JSONObject(data)).toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -103,11 +98,11 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
 
     private void loadData() throws JSONException {
 
-//        JSONObject postJson = JsonHelperTimeline.getCredentials();
-		JSONObject postJson = JsonHelperTimeline.ServerAllSongs.getCredentials();
+        JSONObject postJson = JsonHelperTimeline.getCredentials();
+//		JSONObject postJson = JsonHelperTimeline.ServerAllSongs.getCredentials();
 
         JsonObjectRequest jsonReq = new JsonObjectRequest(Method.POST,
-                AppConfig.MAIN_URL, postJson, new Response.Listener<JSONObject>() {
+               "https://dl.dropboxusercontent.com/u/95984737/akki.txt", postJson, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -157,9 +152,9 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
 
 
     private void setData(JSONObject response) throws JSONException {
-        timelineItems = JsonHelperTimeline.ServerAllSongs.parseTimelineItems(response,getActivity());
+//        timelineItems = JsonHelperTimeline.ServerAllSongs.parseTimelineItems(response,getActivity());
 
-//        timelineItems = JsonHelperTimeline.parseTimelineItems(response);
+        timelineItems = JsonHelperTimeline.parseTimelineItems(response,getActivity());
         adapter.setData(timelineItems);
         adapter.notifyDataSetChanged();
     }

@@ -246,7 +246,8 @@ public class InAapSongTable {
 	 * 
 	 * }
 	 */
-	static boolean remove(long id, Context context) {
+	public static boolean remove(Long id, Context context) {
+        if (id == null) return true;
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 		boolean rr = AllSongsTable.remove(id, context);
 		boolean r = db.delete(TABLE, C_ID + "='" + id + "'", null) > 0;
