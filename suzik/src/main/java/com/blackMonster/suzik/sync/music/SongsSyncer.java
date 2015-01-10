@@ -17,6 +17,7 @@ import com.blackMonster.suzik.sync.music.AndroidMusicHelper.AndroidData;
 import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
 import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;
+import com.blackMonster.suzik.ui.UiBroadcasts;
 
 public class SongsSyncer extends Syncer {
 	private static final String TAG = "SongsSyncer";
@@ -79,8 +80,10 @@ public class SongsSyncer extends Syncer {
 		LOGI(TAG,"move to queue done");
 
 		if (!QueueAddedSongs.isEmpty(this)) AddedSongsResponseHandler.futureCall(this);
-		
-		LOGI(TAG,"All done");
+
+
+        UiBroadcasts.broadcastMusicDataChanged(this);
+        LOGI(TAG,"All done");
 		return true;		
 	}
 

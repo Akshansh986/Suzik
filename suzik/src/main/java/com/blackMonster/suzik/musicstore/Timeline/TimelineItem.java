@@ -6,10 +6,10 @@ import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
 
 public class TimelineItem {
-	Song song;
-	long id;
-	String albumArtUrl, songUrl;
-    InAapSongTable.InAppSongData inAppSongMirror;
+	private Song song;
+	private long id;
+	private String albumArtUrl, songUrl;
+    private InAapSongTable.InAppSongData inAppSongMirror;
 
 	public TimelineItem(Song song, long id, String albumArtUrl, String songUrl, Context context) {
 		super();
@@ -17,14 +17,14 @@ public class TimelineItem {
 		this.id = id;
 		this.albumArtUrl = albumArtUrl;
 		this.songUrl = songUrl;
-        setInAppSongMirrorIfAvailable(context);
+        setInappMirrorIfAvailable(context);
 	}
 
-    public void setInAppSongMirrorIfAvailable(Context context) {
+    public void setInappMirrorIfAvailable(Context context) {
         inAppSongMirror = InAapSongTable.getDataFromServerId(id,context);
     }
 
-    public boolean isInAppMirrorAvailable() {
+    public boolean isAlreadyInappDownload() {
         return inAppSongMirror != null;
     }
 

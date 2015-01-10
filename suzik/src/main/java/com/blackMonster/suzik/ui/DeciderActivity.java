@@ -20,10 +20,10 @@ public class DeciderActivity extends Activity {
 		} else {
 			startActivity(new Intent(this,ActivitySignup.class));
 		}
-		
+
 		finish();
-		
-		
+
+
 		//for (int i=0 ; i<10000 ; ++i);
 		//if (ContentObserverService.musicObserver == null) LOGD(TAG,"null");
 		//else

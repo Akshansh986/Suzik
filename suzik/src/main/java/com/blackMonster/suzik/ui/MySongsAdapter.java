@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.sync.music.AllSongsTable;
+import com.blackMonster.suzik.sync.music.InAapSongTable;
 
 
 /**
@@ -43,10 +44,10 @@ public class MySongsAdapter extends BaseAdapter {
     }
 
     private void setCount() {
-       if (inappCursor != null) inappCount = inappCursor.getCount();
+        if (inappCursor != null) inappCount = inappCursor.getCount();
         else inappCount = 0;
 
-        if (androidCurosr !=null) androidCount = androidCurosr.getCount();
+        if (androidCurosr != null) androidCount = androidCurosr.getCount();
         else androidCount = 0;
     }
 
@@ -114,12 +115,28 @@ public class MySongsAdapter extends BaseAdapter {
 
         } else {
             LOGD(TAG, "inapp " + position);
-             pos = getActualCursorPosition(position);
+            pos = getActualCursorPosition(position);
             inappCursor.moveToPosition(pos);
             title = inappCursor.getString(inappCursor.getColumnIndex(AllSongsTable.C_TITLE));
             artist = inappCursor.getString(inappCursor.getColumnIndex(AllSongsTable.C_ARTIST));
             ImageView imv = ((ImageView) convertView.findViewById(R.id.inapp_image));
-            imv.setImageBitmap(lazyImageLoader.defaultImage);
+
+            String location = inappCursor.getString(inappCursor.getColumnIndex(InAapSongTable.C_ALBUM_ART_LOCATION));
+
+            if (FileDownloader.doesFileExist(location)) lazyImageLoader.loadBitmap(location, imv);
+            else {
+                imv.setImageBitmap(lazyImageLoader.defaultImage);
+
+                String fileName = FileDownloader.getNewAlbumArtName();
+                location = FileDownloader.getLocationFromFilename(fileName,context);
+                FileDownloader.saveImageToDisk( inappCursor.getString(inappCursor.getColumnIndex(InAapSongTable.C_ALBUMART_LINK)),
+                        location);
+
+                LOGD(TAG, inappCursor.getLong(inappCursor.getColumnIndex(InAapSongTable.C_ID)) + "  " + location );
+                InAapSongTable.updateAlbumArtLocation(inappCursor.getLong(inappCursor.getColumnIndex(InAapSongTable.C_ID)),location,context);
+
+            }
+
 
         }
 

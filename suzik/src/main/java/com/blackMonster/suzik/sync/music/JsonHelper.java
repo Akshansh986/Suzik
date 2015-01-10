@@ -218,7 +218,7 @@ import com.blackMonster.suzik.util.ServerUtils;
 						rObj.getLong(P_R_DURATION));
 
 				result.add(new InAppSongData(null, rObj.getLong(P_R_SERVER_ID),song, rObj
-						.getString(P_R_FPRINT), rObj.getString(P_R_ALUBMART_LINK),rObj.getString(P_R_SONG_LINK), null));
+						.getString(P_R_FPRINT), rObj.getString(P_R_ALUBMART_LINK),rObj.getString(P_R_SONG_LINK), null,null));
 
 			}
 

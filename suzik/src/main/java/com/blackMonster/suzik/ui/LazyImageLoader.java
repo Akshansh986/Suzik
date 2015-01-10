@@ -17,10 +17,13 @@ import android.widget.ImageView;
 
 import com.blackMonster.suzik.R;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 /**
  * Created by akshanshsingh on 07/01/15.
@@ -29,7 +32,7 @@ import java.lang.ref.WeakReference;
 //TODO image loading is seriously not smooth fix it.
 
 public class LazyImageLoader {
-
+    public static final String TAG ="LazyImageLoader";
     private static final Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
     private static final BitmapFactory.Options sBitmapOptions = new BitmapFactory.Options();
     private static final BitmapFactory.Options sBitmapOptionsCache = new BitmapFactory.Options();
@@ -249,22 +252,32 @@ public class LazyImageLoader {
         return null;
     }
 
-    class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
+    class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 
         private final WeakReference<ImageView> imageViewReference;
-        private int data = 0;
+        private String data = "";
         boolean shouldDeffer = true;
+        boolean isChachedImage;
 
-        public BitmapWorkerTask(ImageView imageView) {
+        public BitmapWorkerTask(ImageView imageView, boolean isChachedImage) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
             imageViewReference = new WeakReference<ImageView>(imageView);
+            this.isChachedImage = isChachedImage;
         }
 
         // Decode image in background.
         @Override
-        protected Bitmap doInBackground(Integer... params) {
+        protected Bitmap doInBackground(String... params) {
+
             data = params[0];
-            return getArtworkQuick(context,data,size,size);
+
+            if (isChachedImage) {
+                return getCachedBitmap(data);
+            }
+            else {
+                return getArtworkQuick(context,Integer.parseInt(data),size,size);
+            }
+
 //            return getArtwork(context,data);
         }
 
@@ -301,6 +314,25 @@ public class LazyImageLoader {
 
     }
 
+    private Bitmap getCachedBitmap(String location) {
+        if (location==null || location.equals("")) {
+            LOGD(TAG,"albumart null or empty location");
+            return null;
+        }
+
+        File file = new File(location);
+        if (file.exists()) {
+            LOGD(TAG, "albumart found..setting");
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap bitmap = BitmapFactory.decodeFile(location, options);
+            return  bitmap;
+        }
+
+        LOGD(TAG, "albumart not found");
+        return null;
+    }
+
     private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
         if (imageView != null) {
             final Drawable drawable = imageView.getDrawable();
@@ -313,13 +345,13 @@ public class LazyImageLoader {
     }
 
 
-    public static boolean cancelPotentialWork(int data, ImageView imageView) {
+    public static boolean cancelPotentialWork(String data, ImageView imageView) {
         final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
 
         if (bitmapWorkerTask != null) {
-            final int bitmapData = bitmapWorkerTask.data;
+            final String bitmapData = bitmapWorkerTask.data;
             // If bitmapData is not yet set or it differs from the new data
-            if (bitmapData == 0 || bitmapData != data) {
+            if (bitmapData.equals("") || !bitmapData.equals(data)) {
                 // Cancel previous task
                 bitmapWorkerTask.cancel(true);
             } else {
@@ -333,12 +365,22 @@ public class LazyImageLoader {
 
 
     public void loadBitmap(int albumId, ImageView imageView) {
-        if (cancelPotentialWork(albumId, imageView)) {
-            final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+        if (cancelPotentialWork(albumId + "", imageView)) {
+            final BitmapWorkerTask task = new BitmapWorkerTask(imageView,false);
             final AsyncDrawable asyncDrawable =
                     new AsyncDrawable(context.getResources(), defaultImage, task);
             imageView.setImageDrawable(asyncDrawable);
-            task.execute(albumId);
+            task.execute(albumId+ "");
+        }
+    }
+
+    public void loadBitmap(String location, ImageView imageView) {
+        if (cancelPotentialWork(location, imageView)) {
+            final BitmapWorkerTask task = new BitmapWorkerTask(imageView,true);
+            final AsyncDrawable asyncDrawable =
+                    new AsyncDrawable(context.getResources(), defaultImage, task);
+            imageView.setImageDrawable(asyncDrawable);
+            task.execute(location);
         }
     }
 

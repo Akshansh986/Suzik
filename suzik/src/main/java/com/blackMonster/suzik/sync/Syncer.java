@@ -142,19 +142,19 @@ public abstract class Syncer extends IntentService {
 
 	}
 
-	public static void callFuture(Class cls, long timeMS, Context context) {
-		LOGD(TAG, "calling after  " + timeMS + "  ms " + cls.getSimpleName());
-		Intent intent = new Intent(context, cls);
+        public static void callFuture(Class cls, long timeMS, Context context) {
+            LOGD(TAG, "calling after  " + timeMS + "  ms " + cls.getSimpleName());
+            Intent intent = new Intent(context, cls);
 
-		PendingIntent operation = PendingIntent.getService(context, -1, intent,
-				PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent operation = PendingIntent.getService(context, -1, intent,
+                    PendingIntent.FLAG_CANCEL_CURRENT);
 
-		AlarmManager am = ((AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE));
-		am.cancel(operation);
-		am.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime()
-				+ timeMS, operation);
-	}
+            AlarmManager am = ((AlarmManager) context
+                    .getSystemService(Context.ALARM_SERVICE));
+            am.cancel(operation);
+            am.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime()
+                    + timeMS, operation);
+        }
 
 	/**
 	 * Start syncing after a fixed time, and resets timer if new request comes

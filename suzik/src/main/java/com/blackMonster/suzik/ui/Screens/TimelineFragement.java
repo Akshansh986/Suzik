@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -23,7 +24,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -160,10 +163,19 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
     }
 
     @Override
-    public void onItemClick(AdapterView<?> arg0, View arg1, final int position, long arg3) {
+    public void onItemClick(AdapterView<?> arg0, View view, final int position, long arg3) {
 
         Log.d(TAG, "fsdf " + position + timelineItems.get(position).getSongUrl());
 
+
+
+//        ((CardView) view.findViewById(R.id.card_view)).setCardElevation(200);
+//        ((CardView) view.findViewById(R.id.card_view)).setPadding(200, 200, 200, 200);
+//
+//        ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(((CardView) view.findViewById(R.id.card_view)).getLayoutParams());
+//        marginParams.setMargins(60, 60, 60, 60);
+//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(marginParams);
+//        ((CardView) view.findViewById(R.id.card_view)).setLayoutParams(layoutParams);
 
         new Thread() {
             public void run() {

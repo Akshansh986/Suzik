@@ -74,6 +74,17 @@ public class FeedImageView extends ImageView {
 		loadImageIfNecessary(false);
 	}
 
+
+    public void setImageLocal(Bitmap bitmap) {
+		mUrl = "";
+
+        int bWidth = 0, bHeight = 0;
+        setImageBitmap(bitmap);
+        bWidth = bitmap.getWidth();
+        bHeight = bitmap.getHeight();
+        adjustImageAspect(bWidth, bHeight);
+	}
+
 	/**
 	 * Sets the default image resource ID to be used for this view until the
 	 * attempt to load it completes.
