@@ -1,29 +1,23 @@
 package com.blackMonster.suzik.ui;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.R;
+import com.blackMonster.suzik.musicstore.Timeline.Playable;
 import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
@@ -34,7 +28,7 @@ import static com.blackMonster.suzik.sync.music.InAapSongTable.insert;
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import static com.blackMonster.suzik.util.LogUtils.LOGE;
 
-public class TimelineAdapter extends BaseAdapter {
+public class TimelineAdapter extends BaseAdapter implements  Playlist {
     private static final String TAG = "TimelineAdapter";
     private Activity activity;
     private LayoutInflater inflater;
@@ -71,7 +65,7 @@ public class TimelineAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-//        Log.d("TimelineAdapter", "getview : " + position);
+        Log.d("TimelineAdapter", "getview : " + position);
         if (inflater == null)
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -85,6 +79,9 @@ public class TimelineAdapter extends BaseAdapter {
         //View load
         FeedImageView feedImageView = (FeedImageView) convertView
                 .findViewById(R.id.album_art);
+
+//        feedImageView.setDefaultImageResId(R.drawable.album_art);
+        feedImageView.setImageGradientOverlay((RelativeLayout) convertView.findViewById(R.id.relative_l));
         final TimelineItem item = timelineItems.get(position);
         final ImageView likeButton = ((ImageView) convertView.findViewById(R.id.like_icon));
         //
@@ -92,21 +89,21 @@ public class TimelineAdapter extends BaseAdapter {
         String title, artist;
         int likeIconResource;
 
-        if (item.isAlreadyInappDownload()) {
+        if (item.isCached()) {
             LOGD(TAG,"already downloaded");
-            title = item.getInAppSongMirror().getSong().getTitle();
-            artist = item.getInAppSongMirror().getSong().getArtist();
             likeIconResource = R.drawable.redheart;
 //            if (!loadLocalAlbumArtIfAvailable(item, feedImageView))
 //                fetchAlbumArtFromNet(item, feedImageView, true);
         } else {
             LOGD(TAG,"online song");
-            title = item.getSong().getTitle();
-            artist = item.getSong().getArtist();
             likeIconResource = R.drawable.whiteheart;
         }
-           fetchAlbumArtFromNet(item, feedImageView, false);
 
+
+        fetchAlbumArtFromNet(item,feedImageView, false);
+
+        title = item.getSong().getTitle();
+        artist = item.getSong().getArtist();
 
         //setting values to views
         ((TextView) convertView.findViewById(R.id.song_title)).setText(title);
@@ -124,23 +121,23 @@ public class TimelineAdapter extends BaseAdapter {
             public void onClick(View v) {
                 LOGD(TAG, "buttondownload");
 
-                if (item.isAlreadyInappDownload()) {
+                if (item.isCached()) {
+                    likeButton.setImageResource(R.drawable.whiteheart);
                     FileDownloader.deleteFile(item.getInAppSongMirror().getAlbumartLocation());
                     FileDownloader.deleteFile(item.getInAppSongMirror().getSongLocation());
                     InAapSongTable.remove(item.getInAppSongMirror().getId(),context);
 
-                    likeButton.setImageResource(R.drawable.whiteheart);
                 } else {
+                    likeButton.setImageResource(R.drawable.redheart);
                     String songFileName = FileDownloader.getNewSongFileName();
                     String songLocation = FileDownloader.getLocationFromFilename(songFileName,context);
                     String albumartLocation = FileDownloader.getLocationFromFilename(FileDownloader.getNewAlbumArtName(),context);
 
-                    FileDownloader.saveImageToDisk(item.getMediumAlbumArt(),albumartLocation);
+                    FileDownloader.saveImageToDisk(item.getAlbumArtPath(),albumartLocation);
                     FileDownloader.saveSongToDisk(item.getSong().getTitle(),item.getSong().getArtist(),
-                            item.getSongUrl(),songFileName,context);
+                            item.getSongPath(),songFileName,context);
                     insertInAppSongTable(item,songLocation,albumartLocation);
 
-                    likeButton.setImageResource(R.drawable.redheart);
                     UserActivityManager.add(new UserActivity(item.getSong(), null, item.getId(), UserActivity.ACTION_IN_APP_DOWNLOAD, 0, System.currentTimeMillis()), context);
 
                 }
@@ -154,11 +151,9 @@ public class TimelineAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void fetchAlbumArtFromNet(final TimelineItem item, FeedImageView feedImageView, final boolean shouldSave) {
-
-        if (item.getMediumAlbumArt() != null) {
-            feedImageView.setImageUrl(item.getMediumAlbumArt(), imageLoader);
-            feedImageView.setVisibility(View.VISIBLE);
+    private void fetchAlbumArtFromNet(final TimelineItem item, final FeedImageView feedImageView, final boolean shouldSave) {
+        if (item.getAlbumArtPath() != null) {
+            feedImageView.setImageUrl(item.getOnlineAlbumArtUrl(), imageLoader);
             feedImageView
                     .setResponseObserver(new FeedImageView.ResponseObserver() {
                         @Override
@@ -168,13 +163,29 @@ public class TimelineAdapter extends BaseAdapter {
 
                         @Override
                         public void onSuccess(Bitmap bmp) {
-                            if (shouldSave) {
-                                String location = item.getInAppSongMirror().getAlbumartLocation();
-                                if (location == null || location.equals(("")))
-                                    location = FileDownloader.getLocationFromFilename(FileDownloader.getNewAlbumArtName(),context);
-                                FileDownloader.writeToDisk(bmp, location);
-                                InAapSongTable.updateAlbumArtLocation(item.getInAppSongMirror().getId(),location,context);
-                            }
+//
+//                            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mlayout.getLayoutParams();
+//
+////                            f
+////                            if (bWidth == 0 || bHeight == 0)
+////                                return;
+////
+////                            int swidth = getWidth();
+////                            int new_height = 0;
+////                            new_height = (int) ((swidth * bHeight / bWidth) );
+//                            params.width = feedImageView.w;
+//                            params.height = feedImageView.h;
+//                            mlayout.setLayoutParams(params);
+
+
+//
+//                            if (shouldSave) {
+//                                String location = item.getInAppSongMirror().getAlbumartLocation();
+//                                if (location == null || location.equals(("")))
+//                                    location = FileDownloader.getLocationFromFilename(FileDownloader.getNewAlbumArtName(),context);
+//                                FileDownloader.writeToDisk(bmp, location);
+//                                InAapSongTable.updateAlbumArtLocation(item.getInAppSongMirror().getId(),location,context);
+                        }
 //                            if (bitmap == null) return;
 //                            Palette.generateAsync(bitmap,
 //                                    new Palette.PaletteAsyncListener() {
@@ -195,81 +206,58 @@ public class TimelineAdapter extends BaseAdapter {
 //                                            }
 //                                        }
 //                                    });
-                        }
+//                        }
                     });
-        } else {
-            feedImageView.setVisibility(View.GONE);
         }
 
     }
 
-    private boolean loadLocalAlbumArtIfAvailable(final TimelineItem item, FeedImageView feedImageView) {
-
-        String location = item.getInAppSongMirror().getAlbumartLocation();
-        if (location==null || location.equals("")) {
-            LOGD(TAG,"albumart null or empty location");
-            return false;
-        }
-
-        File file = new File(location);
-        if (file.exists()) {
-            LOGD(TAG, "albumart found..setting");
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(item.getInAppSongMirror().getAlbumartLocation(), options);
-
-            Bitmap bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.album_art);
-
-            feedImageView.setImageBitmap(bm);
-            return true;
-        }
-        LOGD(TAG, "albumart not found");
-
-        return false;
-
-    }
+//    private boolean loadLocalAlbumArtIfAvailable(final TimelineItem item, FeedImageView feedImageView) {
+//
+//        String location = item.getInAppSongMirror().getAlbumartLocation();
+//        if (location==null || location.equals("")) {
+//            LOGD(TAG,"albumart null or empty location");
+//            return false;
+//        }
+//
+//        File file = new File(location);
+//        if (file.exists()) {
+//            LOGD(TAG, "albumart found..setting");
+//            BitmapFactory.Options options = new BitmapFactory.Options();
+//            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//            Bitmap bitmap = BitmapFactory.decodeFile(item.getInAppSongMirror().getAlbumartLocation(), options);
+//
+//            Bitmap bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.album_art);
+//
+//            feedImageView.setImageBitmap(bm);
+//            return true;
+//        }
+//        LOGD(TAG, "albumart not found");
+//
+//        return false;
+//
+//    }
 
     private void updateUi(TimelineItem item) {
         item.setInappMirrorIfAvailable(context);
         UiBroadcasts.broadcastMusicDataChanged(context);
     }
 
-
-//    private boolean removeInAppSong(TimelineItem item) {
-//        boolean res = deleteFile(item.getInAppSongMirror().getSongLocation());
-//                res =  res && deleteFile(item.getInAppSongMirror().getAlbumartLocation());
-//        LOGD(TAG, "deleted : " + res);
-//
-//        InAapSongTable.remove(item.getInAppSongMirror().getId(), context);
-//
-//
-//        return res;
-//
-//    }
-//
-//
-//
-//    private void downloadFile(TimelineItem item) {
-//        long time = System.currentTimeMillis();
-//        String newSongFileName = getNewSongFileName(time);
-//        String newAlbumArtFileName = getNewAlbumArtName(time);
-//
-//        updateInAppSongTable(item, newSongFileName, newAlbumArtFileName);
-//
-//        startSongDownload(item.getSong().getTitle(), item.getSong().getArtist(), item.getSongUrl(), newSongFileName);
-//        saveBitmap(item, getLocation() + newAlbumArtFileName);
-//
-//
-//
-//    }
-
     private void insertInAppSongTable(TimelineItem item, String songLocatoin, String albumartLocation) {
         InAppSongData inAppSongData = new InAppSongData(null, item.getId(),
-                item.getSong(), "", item.getMediumAlbumArt(), item.getSongUrl(),
+                item.getSong(), "", item.getAlbumArtPath(), item.getSongPath(),
                 songLocatoin, albumartLocation);
         InAapSongTable.insert(inAppSongData, context);
     }
 
 
+    @Override
+    public Playable getPlayable(int position) {
+        return timelineItems.get(position);
+    }
 
+    @Override
+    public int getSongCount() {
+        return getCount();
+    }
 }

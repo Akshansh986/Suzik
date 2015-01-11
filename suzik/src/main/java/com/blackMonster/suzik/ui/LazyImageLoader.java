@@ -364,19 +364,19 @@ public class LazyImageLoader {
     }
 
 
-    public void loadBitmap(int albumId, ImageView imageView) {
-        if (cancelPotentialWork(albumId + "", imageView)) {
-            final BitmapWorkerTask task = new BitmapWorkerTask(imageView,false);
-            final AsyncDrawable asyncDrawable =
-                    new AsyncDrawable(context.getResources(), defaultImage, task);
-            imageView.setImageDrawable(asyncDrawable);
-            task.execute(albumId+ "");
-        }
-    }
+//    public void loadBitmap(int albumId, ImageView imageView) {
+//        if (cancelPotentialWork(albumId + "", imageView)) {
+//            final BitmapWorkerTask task = new BitmapWorkerTask(imageView,false);
+//            final AsyncDrawable asyncDrawable =
+//                    new AsyncDrawable(context.getResources(), defaultImage, task);
+//            imageView.setImageDrawable(asyncDrawable);
+//            task.execute(albumId+ "");
+//        }
+//    }
 
-    public void loadBitmap(String location, ImageView imageView) {
+    public void loadBitmap(String location, ImageView imageView, boolean isCached) {
         if (cancelPotentialWork(location, imageView)) {
-            final BitmapWorkerTask task = new BitmapWorkerTask(imageView,true);
+            final BitmapWorkerTask task = new BitmapWorkerTask(imageView,isCached);
             final AsyncDrawable asyncDrawable =
                     new AsyncDrawable(context.getResources(), defaultImage, task);
             imageView.setImageDrawable(asyncDrawable);

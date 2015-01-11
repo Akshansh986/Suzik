@@ -82,7 +82,6 @@ public class SongsSyncer extends Syncer {
 		if (!QueueAddedSongs.isEmpty(this)) AddedSongsResponseHandler.futureCall(this);
 
 
-        UiBroadcasts.broadcastMusicDataChanged(this);
         LOGI(TAG,"All done");
 		return true;		
 	}

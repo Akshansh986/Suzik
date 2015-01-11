@@ -22,16 +22,21 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.blackMonster.suzik.AppConfig;
+import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.R;
 
 import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
+import com.blackMonster.suzik.sync.music.AddedSongsResponseHandler;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
 import com.blackMonster.suzik.sync.music.InitMusicDb;
 import com.blackMonster.suzik.ui.MySongsAdapter;
 import com.blackMonster.suzik.ui.UiBroadcasts;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 
 public class MySongListFragement extends Fragment implements OnItemClickListener {
@@ -68,9 +73,39 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
 
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        LOGD(TAG,"setuservisiblehint " + isVisibleToUser);
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            showTryAgainMessageIfNecessary();
+        }
+    }
+
+    void showTryAgainMessageIfNecessary() {
+
+        if (!MainPrefs.isFirstTimeMusicSyncDone(getActivity())) {
+            long time = AddedSongsResponseHandler.getRemainingTimeMs(getActivity());
+            double ftime = time / (double)AppConfig.MINUTE_IN_MILLISEC;
+            String message;
+
+            Double truncatedDouble=new BigDecimal(ftime ).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+
+            if (ftime == 0)
+                message = "Syncing music with servers, try again later!";
+            else
+                message = "Syncing music with servers, try after " + truncatedDouble + " minutes";
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void loadData() {
-        androidCursor = getAndroidSongs();
-        inAppCursor = InAapSongTable.getAllDataCursor(getActivity());
+        if (MainPrefs.isFirstTimeMusicSyncDone(getActivity())) {
+            androidCursor = getAndroidSongs();
+            inAppCursor = InAapSongTable.getAllDataCursor(getActivity());
+        }
+
     }
 
     private Cursor getAndroidSongs() {
@@ -97,13 +132,13 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
 
         LOGD(TAG, " " + position);
 
-//        Log.d(TAG, "fsdf " + position + timelineItems.get(position).getSongUrl());
+//        Log.d(TAG, "fsdf " + position + timelineItems.get(position).getSongPath());
 //
 //
 //        new Thread() {
 //            public void run() {
 //                try {
-//                    play(timelineItems.get(position).getSongUrl());
+//                    play(timelineItems.get(position).getSongPath());
 //                } catch (Exception e) {
 //                }
 //            }
@@ -145,7 +180,7 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
         public void onReceive(Context context, Intent intent) {
             LOGD(TAG, "received : broadcastMusicDataChanged");
             loadData();
-            adapter.updateCursors(androidCursor,inAppCursor);
+            adapter.updateCursors(androidCursor, inAppCursor);
 
         }
     };

@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -24,9 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -34,7 +31,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.R;
@@ -165,7 +161,8 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
     @Override
     public void onItemClick(AdapterView<?> arg0, View view, final int position, long arg3) {
 
-        Log.d(TAG, "fsdf " + position + timelineItems.get(position).getSongUrl());
+        Log.d(TAG, "fsdf " + position +  adapter.getPlayable(position).getSongPath());
+
 
 
 
@@ -180,7 +177,7 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
         new Thread() {
             public void run() {
                 try {
-                    play(timelineItems.get(position).getSongUrl());
+                    play(adapter.getPlayable(position).getSongPath());
                 } catch (Exception e) {
                 }
             }
@@ -193,7 +190,7 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
 
     void play(String url) {
         MediaPlayer mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             mediaPlayer.setDataSource(url);
         } catch (IllegalArgumentException e) {

@@ -5,66 +5,76 @@ import android.content.Context;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
 
-public class TimelineItem {
-	private Song song;
-	private long id;
-	private String albumArtUrl, songUrl;
+public class TimelineItem implements Playable{
+    protected Song song;
+    protected long id;
+    protected String albumArtPath;
+    protected String songPath;
+
     private InAapSongTable.InAppSongData inAppSongMirror;
 
-	public TimelineItem(Song song, long id, String albumArtUrl, String songUrl, Context context) {
-		super();
-		this.song = song;
-		this.id = id;
-		this.albumArtUrl = albumArtUrl;
-		this.songUrl = songUrl;
+    public TimelineItem(Song song, long id, String albumArtUrl, String songUrl, Context context) {
+        this.song = song;
+        this.id = id;
+        this.albumArtPath = albumArtUrl;
+        this.songPath = songUrl;
         setInappMirrorIfAvailable(context);
 	}
 
     public void setInappMirrorIfAvailable(Context context) {
         inAppSongMirror = InAapSongTable.getDataFromServerId(id,context);
-    }
+      }
 
-    public boolean isAlreadyInappDownload() {
-        return inAppSongMirror != null;
-    }
 
     public InAapSongTable.InAppSongData getInAppSongMirror() {
         return inAppSongMirror;
     }
 
+    public String getOnlineAlbumArtUrl() {
+        return albumArtPath;
+    }
+
+    @Override
+    public boolean isCached() {
+        return inAppSongMirror != null;
+    }
+
+    @Override
+    public boolean isOffline() {
+      return isCached();
+    }
 
 
+    @Override
+    public Song getSong() {
+        if (isCached()) return  inAppSongMirror.getSong();
+        else  return song;
+    }
 
-	public Song getSong() {
-		return song;
-	}
+    @Override
+    public long getId() {
+       if (isCached()) return  inAppSongMirror.getId();
+        else return  id;
+    }
 
-	public long getId() {
-		return id;
-	}
-	
-	public String getLowAlbumArt() {
-		if (albumArtUrl == null) return null;
-		return albumArtUrl.replace("1200x1200", "100x100");
-	}
+    @Override
+    public String getAlbumArtPath() {
+        if (isCached()) return  inAppSongMirror.getAlbumartLocation();
+        else return  albumArtPath;
+    }
 
-	public String getMediumAlbumArt() {
-		if (albumArtUrl == null) return null;
-		return albumArtUrl.replace("1200x1200", "400x400");
-	}
-	
-	public String getHighAlbumArt() {
-		return albumArtUrl;
-	}
+    @Override
+    public String getSongPath() {
+        if (isCached()) return inAppSongMirror.getSongLocation();
+        else  return  songPath;
+    }
 
-	public String getSongUrl() {
-		return songUrl;
-	}
 
-	@Override
-	public String toString() {
-		return "TimelineItem [song=" + song + ", id=" + id + ", albumArt="
-				+ albumArtUrl + ", audio=" + songUrl + "]";
-	}
+    @Override
+    public String toString() {
+        return "TimelineItem [song=" + song + ", id=" + id + ", albumArt="
+                + albumArtPath + ", audio=" + songPath + "]";
+    }
+
 
 }
