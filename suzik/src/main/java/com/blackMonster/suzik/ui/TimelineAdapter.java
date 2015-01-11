@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -43,8 +45,8 @@ public class TimelineAdapter extends BaseAdapter implements  Playlist {
     private List<TimelineItem> timelineItems;
     ImageLoader imageLoader =    ImageLoader.getInstance();
     Context context;
+    static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
 
-    private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
 
     DisplayImageOptions options;
 
@@ -56,7 +58,7 @@ public class TimelineAdapter extends BaseAdapter implements  Playlist {
 
 
         options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.album_art)
+                .showImageOnLoading(R.drawable.white)
                 .showImageForEmptyUri(R.drawable.album_art)
                 .showImageOnFail(R.drawable.album_art)
                 .cacheInMemory(true)
@@ -112,7 +114,6 @@ public class TimelineAdapter extends BaseAdapter implements  Playlist {
             likeIconResource = R.drawable.whiteheart;
         }
 
-        imageLoader.displayImage(item.getOnlineAlbumArtUrl(), albumArtView, options, animateFirstListener);
 
         title = item.getSong().getTitle();
         artist = item.getSong().getArtist();
@@ -160,8 +161,59 @@ public class TimelineAdapter extends BaseAdapter implements  Playlist {
             }
         });
 
+
+        final ProgressBar pb = (ProgressBar) convertView.findViewById(R.id.progressBar);
+        pb.setVisibility(View.GONE);
+        imageLoader.displayImage(item.getOnlineAlbumArtUrl(), albumArtView, options, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+                pb.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                pb.setVisibility(View.GONE);
+
+            }
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                pb.setVisibility(View.GONE);
+
+                if (loadedImage != null) {
+                    ImageView imageView = (ImageView) view;
+
+                    boolean firstDisplay = !displayedImages.contains(imageUri);
+                    if (firstDisplay) {
+                        pb.setVisibility(View.GONE);
+                        FadeInBitmapDisplayer.animate(imageView, 500);
+                        displayedImages.add(imageUri);
+                    }
+                }
+
+
+
+            }
+            @Override
+            public void onLoadingCancelled(String imageUri, View view) {
+                pb.setVisibility(View.GONE);
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
         return convertView;
     }
+
 
 //    private void fetchAlbumArtFromNet(final TimelineItem item, final NetworkImageView feedImageView, final boolean shouldSave) {
 //
@@ -279,31 +331,6 @@ public class TimelineAdapter extends BaseAdapter implements  Playlist {
     @Override
     public int getSongCount() {
         return getCount();
-    }
-
-
-
-
-
-
-
-
-
-    public static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
-
-        static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
-
-        @Override
-        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-            if (loadedImage != null) {
-                ImageView imageView = (ImageView) view;
-                boolean firstDisplay = !displayedImages.contains(imageUri);
-                if (firstDisplay) {
-                    FadeInBitmapDisplayer.animate(imageView, 500);
-                    displayedImages.add(imageUri);
-                }
-            }
-        }
     }
 
 
