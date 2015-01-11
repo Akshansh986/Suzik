@@ -26,7 +26,7 @@ import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 //TODO set Actionbar title on different fragments.
 
-public class MainSliderActivity  extends ActionBarActivity implements View.OnClickListener{
+public class MainSliderActivity  extends ActionBarActivity implements View.OnClickListener, ViewPager.OnPageChangeListener{
     public static final String TAG = "MainSliderActivity";
 	private static final int NUM_PAGES = 2;
 	private ViewPager mPager;
@@ -40,7 +40,24 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
 		mPager = (ViewPager) findViewById(R.id.pager);
 		mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
 		mPager.setAdapter(mPagerAdapter);
+        mPager.setOnPageChangeListener(this);
+        onPageSelected(0);
 	}
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        setTitle(mPagerAdapter.getPageTitle(position));
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
@@ -65,7 +82,20 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
 		public int getCount() {
 			return NUM_PAGES;
 		}
-	}
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return getResources().getString(R.string.title_timeline);
+                case 1:
+                    return getResources().getString(R.string.title_allSongs);
+
+                default:
+                    return null;
+            }
+        }
+    }
 
     Menu menu;
     @Override

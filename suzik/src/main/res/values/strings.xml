@@ -11,5 +11,6 @@
     <string name="search_hint">Search music</string>
     <string name="title_timeline">Timeline</string>
     <string name="title_allSongs">All Songs</string>
+    <string name="title_search">Search</string>
 
 </resources>
