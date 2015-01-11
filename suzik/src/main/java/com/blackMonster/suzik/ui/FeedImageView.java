@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
@@ -73,6 +76,14 @@ public class FeedImageView extends ImageView {
 		// The URL has potentially changed. See if we need to load it.
 		loadImageIfNecessary(false);
 	}
+
+
+    ViewGroup gradientOVerlay=null;
+    public void setImageGradientOverlay(ViewGroup view) {
+
+        gradientOVerlay = view;
+
+    }
 
 
     public void setImageLocal(Bitmap bitmap) {
@@ -245,8 +256,11 @@ public class FeedImageView extends ImageView {
 	/*
 	 * Adjusting imageview height
 	 * */
-	private void adjustImageAspect(int bWidth, int bHeight) {
-		RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) getLayoutParams();
+
+    public int w, h;
+ 	private void adjustImageAspect(int bWidth, int bHeight) {
+//        if (true) return;
+		FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getLayoutParams();
 
 		if (bWidth == 0 || bHeight == 0)
 			return;
@@ -256,6 +270,9 @@ public class FeedImageView extends ImageView {
 		new_height = (int) ((swidth * bHeight / bWidth) );
 		params.width = swidth;
 		params.height = new_height;
+        w = swidth;
+        h = new_height;
 		setLayoutParams(params);
+        if (gradientOVerlay!=null) gradientOVerlay.setLayoutParams(params);
 	}
 }
