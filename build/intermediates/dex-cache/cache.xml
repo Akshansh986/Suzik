@@ -156,6 +156,13 @@
         <dex dex="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/classes-f62ac1451c523d7835ad8f7f8fb23e1d1d1a7441.jar" />
     </item>
     <item
+        jar="/Users/akshanshsingh/.gradle/caches/modules-2/files-2.1/com.nostra13.universalimageloader/universal-image-loader/1.9.3/a85588bec3e2c4584d593d3f15df1677321bca72/universal-image-loader-1.9.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a85588bec3e2c4584d593d3f15df1677321bca72">
+        <dex dex="/Users/akshanshsingh/Documents/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/pre-dexed/debug/universal-image-loader-1.9.3-667ba126cdf03130b302b3c3fdabbf8ab1869fdc.jar" />
+    </item>
+    <item
         jar="/Users/akshanshsingh/Dropbox/AndroidStudoWorkspace/Suzik/suzik/build/intermediates/exploded-aar/com.twitter.sdk.android/tweet-ui/1.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.2"

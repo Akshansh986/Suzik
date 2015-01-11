@@ -4,12 +4,10 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.blackMonster.suzik.AppController;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,33 +45,22 @@ public class FileDownloader {
             return;
         }
 
-        ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+        com.nostra13.universalimageloader.core.ImageLoader.getInstance().loadImage(url, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                LOGD(TAG,"onresponse saveImageTODisk ");
 
-        ImageLoader.ImageContainer newContainer =   imageLoader.get(url,
-                new ImageLoader.ImageListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        LOGE(TAG, "Image load error :  " + error.toString());
-                    }
+                if (loadedImage == null)  {
+                    LOGE(TAG,"bitmap null");
+                    return;
+                }
+                LOGE(TAG,"bitmap not null");
 
-                    @Override
-                    public void onResponse(ImageLoader.ImageContainer response,
-                                           boolean isImmediate) {
-
+                writeToDisk(loadedImage,location);
+            }
+        });
 
 
-                           LOGD(TAG,"onresponse saveImageTODisk " + isImmediate );
-
-                            if (response.getBitmap() == null)  {
-                                LOGE(TAG,"bitmap null");
-                                return;
-                            }
-                        LOGE(TAG,"bitmap not null");
-
-                        writeToDisk(response.getBitmap(),location);
-
-                    }
-                });
 
     }
 
@@ -84,25 +71,25 @@ public class FileDownloader {
             return;
         }
 
-        AppController.getInstance().getImageLoader().get(url,
-                new ImageLoader.ImageListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        LOGE(TAG, "Image load error :  " + error.toString());
-                    }
-
-                    @Override
-                    public void onResponse(final ImageLoader.ImageContainer response,
-                                           boolean isImmediate) {
-
-                        if (response.getBitmap() == null)  return;
-
-                        writeToDisk(response.getBitmap(),location);
-                        view.setImageBitmap(response.getBitmap());
-
-
-                    }
-                });
+//        AppController.getInstance().getImageLoader().get(url,
+//                new ImageLoader.ImageListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        LOGE(TAG, "Image load error :  " + error.toString());
+//                    }
+//
+//                    @Override
+//                    public void onResponse(final ImageLoader.ImageContainer response,
+//                                           boolean isImmediate) {
+//
+//                        if (response.getBitmap() == null)  return;
+//
+//                        writeToDisk(response.getBitmap(),location);
+//                        view.setImageBitmap(response.getBitmap());
+//
+//
+//                    }
+//                });
 
 
 

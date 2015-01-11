@@ -31,7 +31,7 @@ public class TimelineItem implements Playable{
     }
 
     public String getOnlineAlbumArtUrl() {
-        return albumArtPath;
+        return albumArtPath.replace("1200x1200", "400x400");
     }
 
     @Override
@@ -60,7 +60,7 @@ public class TimelineItem implements Playable{
     @Override
     public String getAlbumArtPath() {
         if (isCached()) return  inAppSongMirror.getAlbumartLocation();
-        else return  albumArtPath;
+        else return  getOnlineAlbumArtUrl();
     }
 
     @Override
