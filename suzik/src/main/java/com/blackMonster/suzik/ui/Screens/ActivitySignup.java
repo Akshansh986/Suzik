@@ -2,6 +2,7 @@ package com.blackMonster.suzik.ui.Screens;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -29,7 +30,7 @@ import com.digits.sdk.android.DigitsAuthButton;
 import com.digits.sdk.android.DigitsException;
 import com.digits.sdk.android.DigitsSession;
 
-public class ActivitySignup extends ActionBarActivity {
+public class ActivitySignup extends Activity {
     private static final String TAG = "ActivitySignup";
     private static final int RUNNING = 1;
     private static final int STOPPED = 0;
@@ -56,23 +57,23 @@ public class ActivitySignup extends ActionBarActivity {
         resetGlobals();
         registerReceivers();
 
-        DigitsAuthButton digitsButton = (DigitsAuthButton) findViewById(R.id.auth_button);
-        digitsButton.setCallback(new AuthCallback() {
-            @Override
-            public void success(DigitsSession session, String phoneNumber) {
-
-                LOGD(TAG, "Sucess " + phoneNumber);
-                onSuccessfulRegistration(phoneNumber);
-
-            }
-
-            @Override
-            public void failure(DigitsException exception) {
-                LOGD(TAG, "failure");
-                Toast.makeText(getBaseContext(), "Registration failed!",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+//        DigitsAuthButton digitsButton = (DigitsAuthButton) findViewById(R.id.auth_button);
+//        digitsButton.setCallback(new AuthCallback() {
+//            @Override
+//            public void success(DigitsSession session, String phoneNumber) {
+//
+//                LOGD(TAG, "Sucess " + phoneNumber);
+//                onSuccessfulRegistration(phoneNumber);
+//
+//            }
+//
+//            @Override
+//            public void failure(DigitsException exception) {
+//                LOGD(TAG, "failure");
+//                Toast.makeText(getBaseContext(), "Registration failed!",
+//                        Toast.LENGTH_LONG).show();
+//            }
+//        });
 
     }
 
