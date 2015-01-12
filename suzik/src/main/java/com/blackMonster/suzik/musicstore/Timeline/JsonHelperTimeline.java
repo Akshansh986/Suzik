@@ -1,5 +1,7 @@
 package com.blackMonster.suzik.musicstore.Timeline;
 
+import android.content.Context;
+
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 import java.util.ArrayList;
@@ -15,58 +17,57 @@ import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
 import com.blackMonster.suzik.util.ServerUtils;
 
 public class JsonHelperTimeline {
-	private static final String TAG = "JsonHelperTimeline";
+    private static final String TAG = "JsonHelperTimeline";
 
-	private static final String P_MODULE = "generateTimeline";
+    private static final String P_MODULE = "generateTimeline";
 
-	private static final String P_R_FULL_SONG_DATA = "response";
-	//private static final String P_R_NEXT_IDS = "nextIds";
+    private static final String P_R_FULL_SONG_DATA = "response";
+    //private static final String P_R_NEXT_IDS = "nextIds";
 
-	private static final String P_R_ID = "songId";
-	private static final String P_R_SONG_URL = "songLink";;
-	private static final String P_R_ALBUM_URL = "albumArtLink";
+    private static final String P_R_ID = "songId";
+    private static final String P_R_SONG_URL = "songLink";
+    ;
+    private static final String P_R_ALBUM_URL = "albumArtLink";
 
-	private static final String P_R_TITLE = "title";
-	private static final String P_R_ARTIST = "artist";
-	private static final String P_R_ALBUM = "album";
-	private static final String P_R_DURATION = "duration";
+    private static final String P_R_TITLE = "title";
+    private static final String P_R_ARTIST = "artist";
+    private static final String P_R_ALBUM = "album";
+    private static final String P_R_DURATION = "duration";
 
-	//private static final String P_R_NUMBER = "num";
+    //private static final String P_R_NUMBER = "num";
 
-	public static JSONObject getCredentials() throws JSONException {
-		JSONObject root = new JSONObject();
-		ServerUtils.addEssentialParamToJson(root, P_MODULE);
-		LOGD(TAG, root.toString());
-		return root;
-	}
-	
-	
-	
+    public static JSONObject getCredentials() throws JSONException {
+        JSONObject root = new JSONObject();
+        ServerUtils.addEssentialParamToJson(root, P_MODULE);
+        LOGD(TAG, root.toString());
+        return root;
+    }
 
-	public static List<TimelineItem> parseTimelineItems(JSONObject response) throws JSONException {
 
-		List<TimelineItem> result = new ArrayList<TimelineItem>();
+    public static List<TimelineItem> parseTimelineItems(JSONObject response, Context context) throws JSONException {
 
-		JSONArray responseArray = response.getJSONArray(P_R_FULL_SONG_DATA);
+        List<TimelineItem> result = new ArrayList<TimelineItem>();
 
-		Song song;
-		int n = responseArray.length();
-		for (int i = 0; i < n; i++) {
-			JSONObject o = (JSONObject) responseArray.get(i);
+        JSONArray responseArray = response.getJSONArray(P_R_FULL_SONG_DATA);
 
-song = new Song(o.getString(P_R_TITLE),
-					o.isNull(P_R_ARTIST) ? null: o.getString(P_R_ARTIST), 
-					o.isNull(P_R_ALBUM) ? null: o.getString(P_R_ALBUM),o.isNull(P_R_DURATION) ? 0 : o.getLong(P_R_DURATION));
-		
-LOGD(TAG, song.toString());
-			result.add(new TimelineItem(song, o.getLong(P_R_ID), o.isNull(P_R_ALBUM_URL) ? null: o.getString(P_R_ALBUM_URL),
-					o.getString(P_R_SONG_URL)));
-		}
+        Song song;
+        int n = responseArray.length();
+        for (int i = 0; i < n; i++) {
+            JSONObject o = (JSONObject) responseArray.get(i);
 
-		return result;
+            song = new Song(o.getString(P_R_TITLE),
+                    o.isNull(P_R_ARTIST) ? null : o.getString(P_R_ARTIST),
+                    o.isNull(P_R_ALBUM) ? null : o.getString(P_R_ALBUM), o.isNull(P_R_DURATION) ? 0 : o.getLong(P_R_DURATION));
 
-	}
-	/*
+            LOGD(TAG, song.toString());
+            result.add(new TimelineItem(song, o.getLong(P_R_ID), o.isNull(P_R_ALBUM_URL) ? null : o.getString(P_R_ALBUM_URL),
+                    o.getString(P_R_SONG_URL), context));
+        }
+
+        return result;
+
+    }
+    /*
 	public static List<Long> parseNextIds(JSONObject response) throws JSONException {
 
 		List<Long> result = new ArrayList<Long>();
@@ -85,24 +86,21 @@ LOGD(TAG, song.toString());
 	
 	
 	*/
-
-
-
-   public  static class ServerAllSongs {
+    public static class ServerAllSongs {
         private static final String P_MODULE = "music";
         private static final String P_CMD = "getSongsList";
 
         private static final String P_R_SONG_LIST = "songData";
         private static final String P_R_SERVER_ID = "id";
         private static final String P_R_FPRINT = "fingerprint";
-            private static final String P_R_ALUBMART_LINK = "album_art_link";
-            private static final String P_R_SONG_LINK = "songLink";
+        private static final String P_R_ALUBMART_LINK = "album_art_link";
+        private static final String P_R_SONG_LINK = "songLink";
         private static final String P_R_TITLE = "title";
         private static final String P_R_ARTIST = "artist";
         private static final String P_R_ALBUM = "album";
         private static final String P_R_DURATION = "duration";
 
-       public  static JSONObject getCredentials() throws JSONException {
+        public static JSONObject getCredentials() throws JSONException {
             JSONObject root = new JSONObject();
             ServerUtils.addEssentialParamToJson(root, P_MODULE, P_CMD);
             LOGD(TAG, root.toString());
@@ -111,46 +109,31 @@ LOGD(TAG, song.toString());
         }
 
 
-       public static List<TimelineItem> parseTimelineItems(JSONObject response) throws JSONException {
+        public static List<TimelineItem> parseTimelineItems(JSONObject response, Context context) throws JSONException {
 
-           List<TimelineItem> result = new ArrayList<TimelineItem>();
+            List<TimelineItem> result = new ArrayList<TimelineItem>();
 
-           JSONArray responseArray = response.getJSONArray(P_R_SONG_LIST);
+            JSONArray responseArray = response.getJSONArray(P_R_SONG_LIST);
 
-           Song song;
-           int n = responseArray.length();
-           for (int i = 0; i < n; i++) {
-               JSONObject o = (JSONObject) responseArray.get(i);
-               song = new Song(o.getString(P_R_TITLE),
-                       o.isNull(P_R_ARTIST) ? null: o.getString(P_R_ARTIST),
-                       o.isNull(P_R_ALBUM) ? null: o.getString(P_R_ALBUM), o.getLong(P_R_DURATION));
+            Song song;
+            int n = responseArray.length();
+            for (int i = 0; i < n; i++) {
+                JSONObject o = (JSONObject) responseArray.get(i);
+                song = new Song(o.getString(P_R_TITLE),
+                        o.isNull(P_R_ARTIST) ? null : o.getString(P_R_ARTIST),
+                        o.isNull(P_R_ALBUM) ? null : o.getString(P_R_ALBUM), o.getLong(P_R_DURATION));
 
-               result.add(new TimelineItem(song, o.getLong(P_R_SERVER_ID), o.isNull(P_R_ALUBMART_LINK) ? null: o.getString(P_R_ALUBMART_LINK),
-                       o.getString(P_R_SONG_LINK)));
-           }
+                result.add(new TimelineItem(song, o.getLong(P_R_SERVER_ID), o.isNull(P_R_ALUBMART_LINK) ? null : o.getString(P_R_ALUBMART_LINK),
+                        o.getString(P_R_SONG_LINK), context));
+            }
 
-           LOGD(TAG,"size "  + result.size());
+            LOGD(TAG, "size " + result.size());
 
-           return result;
+            return result;
 
-       }
+        }
 
     }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 
-	
-	
-	
-	
 }

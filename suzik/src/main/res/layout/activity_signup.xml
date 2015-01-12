@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout1"
+    android:id="@+id/RelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="25dp" >
+    android:padding="25dp"
+    >
 
     <TextView
         android:id="@+id/act_songs_list_song_name"
@@ -47,11 +48,15 @@
         android:layout_alignLeft="@+id/signup_button_submit"
         android:text="+91"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-    
-    <com.digits.sdk.android.DigitsAuthButton
-        android:id="@+id/auth_button"
-        android:layout_below="@+id/signup_button_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
+    <!--<ProgressBar-->
+        <!--style="?android:attr/progressBarStyleLarge"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/progressBar2"-->
+        <!--android:progressDrawable="@drawable/progress_bar_color"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_centerHorizontal="true" />-->
+
 
 </RelativeLayout>

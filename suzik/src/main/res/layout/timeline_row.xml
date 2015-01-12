@@ -20,47 +20,75 @@
         android:layout_marginTop="5dp"
         card_view:cardElevation="5dp">
 
-        <RelativeLayout
-            android:id="@+id/RelativeLayout1"
+        <FrameLayout
+            android:id="@+id/FrameLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/feed_bg"
-            android:orientation="vertical">
 
-            <com.blackMonster.suzik.ui.FeedImageView
+            >
+
+            <ImageView
                 android:id="@+id/album_art"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:src="@drawable/album_art"
-                android:scaleType="centerCrop"
-                android:visibility="visible" />
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"/>
 
-            <LinearLayout
+
+            <RelativeLayout
+                android:id="@+id/relative_l"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignBottom="@+id/album_art"
-                android:layout_alignParentLeft="true"
-                android:orientation="vertical">
+                android:background="@drawable/gradient"
 
+                >
                 <TextView
                     android:id="@+id/song_title"
+                    android:textSize="20sp"
                     style="@style/AudioFileInfoOverlayText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_above="@+id/song_artist"
                     android:paddingLeft="@dimen/feed_item_status_pad_left_right"
                     android:paddingRight="@dimen/feed_item_status_pad_left_right"
                     android:paddingTop="@dimen/feed_item_status_pad_top" />
 
                 <TextView
                     android:id="@+id/song_artist"
+                    android:textSize="15sp"
+                    style="@style/AudioFileInfoOverlayText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
                     android:paddingLeft="@dimen/feed_item_status_pad_left_right"
                     android:paddingRight="@dimen/feed_item_status_pad_left_right" />
-            </LinearLayout>
-        </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/like_icon"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:padding="10dp"
+                    android:src="@drawable/whiteheart"
+                    android:layout_gravity="center_horizontal" />
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressBar"
+                    android:visibility="gone"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+
+            </RelativeLayout>
+
+        </FrameLayout>
     </android.support.v7.widget.CardView>
+
+
+
 
 </LinearLayout>

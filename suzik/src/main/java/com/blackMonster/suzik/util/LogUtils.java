@@ -48,7 +48,6 @@ public class LogUtils {
 			try {
 				logFile.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -63,7 +62,6 @@ public class LogUtils {
 			buf.newLine();
 			buf.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

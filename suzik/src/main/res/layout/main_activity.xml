@@ -5,13 +5,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <!--<fragment-->
-        <!--android:id="@+id/list"-->
-        <!--android:name="com.blackMonster.suzik.ui.TimelineFragement"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:tag="timelineFragment"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="1"-->
-        <!--tools:layout="@layout/list_view" />-->
+  
 </LinearLayout>

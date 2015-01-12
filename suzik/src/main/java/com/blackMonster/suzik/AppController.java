@@ -1,15 +1,18 @@
 package com.blackMonster.suzik;
 
 import android.app.Application;
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
-import com.blackMonster.suzik.ui.LruBitmapCache;
 import com.crashlytics.android.Crashlytics;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import io.fabric.sdk.android.Fabric;
@@ -25,8 +28,6 @@ public class AppController extends Application {
 	public static final String TAG = AppController.class.getSimpleName();
 
 	private RequestQueue mRequestQueue;
-	private ImageLoader mImageLoader;
-	LruBitmapCache mLruBitmapCache;
 
 	private static AppController mInstance;
 
@@ -38,8 +39,29 @@ public class AppController extends Application {
 	    	Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
 		Crashlytics.setUserIdentifier(MainPrefs.getMyNo(this));
 		mInstance = this;
+        initImageLoader(getApplicationContext());
 	}
 
+
+
+
+
+    public static void initImageLoader(Context context) {
+        // This configuration tuning is custom. You can tune every option, you may tune some of them,
+        // or you can create default configuration by
+        //  ImageLoaderConfiguration.createDefault(this);
+        // method.
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
+                .threadPriority(Thread.NORM_PRIORITY - 2)
+                .denyCacheImageMultipleSizesInMemory()
+                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                .diskCacheSize(50 * 1024 * 1024) // 50 Mb
+                .tasksProcessingOrder(QueueProcessingType.LIFO)
+                .writeDebugLogs() // Remove for release app
+                .build();
+        // Initialize ImageLoader with configuration.
+        ImageLoader.getInstance().init(config);
+    }
 	public static synchronized AppController getInstance() {
 		return mInstance;
 	}
@@ -52,21 +74,9 @@ public class AppController extends Application {
 		return mRequestQueue;
 	}
 
-	public ImageLoader getImageLoader() {
-		getRequestQueue();
-		if (mImageLoader == null) {
-			getLruBitmapCache();
-			mImageLoader = new ImageLoader(this.mRequestQueue, mLruBitmapCache);
-		}
 
-		return this.mImageLoader;
-	}
 
-	public LruBitmapCache getLruBitmapCache() {
-		if (mLruBitmapCache == null)
-			mLruBitmapCache = new LruBitmapCache();
-		return this.mLruBitmapCache;
-	}
+
 
 	public <T> void addToRequestQueue(Request<T> req, String tag) {
 		req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);

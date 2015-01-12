@@ -81,7 +81,6 @@ public class UserActivityQueueSyncer extends Syncer {
 
 	@Override
 	public String getBroadcastString() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

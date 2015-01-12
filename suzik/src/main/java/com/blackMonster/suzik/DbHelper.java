@@ -35,6 +35,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		// Log.d(TAG, "constructor start");
 		// Log.d(TAG, "DbHelper");
 		// Log.d(TAG, "constructor end");
+
 	}
 
 	@Override

@@ -18,6 +18,7 @@ import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
 import com.blackMonster.suzik.sync.Syncer;
 import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;
+import com.blackMonster.suzik.ui.UiBroadcasts;
 
 public class AddedSongsResponseHandler extends Syncer {
 private static final  String TAG = "AddedSongsResponseHandler";
@@ -65,34 +66,14 @@ private static final  String TAG = "AddedSongsResponseHandler";
 			
 			}
 			
-			
-		/*	for (Map.Entry<String, Long> entry : fPrintIdMap.entrySet()) {
 
-				long serverId = entry.getValue();
-				if (serverId == 0) {
-					//serverId = getNewSongId();
-					LOGD(TAG,"id 0 for " + entry.getKey());
-
-					
-				}
-				QueueData qData = QueueAddedSongs.search(entry.getKey(), this);
-				
-				LOGD(TAG,"inserting " + qData.getFileName() + " to cachel table");
-
-				CacheTable.insert(
-						new CacheData(null, serverId, qData.getSong(), qData.getfPrint(), qData.getFileName()), this);
-				LOGD(TAG,"removing from queue");
-
-				QueueAddedSongs.remove(entry.getKey(), this);
-				UserActivityQueue.add(new UserActivity(serverId, UserActivity.ACTION_OUT_APP_DOWNLOAD), this);
-
-			}*/
 
 			if (!QueueAddedSongs.isEmpty(this)) {
 				futureCall(this);
 			}
 			else {
 				MainPrefs.setFirstTimeMusicSyncDone(this);
+                UiBroadcasts.broadcastMusicDataChanged(this);
 			}
 		} else {
 			LOGD(TAG,"reply size zero");
@@ -118,11 +99,15 @@ private static final  String TAG = "AddedSongsResponseHandler";
 	}
 
 	static void futureCall(Context context) {
-		long time = QueueAddedSongs.getRowCount(context)
-				* AppConfig.TIME_PROCESSING_NEW_SONG_SERVER_MS;
+		long time = getRemainingTimeMs(context);
 		Syncer.callFuture(AddedSongsResponseHandler.class, time, context);
 
 	}
+
+    public static long getRemainingTimeMs(Context context) {
+        return QueueAddedSongs.getRowCount(context)
+                * AppConfig.TIME_PROCESSING_NEW_SONG_SERVER_MS;
+    }
 
 	@Override
 	public String getBroadcastString() {
