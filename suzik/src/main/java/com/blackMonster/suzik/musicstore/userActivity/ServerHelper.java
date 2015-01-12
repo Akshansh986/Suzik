@@ -33,6 +33,7 @@ class ServerHelper {
 		AppController.getInstance().addToRequestQueue(request);
 
 		JSONObject response = future.get();
+        LOGD(TAG,"response " + response.toString());
 		return JsonHelper.UserActivityJson.parseResponse(response);
 
 	}

@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
 import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
+import com.blackMonster.suzik.util.NetworkUtils;
 import com.blackMonster.suzik.util.ServerUtils;
 
 public class JsonHelperTimeline {
@@ -54,6 +55,8 @@ public class JsonHelperTimeline {
         int n = responseArray.length();
         for (int i = 0; i < n; i++) {
             JSONObject o = (JSONObject) responseArray.get(i);
+
+            if (!NetworkUtils.isValidUrl(o.getString(P_R_SONG_URL))) continue;
 
             song = new Song(o.getString(P_R_TITLE),
                     o.isNull(P_R_ARTIST) ? null : o.getString(P_R_ARTIST),

@@ -25,6 +25,7 @@ import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
+import com.blackMonster.suzik.util.NetworkUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -38,12 +39,12 @@ import static com.blackMonster.suzik.sync.music.InAapSongTable.insert;
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import static com.blackMonster.suzik.util.LogUtils.LOGE;
 
-public class TimelineAdapter extends BaseAdapter implements  Playlist {
+public class TimelineAdapter extends BaseAdapter implements Playlist {
     private static final String TAG = "TimelineAdapter";
     private Activity activity;
     private LayoutInflater inflater;
     private List<TimelineItem> timelineItems;
-    ImageLoader imageLoader =    ImageLoader.getInstance();
+    ImageLoader imageLoader = ImageLoader.getInstance();
     Context context;
     static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
 
@@ -54,7 +55,6 @@ public class TimelineAdapter extends BaseAdapter implements  Playlist {
         this.activity = activity;
         this.timelineItems = timelineItems;
         this.context = context;
-
 
 
         options = new DisplayImageOptions.Builder()
@@ -107,10 +107,10 @@ public class TimelineAdapter extends BaseAdapter implements  Playlist {
         int likeIconResource;
 
         if (item.isCached()) {
-            LOGD(TAG,"already downloaded");
+            LOGD(TAG, "already downloaded");
             likeIconResource = R.drawable.redheart;
         } else {
-            LOGD(TAG,"online song");
+            LOGD(TAG, "online song");
             likeIconResource = R.drawable.whiteheart;
         }
 
@@ -136,26 +136,13 @@ public class TimelineAdapter extends BaseAdapter implements  Playlist {
 
                 if (item.isCached()) {
                     likeButton.setImageResource(R.drawable.whiteheart);
-                    FileDownloader.deleteFile(item.getInAppSongMirror().getAlbumartLocation());
-                    FileDownloader.deleteFile(item.getInAppSongMirror().getSongLocation());
-                    InAapSongTable.remove(item.getInAppSongMirror().getId(),context);
+                    onDelete(item);
 
                 } else {
                     likeButton.setImageResource(R.drawable.redheart);
-                    String songFileName = FileDownloader.getNewSongFileName();
-                    String songLocation = FileDownloader.getLocationFromFilename(songFileName,context);
-                    String albumartLocation = FileDownloader.getLocationFromFilename(FileDownloader.getNewAlbumArtName(),context);
-
-                    FileDownloader.saveImageToDisk(item.getAlbumArtPath(),albumartLocation);
-                    FileDownloader.saveSongToDisk(item.getSong().getTitle(),item.getSong().getArtist(),
-                            item.getSongPath(),songFileName,context);
-                    insertInAppSongTable(item,songLocation,albumartLocation);
-
-                    UserActivityManager.add(new UserActivity(item.getSong(), null, item.getId(), UserActivity.ACTION_IN_APP_DOWNLOAD, 0, System.currentTimeMillis()), context);
-
+                    OnDownload(item);
                 }
 
-                updateUi(item);
 
 
             }
@@ -164,54 +151,86 @@ public class TimelineAdapter extends BaseAdapter implements  Playlist {
 
         final ProgressBar pb = (ProgressBar) convertView.findViewById(R.id.progressBar);
         pb.setVisibility(View.GONE);
-        imageLoader.displayImage(item.getOnlineAlbumArtUrl(), albumArtView, options, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
-                pb.setVisibility(View.VISIBLE);
-            }
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                pb.setVisibility(View.GONE);
 
-            }
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                pb.setVisibility(View.GONE);
+        if (NetworkUtils.isValidUrl(item.getOnlineAlbumArtUrl())) {
 
-                if (loadedImage != null) {
-                    ImageView imageView = (ImageView) view;
-
-                    boolean firstDisplay = !displayedImages.contains(imageUri);
-                    if (firstDisplay) {
-                        pb.setVisibility(View.GONE);
-                        FadeInBitmapDisplayer.animate(imageView, 500);
-                        displayedImages.add(imageUri);
-                    }
+            imageLoader.displayImage(item.getOnlineAlbumArtUrl(), albumArtView, options, new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String imageUri, View view) {
+                    pb.setVisibility(View.VISIBLE);
                 }
 
+                @Override
+                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                    pb.setVisibility(View.GONE);
+
+                }
+
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    pb.setVisibility(View.GONE);
+
+                    if (loadedImage != null) {
+                        ImageView imageView = (ImageView) view;
+
+                        boolean firstDisplay = !displayedImages.contains(imageUri);
+                        if (firstDisplay) {
+                            pb.setVisibility(View.GONE);
+                            FadeInBitmapDisplayer.animate(imageView, 500);
+                            displayedImages.add(imageUri);
+                        }
+                    }
 
 
-            }
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
-                pb.setVisibility(View.GONE);
+                }
 
-            }
-        });
+                @Override
+                public void onLoadingCancelled(String imageUri, View view) {
+                    pb.setVisibility(View.GONE);
 
+                }
+            });
 
-
-
-
-
-
-
-
-
-
+        } else {
+            albumArtView.setImageResource(R.drawable.album_art);
+        }
 
 
         return convertView;
+    }
+
+    private void OnDownload(final TimelineItem item) {
+
+        new Thread() {
+            public void run() {
+
+                String songFileName = FileDownloader.getNewSongFileName();
+                String songLocation = FileDownloader.getLocationFromFilename(songFileName, context);
+                String albumartLocation = FileDownloader.getLocationFromFilename(FileDownloader.getNewAlbumArtName(), context);
+
+                FileDownloader.saveImageToDisk(item.getAlbumArtPath(), albumartLocation);
+                FileDownloader.saveSongToDisk(item.getSong().getTitle(), item.getSong().getArtist(),
+                        item.getSongPath(), songFileName, context);
+                insertInAppSongTable(item, songLocation, albumartLocation);
+
+                UserActivityManager.add(new UserActivity(item.getSong(), null, item.getId(), UserActivity.ACTION_IN_APP_DOWNLOAD, 0, System.currentTimeMillis()), context);
+                updateUi(item);
+            }
+        }.start();
+
+
+    }
+
+    private void onDelete(final TimelineItem item) {
+
+        new Thread() {
+            public void run() {
+                FileDownloader.deleteFile(item.getInAppSongMirror().getAlbumartLocation());
+                FileDownloader.deleteFile(item.getInAppSongMirror().getSongLocation());
+                InAapSongTable.remove(item.getInAppSongMirror().getId(), context);
+                updateUi(item);
+            }
+        }.start();
     }
 
 
@@ -282,7 +301,7 @@ public class TimelineAdapter extends BaseAdapter implements  Playlist {
 //                    });
 //        }
 
- //   }
+    //   }
 
 //    private boolean loadLocalAlbumArtIfAvailable(final TimelineItem item, FeedImageView feedImageView) {
 //
@@ -332,12 +351,6 @@ public class TimelineAdapter extends BaseAdapter implements  Playlist {
     public int getSongCount() {
         return getCount();
     }
-
-
-
-
-
-
 
 
 }

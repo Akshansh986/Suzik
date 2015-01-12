@@ -35,6 +35,7 @@ class JsonHelper {
 		static HashSet<Contact> parseResponse(JSONObject response)
 				throws JSONException {
 
+            LOGD(TAG,"parse response : " + response.toString());
 			HashSet<Contact> result = new HashSet<Contact>();
 
 			JSONArray responseArray = response.getJSONArray(P_R_CONTACT_LIST);

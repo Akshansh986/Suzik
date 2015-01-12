@@ -4,9 +4,11 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.blackMonster.suzik.util.NetworkUtils;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.io.File;
@@ -24,7 +26,11 @@ public class FileDownloader {
 
     public static void saveSongToDisk(String title, String artist, String url, String fileName, Context context){
 
-        deleteFile(getLocationFromFilename(fileName,context));
+        LOGD(TAG, "download url : " + url);
+
+        if (!NetworkUtils.isValidUrl(url)) return;
+
+        deleteFile(getLocationFromFilename(fileName, context));
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setDescription(artist);
         request.setTitle(title);
@@ -40,10 +46,12 @@ public class FileDownloader {
     public static void saveImageToDisk(String url, final String location) {
         LOGD(TAG,"save to disk : "  + url);
 
-        if (location == null || location.equals("")) {
+
+        if (!NetworkUtils.isValidUrl(url)) {
             LOGE(TAG,"unable to save...inalid path " + url);
             return;
         }
+
 
         com.nostra13.universalimageloader.core.ImageLoader.getInstance().loadImage(url, new SimpleImageLoadingListener() {
             @Override
@@ -64,38 +72,9 @@ public class FileDownloader {
 
     }
 
-    public static void saveImageToDiskAndUpdateView(String url, final String location, final ImageView view) {
-
-        if (location == null || location.equals("")) {
-            LOGE(TAG,"unable to save...inalid path " + url);
-            return;
-        }
-
-//        AppController.getInstance().getImageLoader().get(url,
-//                new ImageLoader.ImageListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        LOGE(TAG, "Image load error :  " + error.toString());
-//                    }
-//
-//                    @Override
-//                    public void onResponse(final ImageLoader.ImageContainer response,
-//                                           boolean isImmediate) {
-//
-//                        if (response.getBitmap() == null)  return;
-//
-//                        writeToDisk(response.getBitmap(),location);
-//                        view.setImageBitmap(response.getBitmap());
-//
-//
-//                    }
-//                });
-
-
-
-    }
-
     public static void writeToDisk(Bitmap bmp , String location) {
+     //TODO  Checking external storage availability and space avalilabiity before writing to disk
+
         LOGD(TAG,"write to disk called");
 
         if (bmp == null) {
