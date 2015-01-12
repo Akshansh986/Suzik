@@ -75,6 +75,9 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
+
+       //Everyting you do here is reflected in serarch result fragment
+
         LOGD(TAG,"setuservisiblehint " + isVisibleToUser);
         super.setUserVisibleHint(isVisibleToUser);
 
@@ -103,12 +106,18 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
     public void loadData() {
         if (MainPrefs.isFirstTimeMusicSyncDone(getActivity())) {
             androidCursor = getAndroidSongs();
-            inAppCursor = InAapSongTable.getAllDataCursor(getActivity());
+            inAppCursor = getInAppSong();
         }
 
     }
 
-    private Cursor getAndroidSongs() {
+   public  Cursor getInAppSong() {
+       return InAapSongTable.getAllDataCursor(getActivity());
+    }
+
+
+
+   public Cursor getAndroidSongs() {
 
         Uri URI = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 

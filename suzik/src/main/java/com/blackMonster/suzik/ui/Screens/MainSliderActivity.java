@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.blackMonster.suzik.R;
+import com.blackMonster.suzik.sync.music.SongsSyncer;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
@@ -34,6 +35,7 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
 
 	@Override
 	protected void onCreate(Bundle arg0) {
+
 		super.onCreate(arg0);
 		setContentView(R.layout.main_slider_activity);
 
@@ -42,6 +44,9 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
 		mPager.setAdapter(mPagerAdapter);
         mPager.setOnPageChangeListener(this);
         onPageSelected(0);
+
+        startService(new Intent(this, SongsSyncer.class));
+
 	}
 
     @Override
