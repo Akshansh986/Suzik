@@ -51,14 +51,13 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
     TimelineAdapter adapter;
     SwipeRefreshLayout swipeLayout;
 
-    UIcontroller uIcontroller;
-
+UIcontroller uiController;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        uIcontroller = UIcontroller.getInstance(getActivity());
-        uIcontroller.bindtoservice();
+        uiController=UIcontroller.getInstance(getActivity());
+
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.timeline_view,
                 container, false);
@@ -170,8 +169,8 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
 
         Log.d(TAG, "fsdf " + position +  adapter.getPlayable(position).getSongPath());
 
-        uIcontroller.setList(adapter);
-        uIcontroller.setSongpos(position);
+        uiController.setList(adapter);
+        uiController.setSongpos(position);
 
 
 
@@ -183,44 +182,10 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
 //        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(marginParams);
 //        ((CardView) view.findViewById(R.id.card_view)).setLayoutParams(layoutParams);
 
-        new Thread() {
-            public void run() {
-                try {
-                    play(adapter.getPlayable(position).getSongPath());
-                } catch (Exception e) {
-                }
-            }
-
-        }.start();
-
 
     }
 
 
-    void play(String url) {
-        MediaPlayer mediaPlayer = new MediaPlayer();
-//        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(url);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            mediaPlayer.prepare();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } // might take long! (for buffering, etc)
-        mediaPlayer.start();
-
-    }
 
 
     @Override

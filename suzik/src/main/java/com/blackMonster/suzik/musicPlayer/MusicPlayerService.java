@@ -24,7 +24,9 @@ import android.widget.RemoteViews;
 
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicstore.Timeline.Playable;
-public class MusicPlayerService extends Service 
+import com.blackMonster.suzik.ui.Screens.MainSliderActivity;
+
+public class MusicPlayerService extends Service
 implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekCompleteListener,OnInfoListener{
 	
 	private static final String TAG = "Suzikplayer_service";
@@ -127,6 +129,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				// TODO Auto-generated method stub
+                Log.d(TAG,"broadcastReceiver_seekbaruiupdate:onReceive");
 				updateseekpos(intent);
 			}
 		};
@@ -136,7 +139,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 			int seekpos=intent.getIntExtra("seekui",0);
 			//if(player.isPlaying())
 			//{	
-				handler.removeCallbacks(sendUpdatestoui);
+		//		handler.removeCallbacks(sendUpdatestoui);
 				seek(seekpos);
 				setuphandler();
 				
@@ -198,9 +201,9 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		String songTitle=playable.getSong().getTitle();
 		String songArtist=playable.getSong().getArtist();
 	
-		Intent notIntent = new Intent(this, MusicPlayerFragment.class);
+		Intent notIntent = new Intent(this, MainSliderActivity.class);
 		notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		PendingIntent pendInt = PendingIntent.getActivity(this, 0, notIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pendInt = PendingIntent.getActivity(this, 0, notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		RemoteViews views= new RemoteViews(getPackageName(), R.layout.smallwidget);
 		views.setImageViewResource(R.id.notification_small_albumart,R.drawable.album_art);
 		views.setTextViewText(R.id.notification_small_songtitle,songTitle);
@@ -290,7 +293,9 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		{	if(mediaplayerstate==prepared||mediaplayerstate==started||mediaplayerstate==paused||mediaplayerstate==playbackcomplete)
 				
 		  {	player.seekTo(posn);
-		    mediaplayerstate=prepared;
+              Log.d(TAG, "seek complete");
+
+              mediaplayerstate=prepared;
 		    setseekintent=0;
 		    fullfillintent();
 		  }

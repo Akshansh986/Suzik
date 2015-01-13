@@ -21,20 +21,20 @@ import com.blackMonster.suzik.ui.Playlist;
 
 public class UIcontroller {
 	private static final String TAG = "Suzikplayer_uicontroller";
-	
+
 	Handler mHandler=new Handler();
 
 	Runnable mHandlerTask = new Runnable()
 	{
-	     @Override 
+	     @Override
 	     public void run() {
 	    	 Log.d(TAG,"Runnable setsong");
 	    	 musicSrv.setSong(songs.getPlayable(songpos));
-	    	 
+
 	     }
 	};
-	
-	
+
+
 	Playlist songs=null;
 	boolean playbtn;
 	int songpos=0;
@@ -54,10 +54,10 @@ public class UIcontroller {
 	Intent Intent_uidataupdate;
 	public static String brodcast_uibtnupdate="uibtnupdate";
 	Intent Intent_uibtnupdate;
-	
+
 	public static String brodcast_resetui="resetui";
 	Intent Intent_resetui;
-	
+
 	public static String brodcast_playercurrentstatus="playercurrentstatus";
 	Intent Intent_playercurrentstatus;
 	public static String brodcast_playersavedstatus="playersavedstatus";
@@ -67,32 +67,36 @@ public class UIcontroller {
 	Intent intent_uiseekintent;
 
 
-	
+
 	private MusicPlayerService musicSrv;
 	private boolean musicBound=false;
 	private Intent playIntent=null;
 
-	
+
 	Context context;
 	private static UIcontroller instance=null;
-	
-	
+
+
 	public static UIcontroller getInstance(Context context)
-	
+
 	{
-		Log.d(TAG,"getInstance"); 
-		if(instance==null)
-		{		
-			instance=new UIcontroller(context);
+		Log.d(TAG,"getInstance");
+
+        if(instance==null)
+		{
+			instance=new UIcontroller(context.getApplicationContext());
 		}
+
 	return instance;
-		
+
 	}
+
 	private UIcontroller(Context context) {
 	// TODO Auto-generated constructor stub
 		
 		Log.d(TAG,"UIcontroller constuctor"); 
 		this.context=context;
+
 	Intent_uidataupdate=new Intent(brodcast_uidataupdate);
 	Intent_uibtnupdate=new Intent(brodcast_uibtnupdate);
 

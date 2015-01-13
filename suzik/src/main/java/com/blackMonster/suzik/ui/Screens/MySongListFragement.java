@@ -28,6 +28,7 @@ import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.R;
 
+import com.blackMonster.suzik.musicPlayer.UIcontroller;
 import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
 import com.blackMonster.suzik.sync.music.AddedSongsResponseHandler;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
@@ -45,6 +46,7 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
     ListView listView;
     MySongsAdapter adapter;
     Cursor androidCursor, inAppCursor;
+    UIcontroller uiController;
 
 
     @Override
@@ -60,6 +62,8 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.list_view,
                 container, false);
 
+
+        uiController=UIcontroller.getInstance(getActivity());
         listView = (ListView) rootView.findViewById(R.id.list_view);
 
         loadData();
@@ -140,48 +144,13 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
     public void onItemClick(AdapterView<?> arg0, View arg1, final int position, long arg3) {
 
         LOGD(TAG, " " + position);
-
-//        Log.d(TAG, "fsdf " + position + timelineItems.get(position).getSongPath());
-//
-//
-//        new Thread() {
-//            public void run() {
-//                try {
-//                    play(timelineItems.get(position).getSongPath());
-//                } catch (Exception e) {
-//                }
-//            }
-//
-//        }.start();
+        uiController.setList(adapter);
+        uiController.setSongpos(position);
 
 
     }
 
 
-    void play(String url) {
-        MediaPlayer mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(url);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            mediaPlayer.prepare();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } // might take long! (for buffering, etc)
-        mediaPlayer.start();
-
-    }
 
 
     private BroadcastReceiver broadcastMusicDataChanged = new BroadcastReceiver() {

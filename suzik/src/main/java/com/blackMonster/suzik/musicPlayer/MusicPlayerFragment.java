@@ -317,7 +317,6 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         setanimation();
 
         uicontroller = UIcontroller.getInstance(getActivity().getApplicationContext());
-        uicontroller.bindtoservice();
 
 
         Log.d(TAG, "oncreate:Register broadcast");
@@ -475,9 +474,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     public void onDestroy() {
         // TODO Auto-generated method stub
         Log.d(TAG, "onDestroy");
-        if (uicontroller != null) {
-            uicontroller.unbind();
-        }
+
         super.onDestroy();
     }
 

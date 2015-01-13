@@ -21,6 +21,7 @@ import android.view.View;
 
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicPlayer.MusicPlayerFragment;
+import com.blackMonster.suzik.musicPlayer.UIcontroller;
 import com.blackMonster.suzik.sync.music.AddedSongsResponseHandler;
 import com.blackMonster.suzik.sync.music.SongsSyncer;
 
@@ -34,11 +35,17 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
 	private static final int NUM_PAGES = 3;
 	private ViewPager mPager;
 	private PagerAdapter mPagerAdapter;
+    UIcontroller uIcontroller;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
 
 		super.onCreate(arg0);
+
+
+        uIcontroller = UIcontroller.getInstance(this);
+        uIcontroller.bindtoservice();
+
 		setContentView(R.layout.main_slider_activity);
 
 		mPager = (ViewPager) findViewById(R.id.pager);
@@ -141,6 +148,7 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
     @Override
     protected void onResume() {
         super.onResume();
+
         hideSearchBar();
     }
 
@@ -149,6 +157,17 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
             MenuItem v = (menu.findItem(R.id.search));
             if (v!=null && v.isActionViewExpanded())
             (menu.findItem(R.id.search)).collapseActionView();
+        }
+    }
+
+
+    
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (uIcontroller != null) {
+            uIcontroller.unbind();
         }
     }
 }
