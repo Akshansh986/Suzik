@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name="com.blackMonster.suzik.AppController"
@@ -133,6 +134,24 @@
         <meta-data
             android:name="com.crashlytics.ApiKey"
             android:value="f7c01fc5ad082280f803db6619586f6bc8c5a4f3" />
+
+
+        //Player
+
+        <service android:name="com.blackMonster.suzik.musicPlayer.MusicPlayerService" />
+
+
+
+
+
+
+
+
+
+
+
+
+
     </application>
 
 </manifest>

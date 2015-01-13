@@ -19,7 +19,6 @@
 
 
 
-
         <!--&lt;!&ndash; Set AppCompat’s actionBarStyle &ndash;&gt;-->
         <!--<item name="actionBarStyle">@style/MyActionBarStyle</item>-->
 
@@ -29,6 +28,15 @@
 
     <!-- The rest of your attributes -->
     </style>
+
+    <style name="NotificationText">
+        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
+    </style>
+    <style name="NotificationTitle">
+        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 
 
 </resources>
