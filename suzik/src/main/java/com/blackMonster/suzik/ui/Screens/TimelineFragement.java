@@ -35,10 +35,12 @@ import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.R;
+import com.blackMonster.suzik.musicPlayer.UIcontroller;
 import com.blackMonster.suzik.musicstore.Timeline.JsonHelperTimeline;
 import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
 import com.blackMonster.suzik.sync.ContentObserverService;
 import com.blackMonster.suzik.ui.TimelineAdapter;
+import com.blackMonster.suzik.ui.UiBroadcasts;
 
 public class TimelineFragement extends Fragment implements OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = "ActivityTimeline";
@@ -49,10 +51,14 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
     TimelineAdapter adapter;
     SwipeRefreshLayout swipeLayout;
 
+    UIcontroller uIcontroller;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+
+        uIcontroller = UIcontroller.getInstance(getActivity());
+        uIcontroller.bindtoservice();
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.timeline_view,
                 container, false);
@@ -164,6 +170,8 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
 
         Log.d(TAG, "fsdf " + position +  adapter.getPlayable(position).getSongPath());
 
+        uIcontroller.setList(adapter);
+        uIcontroller.setSongpos(position);
 
 
 

@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.blackMonster.suzik.R;
+import com.blackMonster.suzik.musicPlayer.MusicPlayerFragment;
 import com.blackMonster.suzik.sync.music.AddedSongsResponseHandler;
 import com.blackMonster.suzik.sync.music.SongsSyncer;
 
@@ -30,7 +31,7 @@ import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 public class MainSliderActivity  extends ActionBarActivity implements View.OnClickListener, ViewPager.OnPageChangeListener{
     public static final String TAG = "MainSliderActivity";
-	private static final int NUM_PAGES = 2;
+	private static final int NUM_PAGES = 3;
 	private ViewPager mPager;
 	private PagerAdapter mPagerAdapter;
 
@@ -44,7 +45,11 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
 		mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
 		mPager.setAdapter(mPagerAdapter);
         mPager.setOnPageChangeListener(this);
-        onPageSelected(0);
+
+
+        //TODO jugad
+        mPager.setCurrentItem(1);
+        onPageSelected(1);
 
 
 	}
@@ -74,10 +79,11 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
 		public Fragment getItem(int position) {
 			switch (position) {
 			case 0:
-				return new TimelineFragement();
+				return new MusicPlayerFragment();
 			case 1:
+				return new TimelineFragement();
+            case 2:
 				return new MySongListFragement();
-
 			default:
 				return null;
 			}
@@ -92,8 +98,10 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return getResources().getString(R.string.title_timeline);
+                    return getResources().getString(R.string.title_player);
                 case 1:
+                    return getResources().getString(R.string.title_timeline);
+                case 2:
                     return getResources().getString(R.string.title_allSongs);
 
                 default:

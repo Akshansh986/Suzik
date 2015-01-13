@@ -13,6 +13,8 @@
     <string name="title_timeline">Timeline</string>
     <string name="title_allSongs">All Songs</string>
     <string name="title_search">Search</string>
+    <string name="title_player">Player</string>
+
 
 
 </resources>

@@ -198,7 +198,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		String songTitle=playable.getSong().getTitle();
 		String songArtist=playable.getSong().getArtist();
 	
-		Intent notIntent = new Intent(this, MainActivity.class);
+		Intent notIntent = new Intent(this, MusicPlayerFragment.class);
 		notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		PendingIntent pendInt = PendingIntent.getActivity(this, 0, notIntent,PendingIntent.FLAG_UPDATE_CURRENT);
 		RemoteViews views= new RemoteViews(getPackageName(), R.layout.smallwidget);

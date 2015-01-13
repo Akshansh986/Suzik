@@ -1,20 +1,17 @@
 package com.blackMonster.suzik.musicPlayer;
 
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -27,18 +24,11 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request.Method;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.blackMonster.suzik.AppConfig;
-import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.R;
 
 
 
-public class MainActivity extends Activity implements OnSeekBarChangeListener {
+public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeListener {
     private static final String TAG = "Suzikplayer_ui";
 
     public static final String brodcast_uiseek = "uiseek";
@@ -57,7 +47,7 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
     UIcontroller uicontroller;
 
     private int seekmax;
-    private static int songended = 0;
+
 
     private boolean isbplayercurrentstatus;
     private boolean isbrodcastseekregistered;
@@ -162,12 +152,10 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
 
         String counter = intent.getStringExtra("counter");
         String mediamax = intent.getStringExtra("mediamax");
-        String strsongended = intent.getStringExtra("songended");
         int seekprogress = Integer.parseInt(counter);
         Log.d(TAG, "Current Postiton:" + counter + "Max Duration" + mediamax);
 
         seekmax = Integer.parseInt(mediamax);
-        songended = Integer.parseInt(strsongended);
         songProgressBar.setMax(seekmax);
         songProgressBar.setProgress(seekprogress);
 
@@ -302,69 +290,80 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
 
 /////////////////////////////////////////////
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate");
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.suzikplayer);
-        setupui();
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
+
+
+        super.onCreateView(inflater, container, savedInstanceState);
+
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.suzikplayer,
+                container, false);
+
+        setupui(rootView);
         setanimation();
 
-        uicontroller = UIcontroller.getInstance(getApplicationContext());
+        uicontroller = UIcontroller.getInstance(getActivity().getApplicationContext());
         uicontroller.bindtoservice();
 
 
         Log.d(TAG, "oncreate:Register broadcast");
-        registerReceiver(broadcastreciever_seekrecieve, new IntentFilter(MusicPlayerService.broadcast_playerseek));
+        getActivity(). registerReceiver(broadcastreciever_seekrecieve, new IntentFilter(MusicPlayerService.broadcast_playerseek));
         isbrodcastseekregistered = true;
-        registerReceiver(broadcastreciever_uidataupdate, new IntentFilter(UIcontroller.brodcast_uidataupdate));
+        getActivity().registerReceiver(broadcastreciever_uidataupdate, new IntentFilter(UIcontroller.brodcast_uidataupdate));
         isbrodcastuidataupdateregistered = true;
-        registerReceiver(broadcastreciever_uibtnupdate, new IntentFilter(UIcontroller.brodcast_uibtnupdate));
+        getActivity().registerReceiver(broadcastreciever_uibtnupdate, new IntentFilter(UIcontroller.brodcast_uibtnupdate));
         isbrodcastuibtnupdateregistered = true;
-        registerReceiver(broadcastreciever_bufferingplayerrecieve, new IntentFilter(MusicPlayerService.brodcast_bufferingplayer));
+        getActivity().registerReceiver(broadcastreciever_bufferingplayerrecieve, new IntentFilter(MusicPlayerService.brodcast_bufferingplayer));
         isbufferregistered = true;
-        registerReceiver(broadcastreciever_playercurrentstatus, new IntentFilter(UIcontroller.brodcast_playercurrentstatus));
+        getActivity().registerReceiver(broadcastreciever_playercurrentstatus, new IntentFilter(UIcontroller.brodcast_playercurrentstatus));
         isbplayercurrentstatus = true;
-        registerReceiver(broadcastreciever_resetui, new IntentFilter(UIcontroller.brodcast_resetui));
+        getActivity().registerReceiver(broadcastreciever_resetui, new IntentFilter(UIcontroller.brodcast_resetui));
         isrestui = true;
+
+        return  rootView;
+
 
     }
 
 
+
+
     @Override
-    protected void onPause() {
+    public void onPause() {
         // TODO Auto-generated method stub
         Log.d(TAG, "onPause");
         if(uicontroller.getList()!=null) {
             if (isrestui) {
-                unregisterReceiver(broadcastreciever_resetui);
+                getActivity().unregisterReceiver(broadcastreciever_resetui);
                 isrestui = false;
 
             }
 
             if (isbplayercurrentstatus) {
-                unregisterReceiver(broadcastreciever_playercurrentstatus);
+                getActivity().unregisterReceiver(broadcastreciever_playercurrentstatus);
                 isbplayercurrentstatus = false;
 
             }
             if (isbrodcastuidataupdateregistered) {
-                unregisterReceiver(broadcastreciever_uidataupdate);
+                getActivity().unregisterReceiver(broadcastreciever_uidataupdate);
                 isbrodcastuidataupdateregistered = false;
 
             }
             if (isbrodcastuibtnupdateregistered) {
-                unregisterReceiver(broadcastreciever_uibtnupdate);
+                getActivity().unregisterReceiver(broadcastreciever_uibtnupdate);
                 isbrodcastuibtnupdateregistered = false;
 
             }
             if (isbufferregistered) {
-                unregisterReceiver(broadcastreciever_bufferingplayerrecieve);
+                getActivity().unregisterReceiver(broadcastreciever_bufferingplayerrecieve);
                 isbufferregistered = false;
 
             }
 
             if (isbrodcastseekregistered) {
-                unregisterReceiver(broadcastreciever_seekrecieve);
+                getActivity().unregisterReceiver(broadcastreciever_seekrecieve);
                 isbrodcastseekregistered = false;
 
             }
@@ -382,37 +381,37 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
 
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         // TODO Auto-generated method stub
         Log.d(TAG, "onResume");
     if(uicontroller.getList()!=null) {
     if (!isrestui) {
-        registerReceiver(broadcastreciever_resetui, new IntentFilter(UIcontroller.brodcast_resetui));
+        getActivity().registerReceiver(broadcastreciever_resetui, new IntentFilter(UIcontroller.brodcast_resetui));
         isrestui = true;
 
     }
     if (!isbplayercurrentstatus) {
-        registerReceiver(broadcastreciever_playercurrentstatus, new IntentFilter(UIcontroller.brodcast_playercurrentstatus));
+        getActivity().registerReceiver(broadcastreciever_playercurrentstatus, new IntentFilter(UIcontroller.brodcast_playercurrentstatus));
         isbplayercurrentstatus = true;
 
     }
     if (!isbrodcastuidataupdateregistered) {
-        registerReceiver(broadcastreciever_uidataupdate, new IntentFilter(UIcontroller.brodcast_uidataupdate));
+        getActivity().registerReceiver(broadcastreciever_uidataupdate, new IntentFilter(UIcontroller.brodcast_uidataupdate));
         isbrodcastuidataupdateregistered = true;
 
     }
     if (!isbrodcastuibtnupdateregistered) {
-        registerReceiver(broadcastreciever_uibtnupdate, new IntentFilter(UIcontroller.brodcast_uibtnupdate));
+        getActivity().registerReceiver(broadcastreciever_uibtnupdate, new IntentFilter(UIcontroller.brodcast_uibtnupdate));
         isbrodcastuibtnupdateregistered = true;
 
     }
     if (!isbufferregistered) {
-        registerReceiver(broadcastreciever_bufferingplayerrecieve, new IntentFilter(MusicPlayerService.brodcast_bufferingplayer));
+        getActivity().registerReceiver(broadcastreciever_bufferingplayerrecieve, new IntentFilter(MusicPlayerService.brodcast_bufferingplayer));
         isbufferregistered = true;
 
     }
     if (!isbrodcastseekregistered) {
-        registerReceiver(broadcastreciever_seekrecieve, new IntentFilter(MusicPlayerService.broadcast_playerseek));
+        getActivity().registerReceiver(broadcastreciever_seekrecieve, new IntentFilter(MusicPlayerService.broadcast_playerseek));
         isbrodcastseekregistered = true;
 
     }
@@ -441,7 +440,7 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         // TODO Auto-generated method stub
         Log.d(TAG, "onDestroy");
         if (uicontroller != null) {
@@ -467,19 +466,19 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
     }
 
 
-    private void setupui() {
+    private void setupui(View rootView) {
         Log.d(TAG, "setupui");
 
-        btnPlay = (ImageView) findViewById(R.id.playpause);
-        btnNext = (ImageView) findViewById(R.id.next);
-        btnPrevious = (ImageView) findViewById(R.id.previous);
-        btnRepeat = (ImageView) findViewById(R.id.repeat);
-        btnShuffle = (ImageView) findViewById(R.id.shuffle);
-        songProgressBar = (SeekBar) findViewById(R.id.seekbar);
-        songTitleLabel = (TextView) findViewById(R.id.songname);
-        songAlbumName = (TextView) findViewById(R.id.albumname);
-        songArtistName = (TextView) findViewById(R.id.artistname);
-        albumart = (ImageView) findViewById(R.id.albumart);
+        btnPlay = (ImageView) rootView.findViewById(R.id.playpause);
+        btnNext = (ImageView) rootView.findViewById(R.id.next);
+        btnPrevious = (ImageView) rootView.findViewById(R.id.previous);
+        btnRepeat = (ImageView) rootView.findViewById(R.id.repeat);
+        btnShuffle = (ImageView) rootView.findViewById(R.id.shuffle);
+        songProgressBar = (SeekBar) rootView.findViewById(R.id.seekbar);
+        songTitleLabel = (TextView) rootView.findViewById(R.id.songname);
+        songAlbumName = (TextView) rootView.findViewById(R.id.albumname);
+        songArtistName = (TextView) rootView.findViewById(R.id.artistname);
+        albumart = (ImageView) rootView.findViewById(R.id.albumart);
 
         //settags
         btnPlay.setTag("play");
@@ -515,7 +514,7 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
 
                 } else {
 
-                    Toast.makeText(getBaseContext(), "List not set", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "List not set", Toast.LENGTH_SHORT).show();
 
 
                 }
@@ -528,11 +527,10 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
             public void onClick(View v) {
                 Log.d(TAG, "onClick:btnNext");
 
-                ImageView t = (ImageView) v;
                 if (uicontroller.getList() != null) {
                     uicontroller.nextSong();
                 } else {
-                    Toast.makeText(getBaseContext(), "List not set", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "List not set", Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -543,13 +541,12 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
             public void onClick(View v) {
                 Log.d(TAG, "onClick:btnPrevious");
 
-                ImageView t = (ImageView) v;
                 if (uicontroller.getList() != null) {
 
                     uicontroller.prevSong();
 
                 } else {
-                    Toast.makeText(getBaseContext(), "List not set", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "List not set", Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -575,7 +572,7 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
 
                     }
                 } else {
-                    Toast.makeText(getBaseContext(), "List not set", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "List not set", Toast.LENGTH_SHORT).show();
 
 
                 }
@@ -616,7 +613,7 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
                     }
 
                 } else {
-                    Toast.makeText(getBaseContext(), "List not set", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "List not set", Toast.LENGTH_SHORT).show();
 
 
                 }

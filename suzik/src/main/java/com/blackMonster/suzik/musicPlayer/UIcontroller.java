@@ -366,7 +366,7 @@ public class UIcontroller {
 		     songpos=songIndex;
 		     setSong();
 		}
-		public void setSong() {
+		private void setSong() {
 			// TODO Auto-generated method stub
 			Log.d(TAG,"setsong"); 
 			resetui();
