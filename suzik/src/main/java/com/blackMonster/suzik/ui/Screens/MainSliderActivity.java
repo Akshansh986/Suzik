@@ -161,7 +161,7 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
     }
 
 
-    
+
 
     @Override
     protected void onDestroy() {

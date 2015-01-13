@@ -168,6 +168,9 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		if(player!=null)
 		{		
 			player.reset();
+            setseekintent=0;
+            setstopintent=0;
+            setplaypauseintent=0;
 			mediaplayerstate=idle;
 			fullfillintent();
 		}

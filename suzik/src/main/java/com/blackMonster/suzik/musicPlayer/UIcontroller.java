@@ -93,8 +93,8 @@ public class UIcontroller {
 
 	private UIcontroller(Context context) {
 	// TODO Auto-generated constructor stub
-		
-		Log.d(TAG,"UIcontroller constuctor"); 
+
+		Log.d(TAG,"UIcontroller constuctor");
 		this.context=context;
 
 	Intent_uidataupdate=new Intent(brodcast_uidataupdate);

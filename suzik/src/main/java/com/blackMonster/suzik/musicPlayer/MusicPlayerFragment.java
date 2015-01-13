@@ -29,6 +29,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import java.util.logging.Handler;
+
 
 public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeListener {
     private static final String TAG = "Suzikplayer_ui";
@@ -65,7 +67,13 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     Animation fadeIn;
     Animation fadeOut;
     AnimationSet animation;
-
+   android.os.Handler animationHandler=new android.os.Handler();
+    Runnable animationRunnable=new Runnable() {
+        @Override
+        public void run() {
+            songProgressBar.startAnimation(animation);
+        }
+    };
     //broadcast recievers
     private BroadcastReceiver broadcastreciever_playercurrentstatus = new BroadcastReceiver() {
 
@@ -269,13 +277,12 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             case 1:
                 isbuffering = true;
                 Log.d(TAG, "Animationstarted");
-                songProgressBar.startAnimation(animation);
-
+                animationHandler.postDelayed(animationRunnable,0);
                 break;
             case 0:
                 isbuffering = false;
                 Log.d(TAG, "Animationstopeed");
-                songProgressBar.startAnimation(animation);
+                animationHandler.removeCallbacks(animationRunnable);
                 break;
 
 
@@ -680,28 +687,28 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             public void onAnimationStart(Animation animation) {
                 // TODO Auto-generated method stub
                 Log.d(TAG, "onAnimationStart");
-                if (!isbuffering) {
-                    songProgressBar.clearAnimation();
 
 
-                }
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
                 // TODO Auto-generated method stub
-                Log.d(TAG, "onAnimationStart");
+                Log.d(TAG, "onAnimationRepeat");
+                if(!isbuffering) {
 
+                    animationHandler.removeCallbacks(animationRunnable);
+                }
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 // TODO Auto-generated method stub
                 Log.d(TAG, "onAnimationEnd");
-                if (isbuffering) {
-                    songProgressBar.startAnimation(animation);
-                }
+                    if(isbuffering) {
 
+                        animationHandler.postDelayed(animationRunnable,0);
+                    }
             }
         });
 
