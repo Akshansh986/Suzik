@@ -23,8 +23,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.blackMonster.suzik.R;
-import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
-
+import com.blackMonster.suzik.musicstore.Timeline.Playable;
 public class MusicPlayerService extends Service 
 implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekCompleteListener,OnInfoListener{
 	
@@ -51,7 +50,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 	final int end=8;
 	final int error=9;
 	int mediaplayerstate;
-	private TimelineItem CurrentSong;
+	private Playable CurrentSong;
 	private boolean isplay;
 	private boolean isasyncplay;
 	
@@ -160,7 +159,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		player.setOnInfoListener(this);
 		
 	}
-	public void setSong(TimelineItem song){
+	public void setSong(Playable playable){
 		isplay=false;
 		isasyncplay=false;
 		if(player!=null)
@@ -169,17 +168,17 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 			mediaplayerstate=idle;
 			fullfillintent();
 		}
-		CurrentSong=song;
+		CurrentSong=playable;
 		if(mediaplayerstate==idle)
 		{
 		  try
 		  {
 			//player.setDataSource("https://www.dropbox.com/s/jef2cfbpdmj3sr4/Contemporary%20Dance%20Solo.mp4?dl=0");
 			
-			player.setDataSource(song.songUrl);
+			player.setDataSource(playable.getSongPath());
 			mediaplayerstate=initialized;
 			fullfillintent();
-			Log.d(TAG,"Musicplayerservice: song set == "+song.songUrl);
+			Log.d(TAG, "Musicplayerservice: song set == " + playable.getSongPath());
 			Log.d(TAG,"Musicplayerservice: player resource set");
 
 		  }	
@@ -196,8 +195,8 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 	
 		
 		
-		String songTitle=song.song.getTitle();
-		String songArtist=song.song.getArtist();
+		String songTitle=playable.getSong().getTitle();
+		String songArtist=playable.getSong().getArtist();
 	
 		Intent notIntent = new Intent(this, MainActivity.class);
 		notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -541,7 +540,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 			}
 			else
 			{ 	if(CurrentSong!=null)		
-				playerstatus= new Status(0,(int)CurrentSong.song.getDuration(),player.isPlaying());
+				playerstatus= new Status(0,(int)CurrentSong.getSong().getDuration(),player.isPlaying());
 
 			}
 	}

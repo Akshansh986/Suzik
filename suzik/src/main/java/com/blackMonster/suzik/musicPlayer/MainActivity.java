@@ -35,8 +35,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.R;
-import com.blackMonster.suzik.musicstore.Timeline.JsonHelperTimeline;
-import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
+
 
 
 public class MainActivity extends Activity implements OnSeekBarChangeListener {
@@ -55,7 +54,6 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
     private ImageView albumart;
     private SeekBar songProgressBar;
 
-    List<TimelineItem> songs;
     UIcontroller uicontroller;
 
     private int seekmax;

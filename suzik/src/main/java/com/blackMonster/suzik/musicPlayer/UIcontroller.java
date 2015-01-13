@@ -17,8 +17,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
-import com.example.suzikmusicplayer.MusicPlayerService.MusicBinder;
+import com.blackMonster.suzik.ui.Playlist;
 
 public class UIcontroller {
 	private static final String TAG = "Suzikplayer_uicontroller";
@@ -30,13 +29,13 @@ public class UIcontroller {
 	     @Override 
 	     public void run() {
 	    	 Log.d(TAG,"Runnable setsong");
-	    	 musicSrv.setSong(songs.get(songpos));
+	    	 musicSrv.setSong(songs.getPlayable(songpos));
 	    	 
 	     }
 	};
 	
 	
-	List<TimelineItem> songs=null;
+	Playlist songs=null;
 	boolean playbtn;
 	int songpos=0;
 	int repeat=0;
@@ -140,7 +139,7 @@ public class UIcontroller {
 		  public void onServiceConnected(ComponentName name, IBinder service) {
 				Log.d(TAG,"service connected ");
 
-			  MusicBinder binder = (MusicBinder)service;
+			  MusicPlayerService.MusicBinder binder = (MusicPlayerService.MusicBinder)service;
 		    //get service
 		    musicSrv = binder.getService();
 		  	//pass list
@@ -228,11 +227,11 @@ public class UIcontroller {
 		// TODO Auto-generated method stub
 		
 			
-			Intent_uidataupdate.putExtra("songTitleLabel",songs.get(songpos).song.getTitle());
-			Intent_uidataupdate.putExtra("songAlbumName",songs.get(songpos).song.getAlbum());
-			Intent_uidataupdate.putExtra("songArtistName",songs.get(songpos).song.getArtist());
-			Intent_uidataupdate.putExtra("albumart",songs.get(songpos).albumArtUrl);
-			Intent_uidataupdate.putExtra("songduration",songs.get(songpos).song.getDuration());
+			Intent_uidataupdate.putExtra("songTitleLabel", songs.getPlayable(songpos).getSong().getTitle());
+			Intent_uidataupdate.putExtra("songAlbumName",songs.getPlayable(songpos).getSong().getAlbum());
+			Intent_uidataupdate.putExtra("songArtistName", songs.getPlayable(songpos).getSong().getArtist());
+			Intent_uidataupdate.putExtra("albumart",songs.getPlayable(songpos).getAlbumArtPath());
+			Intent_uidataupdate.putExtra("songduration", songs.getPlayable(songpos).getSong().getDuration());
 
 			 
 			
@@ -349,13 +348,13 @@ public class UIcontroller {
 	
 	
 	
-	public void setList(List<TimelineItem> songlist) {
+	public void setList(Playlist playlist) {
 		// TODO Auto-generated method stub
 			Log.d(TAG,"setlist"); 
-			songs=songlist;
+			songs=playlist;
 			
 		}
-		public List<TimelineItem> getList() {
+		public Playlist getList() {
 		// TODO Auto-generated method stub
 			Log.d(TAG,"getlist"); 
 		return songs;
@@ -417,7 +416,7 @@ public class UIcontroller {
 					shuffleSong();
 				}
 				else{
-					if(songpos==songs.size()-1 )
+					if(songpos==songs.getSongCount()-1 )
 					{songpos=0;
 					}
 					else
@@ -451,7 +450,7 @@ public class UIcontroller {
 				}
 				else{
 				if(songpos==0)
-					   songpos=songs.size()-1;
+					   songpos=songs.getSongCount()-1;
 				   else
 				   {   songpos--;
 				   }
@@ -479,7 +478,7 @@ public class UIcontroller {
 		Log.d(TAG,"shuffleSong");
 
 		Random r=new Random();
-		songpos=r.nextInt(songs.size());
+		songpos=r.nextInt(songs.getSongCount());
 		setSong();
 	}
 	public void setrepeatStatus() {
@@ -533,10 +532,10 @@ public class UIcontroller {
 			{
 		Status s=musicSrv.getplayerstatus();
 		if(s!=null){
-			Intent_playercurrentstatus.putExtra("songTitleLabel",songs.get(songpos).song.getTitle());
-			Intent_playercurrentstatus.putExtra("songAlbumName",songs.get(songpos).song.getAlbum());
-			Intent_playercurrentstatus.putExtra("songArtistName",songs.get(songpos).song.getArtist());
-			Intent_playercurrentstatus.putExtra("albumart",songs.get(songpos).albumArtUrl);
+			Intent_playercurrentstatus.putExtra("songTitleLabel",songs.getPlayable(songpos).getSong().getTitle());
+			Intent_playercurrentstatus.putExtra("songAlbumName",songs.getPlayable(songpos).getSong().getAlbum());
+			Intent_playercurrentstatus.putExtra("songArtistName",songs.getPlayable(songpos).getSong().getArtist());
+			Intent_playercurrentstatus.putExtra("albumart",songs.getPlayable(songpos).getAlbumArtPath());
 			Intent_playercurrentstatus.putExtra("isplaying",s.isPlaying());
 			Intent_playercurrentstatus.putExtra("currentpos",s.getCurrentPosition());
 			Intent_playercurrentstatus.putExtra("duration",s.getDuration());
@@ -561,10 +560,10 @@ public class UIcontroller {
 
 		if(songs==null)
 		{
-			Intent_playersavedstatus.putExtra("songTitleLabel",songs.get(songpos).song.getTitle());
-			Intent_playersavedstatus.putExtra("songAlbumName",songs.get(songpos).song.getAlbum());
-			Intent_playersavedstatus.putExtra("songArtistName",songs.get(songpos).song.getArtist());
-			Intent_playersavedstatus.putExtra("albumart",songs.get(songpos).albumArtUrl);
+			Intent_playersavedstatus.putExtra("songTitleLabel",songs.getPlayable(songpos).getSong().getTitle());
+			Intent_playersavedstatus.putExtra("songAlbumName",songs.getPlayable(songpos).getSong().getAlbum());
+			Intent_playersavedstatus.putExtra("songArtistName",songs.getPlayable(songpos).getSong().getArtist());
+			Intent_playersavedstatus.putExtra("albumart",songs.getPlayable(songpos).getAlbumArtPath());
 			Intent_playersavedstatus.putExtra("isplaying",savedStatus.isPlaying());
 			Intent_playersavedstatus.putExtra("currentpos",savedStatus.getCurrentPosition());
 			Intent_playersavedstatus.putExtra("duration",savedStatus.getDuration());
@@ -575,10 +574,10 @@ public class UIcontroller {
 		else
 		
 		
-		Intent_playersavedstatus.putExtra("songTitleLabel",songs.get(songpos).song.getTitle());
-		Intent_playersavedstatus.putExtra("songAlbumName",songs.get(songpos).song.getAlbum());
-		Intent_playersavedstatus.putExtra("songArtistName",songs.get(songpos).song.getArtist());
-		Intent_playersavedstatus.putExtra("albumart",songs.get(songpos).albumArtUrl);
+		Intent_playersavedstatus.putExtra("songTitleLabel",songs.getPlayable(songpos).getSong().getTitle());
+		Intent_playersavedstatus.putExtra("songAlbumName",songs.getPlayable(songpos).getSong().getAlbum());
+		Intent_playersavedstatus.putExtra("songArtistName",songs.getPlayable(songpos).getSong().getArtist());
+		Intent_playersavedstatus.putExtra("albumart",songs.getPlayable(songpos).getAlbumArtPath());
 		Intent_playersavedstatus.putExtra("isplaying",savedStatus.isPlaying());
 		Intent_playersavedstatus.putExtra("currentpos",savedStatus.getCurrentPosition());
 		Intent_playersavedstatus.putExtra("duration",savedStatus.getDuration());
