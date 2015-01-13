@@ -25,7 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blackMonster.suzik.R;
-
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 
 public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeListener {
@@ -45,6 +47,9 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     private SeekBar songProgressBar;
 
     UIcontroller uicontroller;
+
+    private DisplayImageOptions options;
+
 
     private int seekmax;
 
@@ -94,7 +99,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         songTitleLabel.setText(SongTitleLabel);
         songAlbumName.setText(SongAlbumName);
         songArtistName.setText(SongArtistName);
-        albumart.setImageResource(R.drawable.album_art);
+        setAlbumart(Albumart);
         songProgressBar.setMax(duration);
         songProgressBar.setProgress(currentpos);
 
@@ -131,7 +136,14 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         }
 
 
+
     }
+
+
+
+    private void setAlbumart(String link) {
+        ImageLoader.getInstance().displayImage(link, albumart, options);
+        }
 
     private BroadcastReceiver broadcastreciever_seekrecieve = new BroadcastReceiver() {
 
@@ -232,7 +244,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         songTitleLabel.setText(SongTitleLabel);
         songAlbumName.setText(SongAlbumName);
         songArtistName.setText(SongArtistName);
-        albumart.setImageResource(R.drawable.album_art);
+        setAlbumart(Albumart);
         songProgressBar.setMax(duration);
 
 
@@ -297,7 +309,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
 
         super.onCreateView(inflater, container, savedInstanceState);
-
+        setImageLoaderOpitons();
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.suzikplayer,
                 container, false);
 
@@ -322,12 +334,32 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         getActivity().registerReceiver(broadcastreciever_resetui, new IntentFilter(UIcontroller.brodcast_resetui));
         isrestui = true;
 
+
+
+
+
+
+
+
+
+
+
+
         return  rootView;
 
 
     }
 
-
+    private void setImageLoaderOpitons() {
+        options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.album_art)
+                .showImageForEmptyUri(R.drawable.album_art)
+                .showImageOnFail(R.drawable.album_art)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .build();
+    }
 
 
     @Override
