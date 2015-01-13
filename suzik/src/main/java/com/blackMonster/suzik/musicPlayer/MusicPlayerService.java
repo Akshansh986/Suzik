@@ -22,7 +22,8 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.example.suzikplayer.R;
+import com.blackMonster.suzik.R;
+import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
 
 public class MusicPlayerService extends Service 
 implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekCompleteListener,OnInfoListener{
@@ -50,7 +51,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 	final int end=8;
 	final int error=9;
 	int mediaplayerstate;
-	private  TimelineItem CurrentSong;
+	private TimelineItem CurrentSong;
 	private boolean isplay;
 	private boolean isasyncplay;
 	
@@ -201,8 +202,8 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		Intent notIntent = new Intent(this, MainActivity.class);
 		notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		PendingIntent pendInt = PendingIntent.getActivity(this, 0, notIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-		RemoteViews views= new RemoteViews(getPackageName(),R.layout.smallwidget);
-		views.setImageViewResource(R.id.notification_small_albumart,R.drawable.noalbumart);
+		RemoteViews views= new RemoteViews(getPackageName(), R.layout.smallwidget);
+		views.setImageViewResource(R.id.notification_small_albumart,R.drawable.album_art);
 		views.setTextViewText(R.id.notification_small_songtitle,songTitle);
 		views.setTextViewText(R.id.notifiacation_small_artist, songArtist);
       
