@@ -213,7 +213,7 @@ public class InAapSongTable {
     }
 
 
-    public static void insert(InAppSongData inAppSongData, Context context) {
+    public static long insert(InAppSongData inAppSongData, Context context) {
         LOGD(TABLE, "insert");
         SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
@@ -231,6 +231,7 @@ public class InAapSongTable {
         values.put(C_ALBUM_ART_LOCATION, inAppSongData.getAlbumartLocation());
 
         db.insert(TABLE, null, values);
+        return localId;
     }
 
     public static void insert(List<InAppSongData> inAppSongData, Context context) {

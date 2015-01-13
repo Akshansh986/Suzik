@@ -211,10 +211,10 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
                 FileDownloader.saveImageToDisk(item.getAlbumArtPath(), albumartLocation);
                 FileDownloader.saveSongToDisk(item.getSong().getTitle(), item.getSong().getArtist(),
                         item.getSongPath(), songFileName, context);
-                insertInAppSongTable(item, songLocation, albumartLocation);
-
-                UserActivityManager.add(new UserActivity(item.getSong(), null, item.getId(), UserActivity.ACTION_IN_APP_DOWNLOAD, 0, System.currentTimeMillis()), context);
+               long localId =  insertInAppSongTable(item, songLocation, albumartLocation);
                 updateUi(item);
+
+                UserActivityManager.add(new UserActivity(item.getSong(), null, localId, UserActivity.ACTION_IN_APP_DOWNLOAD, 0, System.currentTimeMillis()), context);
             }
         }.start();
 
@@ -334,11 +334,11 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
         UiBroadcasts.broadcastMusicDataChanged(context);
     }
 
-    private void insertInAppSongTable(TimelineItem item, String songLocatoin, String albumartLocation) {
+    private long insertInAppSongTable(TimelineItem item, String songLocatoin, String albumartLocation) {
         InAppSongData inAppSongData = new InAppSongData(null, item.getId(),
                 item.getSong(), "", item.getAlbumArtPath(), item.getSongPath(),
                 songLocatoin, albumartLocation);
-        InAapSongTable.insert(inAppSongData, context);
+       return  InAapSongTable.insert(inAppSongData, context);
     }
 
 

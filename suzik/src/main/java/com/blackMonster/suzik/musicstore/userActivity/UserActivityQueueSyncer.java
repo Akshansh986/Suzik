@@ -1,5 +1,6 @@
 package com.blackMonster.suzik.musicstore.userActivity;
 
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import static com.blackMonster.suzik.util.LogUtils.LOGI;
 
 import java.util.ArrayList;
@@ -63,9 +64,16 @@ public class UserActivityQueueSyncer extends Syncer {
 
 			if (!ua.isOnlineSong()) {
 				Long songId = ua.songId();
-				if (songId == null || MusicServerUtils.isDummyServerSongId(songId) ) continue;
-				postParams.add(new Pair<UserActivity, Long>(ua, MusicSyncManager
-						.getServerId(ua.songId(), this)));
+                LOGD(TAG,"songid " + songId);
+                if (songId == null) {
+                    userActivity.remove(ua);
+                    continue;
+                }
+
+                Long serverId = MusicSyncManager
+                        .getServerId(songId, this);
+
+                postParams.add(new Pair<UserActivity, Long>(ua,serverId));
 			}
 			else
 			{
