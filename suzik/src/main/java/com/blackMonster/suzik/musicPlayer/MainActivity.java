@@ -335,45 +335,47 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
     protected void onPause() {
         // TODO Auto-generated method stub
         Log.d(TAG, "onPause");
-        if (isrestui) {
-            unregisterReceiver(broadcastreciever_resetui);
-            isrestui = false;
+        if(uicontroller.getList()!=null) {
+            if (isrestui) {
+                unregisterReceiver(broadcastreciever_resetui);
+                isrestui = false;
 
-        }
+            }
 
-        if (isbplayercurrentstatus) {
-            unregisterReceiver(broadcastreciever_playercurrentstatus);
-            isbplayercurrentstatus = false;
+            if (isbplayercurrentstatus) {
+                unregisterReceiver(broadcastreciever_playercurrentstatus);
+                isbplayercurrentstatus = false;
 
-        }
-        if (isbrodcastuidataupdateregistered) {
-            unregisterReceiver(broadcastreciever_uidataupdate);
-            isbrodcastuidataupdateregistered = false;
+            }
+            if (isbrodcastuidataupdateregistered) {
+                unregisterReceiver(broadcastreciever_uidataupdate);
+                isbrodcastuidataupdateregistered = false;
 
-        }
-        if (isbrodcastuibtnupdateregistered) {
-            unregisterReceiver(broadcastreciever_uibtnupdate);
-            isbrodcastuibtnupdateregistered = false;
+            }
+            if (isbrodcastuibtnupdateregistered) {
+                unregisterReceiver(broadcastreciever_uibtnupdate);
+                isbrodcastuibtnupdateregistered = false;
 
-        }
-        if (isbufferregistered) {
-            unregisterReceiver(broadcastreciever_bufferingplayerrecieve);
-            isbufferregistered = false;
+            }
+            if (isbufferregistered) {
+                unregisterReceiver(broadcastreciever_bufferingplayerrecieve);
+                isbufferregistered = false;
 
-        }
+            }
 
-        if (isbrodcastseekregistered) {
-            unregisterReceiver(broadcastreciever_seekrecieve);
-            isbrodcastseekregistered = false;
+            if (isbrodcastseekregistered) {
+                unregisterReceiver(broadcastreciever_seekrecieve);
+                isbrodcastseekregistered = false;
 
-        }
-        Log.d(TAG, "onPause:unregister broadcast");
+            }
+            Log.d(TAG, "onPause:unregister broadcast");
 
-        if (uicontroller != null) {
+            if (uicontroller != null) {
 
-            Log.d(TAG, "onPause:stophandler");
+                Log.d(TAG, "onPause:stophandler");
 
-            uicontroller.stophandler();
+                uicontroller.stophandler();
+            }
         }
         super.onPause();
     }
@@ -383,58 +385,58 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
     protected void onResume() {
         // TODO Auto-generated method stub
         Log.d(TAG, "onResume");
+    if(uicontroller.getList()!=null) {
+    if (!isrestui) {
+        registerReceiver(broadcastreciever_resetui, new IntentFilter(UIcontroller.brodcast_resetui));
+        isrestui = true;
 
-        if (!isrestui) {
-            registerReceiver(broadcastreciever_resetui, new IntentFilter(UIcontroller.brodcast_resetui));
-            isrestui = true;
+    }
+    if (!isbplayercurrentstatus) {
+        registerReceiver(broadcastreciever_playercurrentstatus, new IntentFilter(UIcontroller.brodcast_playercurrentstatus));
+        isbplayercurrentstatus = true;
 
-        }
-        if (!isbplayercurrentstatus) {
-            registerReceiver(broadcastreciever_playercurrentstatus, new IntentFilter(UIcontroller.brodcast_playercurrentstatus));
-            isbplayercurrentstatus = true;
+    }
+    if (!isbrodcastuidataupdateregistered) {
+        registerReceiver(broadcastreciever_uidataupdate, new IntentFilter(UIcontroller.brodcast_uidataupdate));
+        isbrodcastuidataupdateregistered = true;
 
-        }
-        if (!isbrodcastuidataupdateregistered) {
-            registerReceiver(broadcastreciever_uidataupdate, new IntentFilter(UIcontroller.brodcast_uidataupdate));
-            isbrodcastuidataupdateregistered = true;
+    }
+    if (!isbrodcastuibtnupdateregistered) {
+        registerReceiver(broadcastreciever_uibtnupdate, new IntentFilter(UIcontroller.brodcast_uibtnupdate));
+        isbrodcastuibtnupdateregistered = true;
 
-        }
-        if (!isbrodcastuibtnupdateregistered) {
-            registerReceiver(broadcastreciever_uibtnupdate, new IntentFilter(UIcontroller.brodcast_uibtnupdate));
-            isbrodcastuibtnupdateregistered = true;
+    }
+    if (!isbufferregistered) {
+        registerReceiver(broadcastreciever_bufferingplayerrecieve, new IntentFilter(MusicPlayerService.brodcast_bufferingplayer));
+        isbufferregistered = true;
 
-        }
-        if (!isbufferregistered) {
-            registerReceiver(broadcastreciever_bufferingplayerrecieve, new IntentFilter(MusicPlayerService.brodcast_bufferingplayer));
-            isbufferregistered = true;
+    }
+    if (!isbrodcastseekregistered) {
+        registerReceiver(broadcastreciever_seekrecieve, new IntentFilter(MusicPlayerService.broadcast_playerseek));
+        isbrodcastseekregistered = true;
 
-        }
-        if (!isbrodcastseekregistered) {
-            registerReceiver(broadcastreciever_seekrecieve, new IntentFilter(MusicPlayerService.broadcast_playerseek));
-            isbrodcastseekregistered = true;
+    }
+    Log.d(TAG, "onResume:registerbroadcast");
 
-        }
-        Log.d(TAG, "onResume:registerbroadcast");
+    if (uicontroller != null) {
+        if (uicontroller.isplaying()) {
+            Log.d(TAG, "loadcurrentplayerstatus");
 
-        if (uicontroller != null) {
-            if (uicontroller.isplaying()) {
-                Log.d(TAG, "loadcurrentplayerstatus");
+            uicontroller.loadcurrentplayerstatus();
+        } else {
+            Log.d(TAG, "loadcurrentplayerstatus");
+            uicontroller.loadcurrentplayerstatus();
 
-                uicontroller.loadcurrentplayerstatus();
-            } else {
-                Log.d(TAG, "loadcurrentplayerstatus");
-                uicontroller.loadcurrentplayerstatus();
-
-                //uicontroller.loadsavedplayerstatus();
-            }
-
-            Log.d(TAG, "onResume:starthandler");
-
-            uicontroller.starthandler();
-
+            //uicontroller.loadsavedplayerstatus();
         }
 
+        Log.d(TAG, "onResume:starthandler");
 
+        uicontroller.starthandler();
+
+    }
+
+}
         super.onResume();
     }
 
