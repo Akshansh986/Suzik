@@ -22,17 +22,20 @@ import android.view.View;
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.sync.music.AddedSongsResponseHandler;
 import com.blackMonster.suzik.sync.music.SongsSyncer;
+import com.blackMonster.suzik.ui.AppUpdateNotificaiton;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 
-//TODO set Actionbar title on different fragments.
 
 public class MainSliderActivity  extends ActionBarActivity implements View.OnClickListener, ViewPager.OnPageChangeListener{
     public static final String TAG = "MainSliderActivity";
 	private static final int NUM_PAGES = 2;
 	private ViewPager mPager;
 	private PagerAdapter mPagerAdapter;
+
+    //TODO isVisible complete jugad, remove it after App update notification is not required
+    public static boolean isVisible=false;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -45,6 +48,7 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
 		mPager.setAdapter(mPagerAdapter);
         mPager.setOnPageChangeListener(this);
         onPageSelected(0);
+        AppUpdateNotificaiton.showAppUpdateDialogIfNecessary(this);
 
 
 	}
@@ -130,10 +134,18 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
        startActivity(new Intent(this,SearchResultActivity.class));
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isVisible = false;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         hideSearchBar();
+        isVisible = true;
     }
 
     private void hideSearchBar() {
