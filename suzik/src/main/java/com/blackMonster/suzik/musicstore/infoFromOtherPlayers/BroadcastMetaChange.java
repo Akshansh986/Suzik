@@ -7,8 +7,8 @@ public class BroadcastMetaChange extends MusicBroadcastManager {
 	private static final String TAG = "BroadcastMetaChange";
 
 	@Override
-	public void run(Context context) {
-		Log.d(TAG, "run");
+	public void runIt(Context context) {
+		Log.d(TAG, "runIt");
 		if (isPlaying()) {
 			if (PlayingSong.isVirtuallyCompleted(context))
 				PlayingSong
