@@ -1,9 +1,11 @@
 package com.blackMonster.suzik.musicPlayer;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.Notification.Builder;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +18,7 @@ import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -53,9 +56,8 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 	final int error=9;
 	int mediaplayerstate;
 	private Playable CurrentSong;
-	private boolean isplay;
-	private boolean isasyncplay;
-	
+	private boolean isbuffering;
+
 
 	//for binding with the uicontrollerclass
 	private final IBinder musicBind = new MusicBinder();
@@ -160,11 +162,11 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		player.setOnCompletionListener(this);
 		player.setOnErrorListener(this);
 		player.setOnInfoListener(this);
+        isbuffering=false;
 		
 	}
-	public void setSong(Playable playable){
-		isplay=false;
-		isasyncplay=false;
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public void setSong(Playable playable){
 		if(player!=null)
 		{		
 			player.reset();
@@ -205,13 +207,21 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		String songArtist=playable.getSong().getArtist();
 	
 		Intent notIntent = new Intent(this, MainSliderActivity.class);
-		notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		PendingIntent pendInt = PendingIntent.getActivity(this, 0, notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		RemoteViews views= new RemoteViews(getPackageName(), R.layout.smallwidget);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainSliderActivity.class);
+        stackBuilder.addNextIntent(notIntent);
+
+
+        PendingIntent pendInt = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+
+        RemoteViews views= new RemoteViews(getPackageName(), R.layout.smallwidget);
 		views.setImageViewResource(R.id.notification_small_albumart,R.drawable.album_art);
 		views.setTextViewText(R.id.notification_small_songtitle,songTitle);
 		views.setTextViewText(R.id.notifiacation_small_artist, songArtist);
-      
+
+
         builder = new Notification.Builder(this);
         builder.setSmallIcon(R.drawable.ic_launcher)
 		.setContentIntent(pendInt)
@@ -468,7 +478,6 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		  if(isseekbarupdateuiregistered)
 			{					
 			  unregisterReceiver(broadcastReceiver_seekbaruiupdate);
-
 				isseekbarupdateuiregistered=false;
 				
 			}
@@ -494,7 +503,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 	private void sendbufferingbroadcast() {
 	// TODO Auto-generated method stub
 		Log.d(TAG,"buffering broadcast start"); 
-
+    isbuffering=true;
 	Intent_bufferplayerintent.putExtra("buffering","1");
 	sendBroadcast(Intent_bufferplayerintent);
 
@@ -513,7 +522,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 	private void sendbufferingcompletebroadcast() {
 	// TODO Auto-generated method stub
 		Log.d(TAG,"buffering broadcast complete"); 
-
+isbuffering=false;
 	Intent_bufferplayerintent.putExtra("buffering","0");
 	sendBroadcast(Intent_bufferplayerintent);
 
@@ -544,11 +553,11 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		
 	{		if(player.isPlaying())
 			{	
-			playerstatus= new Status(player.getCurrentPosition(),player.getDuration(),player.isPlaying());
+			playerstatus= new Status(player.getCurrentPosition(),player.getDuration(),player.isPlaying(),isbuffering);
 			}
 			else
 			{ 	if(CurrentSong!=null)		
-				playerstatus= new Status(0,(int)CurrentSong.getSong().getDuration(),player.isPlaying());
+				playerstatus= new Status(0,(int)CurrentSong.getSong().getDuration(),player.isPlaying(),isbuffering);
 
 			}
 	}

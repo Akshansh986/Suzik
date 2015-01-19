@@ -380,6 +380,10 @@ public class UIcontroller {
 			{
 			pauseSong();
 			}
+            if(isfocuslost)
+            {	requestfocus();
+
+            }
 			//delay100ms
 			mHandler.removeCallbacks(mHandlerTask);
 		    mHandler.postDelayed(mHandlerTask,500);
@@ -501,10 +505,13 @@ public class UIcontroller {
 		// TODO Auto-generated method stub
 		Log.d(TAG,"seek");
 
-		intent_uiseekintent.putExtra("seekui",progress);
+        if(musicSrv!=null){
+            musicSrv.seek(progress);
+        }
+        /*intent_uiseekintent.putExtra("seekui",progress);
 		context.sendBroadcast(intent_uiseekintent);
-		
-		
+		*/
+
 	}
 
 	public void unbind() {
@@ -543,11 +550,12 @@ public class UIcontroller {
 			Intent_playercurrentstatus.putExtra("isplaying",s.isPlaying());
 			Intent_playercurrentstatus.putExtra("currentpos",s.getCurrentPosition());
 			Intent_playercurrentstatus.putExtra("duration",s.getDuration());
-			Intent_playercurrentstatus.putExtra("shuffle",shuffle);
+            Intent_playercurrentstatus.putExtra("isbuffering",s.isBuffering());
+            Intent_playercurrentstatus.putExtra("shuffle",shuffle);
 			Intent_playercurrentstatus.putExtra("repeat",repeat);
-			
-			
-			
+
+
+
 			context.sendBroadcast(Intent_playercurrentstatus);
 			Log.d(TAG,"playercurrentstatus\n"+Intent_playercurrentstatus.toString()); 
 				

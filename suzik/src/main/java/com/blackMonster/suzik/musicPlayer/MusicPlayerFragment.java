@@ -98,6 +98,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         String SongArtistName = intent.getStringExtra("songArtistName");
         String Albumart = intent.getStringExtra("albumart");
         Boolean isplaying = intent.getBooleanExtra("isplaying", false);
+        Boolean islbuffering = intent.getBooleanExtra("isbuffering", false);
         int currentpos = intent.getIntExtra("currentpos", 100);
         int duration = intent.getIntExtra("duration", 100);
         Boolean shuffle = intent.getBooleanExtra("shuffle", false);
@@ -110,7 +111,21 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         setAlbumart(Albumart);
         songProgressBar.setMax(duration);
         songProgressBar.setProgress(currentpos);
+        if(!islbuffering){
+            isbuffering = false;
+            Log.d(TAG, "Animationstopeed");
+            animationHandler.removeCallbacks(animationRunnable);
 
+        }
+        else
+        {               isbuffering = false;
+            animationHandler.removeCallbacks(animationRunnable);
+            isbuffering = true;
+            Log.d(TAG, "Animationstarted");
+            animationHandler.postDelayed(animationRunnable,0);
+            isplaying=true;
+
+        }
         if (isplaying) {
             btnPlay.setImageResource(R.drawable.pause);
 
