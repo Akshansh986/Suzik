@@ -3,7 +3,9 @@
     android:id="@+id/smallwidgetlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:background="#bf009688"
+    >
 
     <ImageView
         android:id="@+id/notification_small_albumart"
@@ -11,8 +13,11 @@
         android:layout_height="70dp"
         android:layout_alignParentTop="true"
         android:layout_marginRight="10dp"
-                        android:scaleType="centerCrop"
-        
+
+
+
+        android:scaleType="centerCrop"
+
         android:src="@drawable/album_art" />
 
     <TextView
@@ -25,7 +30,7 @@
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
         style="@style/NotificationTitle"
-        
+
  />
 
     <TextView
@@ -38,7 +43,7 @@
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
                 style="@style/NotificationText"
-        
+
  />
 
    <!--  <ImageButton

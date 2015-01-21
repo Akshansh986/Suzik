@@ -583,6 +583,10 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
                 Log.d(TAG, "onClick:btnNext");
 
                 if (uicontroller.getList() != null) {
+                    if(isbuffering){
+                        isbuffering=false;
+                        songProgressBar.clearAnimation();
+                    }
                     uicontroller.nextSong();
                 } else {
                     Toast.makeText(getActivity(), "List not set", Toast.LENGTH_SHORT).show();
@@ -597,7 +601,10 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
                 Log.d(TAG, "onClick:btnPrevious");
 
                 if (uicontroller.getList() != null) {
-
+                    if(isbuffering){
+                        isbuffering=false;
+                        songProgressBar.clearAnimation();
+                    }
                     uicontroller.prevSong();
 
                 } else {
