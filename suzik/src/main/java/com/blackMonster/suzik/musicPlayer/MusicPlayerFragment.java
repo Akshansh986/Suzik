@@ -34,7 +34,6 @@ import java.util.logging.Handler;
 
 public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeListener {
     private static final String TAG = "Suzikplayer_ui";
-
     public static final String brodcast_uiseek = "uiseek";
     Intent intent_uiseekintent;
     private ImageView btnPlay;
@@ -47,12 +46,8 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     private TextView songArtistName;
     private ImageView albumart;
     private SeekBar songProgressBar;
-
     UIcontroller uicontroller;
-
     private DisplayImageOptions options;
-
-
     private int seekmax;
 
 
@@ -67,7 +62,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     Animation fadeIn;
     Animation fadeOut;
     AnimationSet animation;
-   android.os.Handler animationHandler=new android.os.Handler();
+    android.os.Handler animationHandler=new android.os.Handler();
     Runnable animationRunnable=new Runnable() {
         @Override
         public void run() {
@@ -138,23 +133,28 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         }
         if (shuffle) {
             btnShuffle.setImageResource(R.drawable.shuffleon);
+            btnShuffle.setTag("shuffleon");
+
 
 
         } else {
             btnShuffle.setImageResource(R.drawable.shuffle);
+            btnShuffle.setTag("shuffleoff");
 
 
         }
         if (repeat == 0) {
             btnRepeat.setImageResource(R.drawable.repeat);
+            btnRepeat.setTag("0");
 
         } else {
             if (repeat == 1) {
                 btnRepeat.setImageResource(R.drawable.repeat1);
+                btnRepeat.setTag("1");
 
             } else if (repeat == 2) {
                 btnRepeat.setImageResource(R.drawable.repeatall);
-
+                btnRepeat.setTag("2");
             }
         }
 
@@ -187,9 +187,8 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
         String counter = intent.getStringExtra("counter");
         String mediamax = intent.getStringExtra("mediamax");
-        int seekprogress = Integer.parseInt(counter);
         Log.d(TAG, "Current Postiton:" + counter + "Max Duration" + mediamax);
-
+        int seekprogress = Integer.parseInt(counter);
         seekmax = Integer.parseInt(mediamax);
         songProgressBar.setMax(seekmax);
         songProgressBar.setProgress(seekprogress);
@@ -219,22 +218,28 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             }
             if (shuffle) {
                 btnShuffle.setImageResource(R.drawable.shuffleon);
+                btnShuffle.setTag("shuffleon");
 
 
             } else {
                 btnShuffle.setImageResource(R.drawable.shuffle);
-
+                btnShuffle.setTag("shuffleoff");
 
             }
             if (repeat == 0) {
                 btnRepeat.setImageResource(R.drawable.repeat);
+                btnRepeat.setTag("0");
+
 
             } else {
                 if (repeat == 1) {
                     btnRepeat.setImageResource(R.drawable.repeat1);
+                    btnRepeat.setTag("1");
+
 
                 } else if (repeat == 2) {
                     btnRepeat.setImageResource(R.drawable.repeatall);
+                    btnRepeat.setTag("2");
 
                 }
             }
@@ -549,16 +554,15 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
                 ImageView t = (ImageView) v;
                 if (uicontroller.getList() != null) {
 
-                    if (t.getTag() == "play") {            //		Log.d(TAG,"playtopause");
+                    if (t.getTag() == "play") {
 
                         t.setTag("pause");
                         t.setImageResource(R.drawable.pause);
                         uicontroller.playSong();
 
-                    } else if (t.getTag() == "pause") {                //	Log.d(TAG,"pausetoplay");
+                    } else if (t.getTag() == "pause") {
                         t.setTag("play");
                         t.setImageResource(R.drawable.play);
-
                         uicontroller.pauseSong();
 
                     }
@@ -611,15 +615,15 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
                 // TODO Auto-generated method stub
                 ImageView t = (ImageView) v;
                 if (uicontroller.getList() != null) {
-                    if (t.getTag() == "shuffleoff") {                    //Log.d(TAG,"playtopause");
+                    if (t.getTag() == "shuffleoff") {
 
                         t.setTag("shuffleon");
                         t.setImageResource(R.drawable.shuffleon);
-                        uicontroller.setshuffleStatus();
-                    } else if (t.getTag() == "shuffleon") {                //	Log.d(TAG,"pausetoplay");
+                        uicontroller.setshuffleStatus(true);
+                    } else if (t.getTag() == "shuffleon") {
                         t.setTag("shuffleoff");
                         t.setImageResource(R.drawable.shuffle);
-                        uicontroller.setshuffleStatus();
+                        uicontroller.setshuffleStatus(false);
 
                     }
                 } else {
@@ -645,18 +649,18 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
                         t.setTag("1");
                         t.setImageResource(R.drawable.repeat1);
-                        uicontroller.setrepeatStatus();
+                        uicontroller.setrepeatStatus(1);
                     } else {
-                        if (t.getTag() == "1") {                //	Log.d(TAG,"pausetoplay");
+                        if (t.getTag() == "1") {
                             t.setTag("2");
                             t.setImageResource(R.drawable.repeatall);
-                            uicontroller.setrepeatStatus();
+                            uicontroller.setrepeatStatus(2);
 
                         } else {
-                            if (t.getTag() == "2") {                //	Log.d(TAG,"pausetoplay");
+                            if (t.getTag() == "2") {
                                 t.setTag("0");
                                 t.setImageResource(R.drawable.repeat);
-                                uicontroller.setrepeatStatus();
+                                uicontroller.setrepeatStatus(0);
 
                             }
 
@@ -668,7 +672,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
 
                 }
-                //uicontroller.setrepeatStatus();
+
 
             }
         });
@@ -721,6 +725,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
                 // TODO Auto-generated method stub
                 Log.d(TAG, "onAnimationEnd");
                     if(isbuffering) {
+                        animationHandler.removeCallbacks(animationRunnable);
 
                         animationHandler.postDelayed(animationRunnable,0);
                     }

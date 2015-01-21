@@ -107,7 +107,7 @@ UIcontroller uiController;
 //		JSONObject postJson = JsonHelperTimeline.ServerAllSongs.getCredentials();
 
         JsonObjectRequest jsonReq = new JsonObjectRequest(Method.POST,
-                "https://dl.dropboxusercontent.com/u/95984737/akki.txt", postJson, new Response.Listener<JSONObject>() {
+                /*AppConfig.MAIN_URL*/"https://dl.dropboxusercontent.com/u/95984737/akki.txt", postJson, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {

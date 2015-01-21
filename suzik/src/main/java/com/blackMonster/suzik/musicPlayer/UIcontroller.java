@@ -28,7 +28,7 @@ public class UIcontroller {
 	{
 	     @Override
 	     public void run() {
-	    	 Log.d(TAG,"Runnable setsong");
+	    	 Log.d(TAG, "Runnable setsong");
 	    	 musicSrv.setSong(songs.getPlayable(songpos));
 
 	     }
@@ -204,7 +204,7 @@ public class UIcontroller {
 				if(repeat==1)
 				{
 						//seek(0);
-						setSong();
+					      setSong();
 				}
 				else
 				{	if(shuffle)
@@ -410,20 +410,16 @@ public class UIcontroller {
 		// TODO Auto-generated method stub
 		Log.d(TAG,"next song"); 
 		if(songs!=null)
-		{	
-			
-			//resetui();
+		{
 
-			if(repeat==1)
-			{      
-				seek(0);
-			}
-			else
-			{	if(shuffle)
+
+
+				if(shuffle)
 				{
 					shuffleSong();
 				}
-				else{
+				else
+                {
 					if(songpos==songs.getSongCount()-1 )
 					{songpos=0;
 					}
@@ -435,8 +431,8 @@ public class UIcontroller {
 
 
 				}
-	
-			}
+
+
 
 		}
 	}
@@ -445,30 +441,28 @@ public class UIcontroller {
 		Log.d(TAG,"prevsong"); 
 		if(songs!=null)
 		{		
-			//resetui();
-			if(repeat==1)
-			{
-			
-					seek(0);
-			}
-			else
-			{	if(shuffle)
+
+
+				if(shuffle)
 				{
 					shuffleSong();
 				}
-				else{
-				if(songpos==0)
-					   songpos=songs.getSongCount()-1;
-				   else
+				else
+                {
+				   if(songpos==0)
+                   {
+                       songpos = songs.getSongCount() - 1;
+                   }
+                   else
 				   {   songpos--;
 				   }
-				
-				setSong();
+
+				   setSong();
 
 
 				}
-	
-			}
+
+
 
 			
 		}
@@ -489,17 +483,17 @@ public class UIcontroller {
 		songpos=r.nextInt(songs.getSongCount());
 		setSong();
 	}
-	public void setrepeatStatus() {
+	public void setrepeatStatus(int value) {
 		// TODO Auto-generated method stub
 		Log.d(TAG,"setrepeatStatus");
 
-		repeat=(repeat+1)%3;
+		repeat=value;
 	}
-	public void setshuffleStatus() {
+	public void setshuffleStatus(boolean value) {
 		// TODO Auto-generated method stub
 		Log.d(TAG,"setshuffleStatus");
 
-		shuffle=!shuffle;
+		shuffle=value;
 	}
 	public void seek(int progress) {
 		// TODO Auto-generated method stub

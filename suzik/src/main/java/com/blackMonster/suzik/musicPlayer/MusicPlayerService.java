@@ -61,7 +61,10 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 
 	//for binding with the uicontrollerclass
 	private final IBinder musicBind = new MusicBinder();
-	public class MusicBinder extends Binder
+
+
+
+    public class MusicBinder extends Binder
 	{
 		  public MusicPlayerService getService() {
 		    return MusicPlayerService.this;
@@ -251,6 +254,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		mediaplayerstate=prepared;
 		fullfillintent();
 		sendbufferingcompletebroadcast();
+        setuphandler();
 		playplayer();
 		
 	}
@@ -344,7 +348,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 				player.pause();
 				mediaplayerstate=paused;
 				fullfillintent();
-				handler.removeCallbacks(sendUpdatestoui);
+				//handler.removeCallbacks(sendUpdatestoui);
 			
 			     }
 				else
@@ -370,7 +374,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		    		player.start();
 					mediaplayerstate=started;
 					fullfillintent();
-			  		setuphandler();
+			  		//setuphandler();
 
 		      }
 		      else
