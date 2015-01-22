@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,9 +28,8 @@ import android.widget.Toast;
 import com.blackMonster.suzik.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-
-import java.util.logging.Handler;
 
 
 public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeListener {
@@ -165,7 +165,27 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
 
     private void setAlbumart(String link) {
-        ImageLoader.getInstance().displayImage(link, albumart, options);
+        ImageLoader.getInstance().displayImage(link, albumart, options , new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+
+            }
+
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+            }
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+
+            }
+
+            @Override
+            public void onLoadingCancelled(String imageUri, View view) {
+
+            }
+        });
         }
 
     private BroadcastReceiver broadcastreciever_seekrecieve = new BroadcastReceiver() {

@@ -1,8 +1,5 @@
 package com.blackMonster.suzik.musicPlayer;
 
-import java.util.List;
-import java.util.Random;
-
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -17,7 +14,16 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.blackMonster.suzik.musicstore.Timeline.Playable;
+import com.blackMonster.suzik.sync.music.InAapSongTable;
+import com.blackMonster.suzik.ui.FileDownloader;
 import com.blackMonster.suzik.ui.Playlist;
+import com.blackMonster.suzik.ui.UiBroadcasts;
+
+import java.util.Random;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.LOGE;
 
 public class UIcontroller {
 	private static final String TAG = "Suzikplayer_uicontroller";
@@ -618,9 +624,33 @@ public class UIcontroller {
 		}
 		
 	}
-	
-	
-	
-	
-	
+
+
+
+    public void onError(Playable playable) {
+
+
+        startDownload(playable.getId(), playable.getAlternatePlayable());
+
+    }
+
+    private void startDownload(long id, Playable playable) {
+        String songFileName = FileDownloader.getNewSongFileName();
+        String songLocation = FileDownloader.getLocationFromFilename(songFileName, context);
+
+        FileDownloader.saveSongToDisk(playable.getSong().getTitle(),playable.getSong().getArtist(),
+                playable.getSongPath(),songFileName,context);
+
+        if (InAapSongTable.updateSongLocation(id,songLocation,context))
+            LOGD(TAG,"Successfuly updated table " + playable.toString());
+        else
+            LOGE(TAG,"Failed table update " + playable.toString());
+
+        UiBroadcasts.broadcastMusicDataChanged(context);
+
+
+
+    }
+
+
 }

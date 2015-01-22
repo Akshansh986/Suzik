@@ -69,6 +69,52 @@ public class TimelineItem implements Playable{
         else  return  songPath;
     }
 
+    @Override
+    public Playable getAlternatePlayable() {
+
+        if (!isCached()) return null;
+
+        return new Playable() {
+            @Override
+            public boolean isOffline() {
+                return false;
+            }
+
+            @Override
+            public boolean isCached() {
+                return false;
+            }
+
+            @Override
+            public Song getSong() {
+                return song;
+            }
+
+            @Override
+            public long getId() {
+                return id;
+            }
+
+            @Override
+            public String getAlbumArtPath() {
+                return getOnlineAlbumArtUrl();
+            }
+
+            @Override
+            public String getSongPath() {
+                return songPath;
+            }
+
+            @Override
+            public Playable getAlternatePlayable() {
+                return null;
+            }
+        };
+
+
+
+    }
+
 
     @Override
     public String toString() {

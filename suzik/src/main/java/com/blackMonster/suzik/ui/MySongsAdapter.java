@@ -1,16 +1,13 @@
 package com.blackMonster.suzik.ui;
 
 
-import android.widget.BaseAdapter;
-
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +16,8 @@ import com.blackMonster.suzik.musicstore.Timeline.Playable;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.music.AllSongsTable;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 
 /**
@@ -175,7 +174,7 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
 
         String title, artist, album, albumartPath, songPath, songUrl, albumartUrl;
         int pos;
-        long duration,id;
+        long duration,id,serverId;
         boolean isCached;
         
         if (isAndroidSong(position)) {
@@ -197,6 +196,7 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
             songUrl = null;
             albumartUrl = null;
             isCached = false;
+            serverId =0;
 
 
         } else {
@@ -215,10 +215,11 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
             songUrl = inappCursor.getString(inappCursor.getColumnIndex(InAapSongTable.C_SONG_LINK));
             albumartUrl = inappCursor.getString(inappCursor.getColumnIndex(InAapSongTable.C_ALBUMART_LINK));
             isCached = true;
+            serverId = inappCursor.getLong(inappCursor.getColumnIndex(AllSongsTable.C_SERVER_ID));
 
         }
 
-        return  new MySong(id, new Song(title,artist,album,duration),songPath,albumartPath,songUrl,albumartUrl,isCached);
+        return  new MySong(id,serverId, new Song(title,artist,album,duration),songPath,albumartPath,songUrl,albumartUrl,isCached);
     }
 
     @Override
