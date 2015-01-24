@@ -1,8 +1,5 @@
 package com.blackMonster.suzik.musicPlayer;
 
-import java.util.List;
-import java.util.Random;
-
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -18,6 +15,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.blackMonster.suzik.ui.Playlist;
+
+import java.util.Random;
 
 public class UIcontroller {
 	private static final String TAG = "Suzikplayer_uicontroller";

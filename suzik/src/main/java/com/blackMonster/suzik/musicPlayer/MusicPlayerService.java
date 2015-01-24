@@ -17,7 +17,9 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.os.Binder;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.PowerManager;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -106,7 +108,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 
 		
 		protected void logmediaposition() {
-			if(player.isPlaying())
+			if(isplaying())
 			{			
 				sendautoseekupdatebroadcast();
 			}
@@ -162,74 +164,153 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		player.setOnInfoListener(this);
 		
 	}
-	public void setSong(Playable playable){
-		isplay=false;
-		isasyncplay=false;
-		if(player!=null)
-		{		
-			player.reset();
-			mediaplayerstate=idle;
-			fullfillintent();
-		}
-		CurrentSong=playable;
-		if(mediaplayerstate==idle)
-		{
-		  try
-		  {
-			//player.setDataSource("https://www.dropbox.com/s/jef2cfbpdmj3sr4/Contemporary%20Dance%20Solo.mp4?dl=0");
-			
-			player.setDataSource(playable.getSongPath());
-			mediaplayerstate=initialized;
-			fullfillintent();
-			Log.d(TAG, "Musicplayerservice: song set == " + playable.getSongPath());
-			Log.d(TAG,"Musicplayerservice: player resource set");
 
-		  }	
-		catch(Exception e)
-		{   Log.e("MUSIC SERVICE", "Error setting data source", e);
-		}
-		Log.d(TAG,"Musicplayerservice: songs set complete ");
-		}
-		else
-		{				Log.d(TAG,"Error setting data source ");
 
-			
-		}
-	
-		
-		
-		String songTitle=playable.getSong().getTitle();
-		String songArtist=playable.getSong().getArtist();
-	
-		Intent notIntent = new Intent(this, MainSliderActivity.class);
-		notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		PendingIntent pendInt = PendingIntent.getActivity(this, 0, notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		RemoteViews views= new RemoteViews(getPackageName(), R.layout.smallwidget);
-		views.setImageViewResource(R.id.notification_small_albumart,R.drawable.album_art);
-		views.setTextViewText(R.id.notification_small_songtitle,songTitle);
-		views.setTextViewText(R.id.notifiacation_small_artist, songArtist);
-      
-        builder = new Notification.Builder(this);
-        builder.setSmallIcon(R.drawable.ic_launcher)
-		.setContentIntent(pendInt)
-		.setContent(views)
-		.setOngoing(true);
-	  notification=builder.build();
-   startForeground(notification.FLAG_ONGOING_EVENT, notification);
-   	
-	  
-	
-		if(mediaplayerstate==initialized||mediaplayerstate==stopped)
-		{		sendbufferingbroadcast();
-				player.prepareAsync();
-				mediaplayerstate=preparing;
-				fullfillintent();
-		}
-		else
-		{
-			Log.d(TAG,"Error prepareAsync ");
-		}
-	}
+
+    private class WorkerThread extends HandlerThread implements Handler.Callback {
+
+        private Handler mHandler;
+
+        public WorkerThread() {
+            super("Worker");
+        }
+
+        public void doRunnable(Runnable runnable) {
+            if (mHandler == null) {
+                mHandler = new Handler(getLooper(), this);
+            }
+            Message msg = mHandler.obtainMessage(0, runnable);
+            mHandler.sendMessage(msg);
+        }
+
+        @Override
+        public boolean handleMessage(Message msg) {
+            Runnable runnable = (Runnable) msg.obj;
+            runnable.run();
+            return true;
+        }
+
+
+
+    }
+    WorkerThread worker;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void setSong(final Playable playable){
+
+
+        Runnable playRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                if (isplaying()) player.stop();
+                player.release();
+                player =null;
+
+                player  =  new MediaPlayer();
+                mediaplayerstate=idle;
+                fullfillintent();
+
+
+            initMusicPlayer();
+
+
+
+
+
+
+                isplay=false;
+                isasyncplay=false;
+                if(player!=null)
+                {
+                    player.reset();
+                    mediaplayerstate=idle;
+                    fullfillintent();
+                }
+                CurrentSong=playable;
+                if(mediaplayerstate==idle)
+                {
+                    try
+                    {
+                        //player.setDataSource("https://www.dropbox.com/s/jef2cfbpdmj3sr4/Contemporary%20Dance%20Solo.mp4?dl=0");
+
+                        player.setDataSource(playable.getSongPath());
+                        mediaplayerstate=initialized;
+                        fullfillintent();
+                        Log.d(TAG, "Musicplayerservice: song set == " + playable.getSongPath());
+                        Log.d(TAG,"Musicplayerservice: player resource set");
+
+                    }
+                    catch(Exception e)
+                    {   Log.e("MUSIC SERVICE", "Error setting data source", e);
+                    }
+                    Log.d(TAG,"Musicplayerservice: songs set complete ");
+                }
+                else
+                {				Log.d(TAG,"Error setting data source ");
+
+
+                }
+
+
+
+                String songTitle=playable.getSong().getTitle();
+                String songArtist=playable.getSong().getArtist();
+
+                Intent notIntent = new Intent(getBaseContext(), MainSliderActivity.class);
+                notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendInt = PendingIntent.getActivity(getBaseContext(), 0, notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                RemoteViews views= new RemoteViews(getPackageName(), R.layout.smallwidget);
+                views.setImageViewResource(R.id.notification_small_albumart,R.drawable.album_art);
+                views.setTextViewText(R.id.notification_small_songtitle,songTitle);
+                views.setTextViewText(R.id.notifiacation_small_artist, songArtist);
+
+                builder = new Notification.Builder(getBaseContext());
+                builder.setSmallIcon(R.drawable.ic_launcher)
+                        .setContentIntent(pendInt)
+                        .setContent(views)
+                        .setOngoing(true);
+                notification=builder.build();
+                startForeground(notification.FLAG_ONGOING_EVENT, notification);
+
+
+
+                if(mediaplayerstate==initialized||mediaplayerstate==stopped)
+                {		sendbufferingbroadcast();
+                    player.prepareAsync();
+                    mediaplayerstate=preparing;
+                    fullfillintent();
+                }
+                else
+                {
+                    Log.d(TAG,"Error prepareAsync ");
+                }
+            }
+        };
+
+
+worker.doRunnable(playRunnable);
+
+
+
+
+    }
 	
 
 	@Override
@@ -382,21 +463,35 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
-		Log.d(TAG,"oncreate"); 
-		if(player==null)
-		{
-			player=new MediaPlayer();
-			mediaplayerstate=idle;
-			fullfillintent();
-		}
-		
-  		initMusicPlayer();
+
+        worker = new WorkerThread();
+        worker.start();
+        worker.doRunnable(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "oncreate");
+                if (player == null) {
+                    player = new MediaPlayer();
+                    mediaplayerstate = idle;
+                    fullfillintent();
+                }
+
+                initMusicPlayer();
 
 
-		Intent_Musicplayer_seekIntent=new Intent(broadcast_playerseek);		
-  		Intent_bufferplayerintent=new Intent(brodcast_bufferingplayer);
-  		Intent_completionplayerintent=new Intent(brodcast_playcomplete);
-  		
+                Intent_Musicplayer_seekIntent = new Intent(broadcast_playerseek);
+                Intent_bufferplayerintent = new Intent(brodcast_bufferingplayer);
+                Intent_completionplayerintent = new Intent(brodcast_playcomplete);
+
+
+                registerReceiver(broadcastReceiver_seekbaruiupdate, new IntentFilter(UIcontroller.brodcast_uiseek));
+                isseekbarupdateuiregistered = true;
+
+
+            }
+        });
+
+
 
 		super.onCreate();
 	}
@@ -448,9 +543,6 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
 		Log.d(TAG,"onStartCommand"); 
-		
-		registerReceiver(broadcastReceiver_seekbaruiupdate,new IntentFilter(UIcontroller.brodcast_uiseek));
-		isseekbarupdateuiregistered=true;
 
 
 		 super.onStartCommand(intent, flags, startId);
@@ -469,7 +561,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 				isseekbarupdateuiregistered=false;
 				
 			}
-		  if(!player.isPlaying())
+		  if(!isplaying())
 		  { 
 			  stopForeground(true);
 		  }
@@ -527,8 +619,13 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		// TODO Auto-generated method stub
 		if(player!=null)
 		{
-			return player.isPlaying();
-		}
+            try {
+                return player.isPlaying();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+                return  false;
+            }
+        }
 		return false;
 		
 	}
@@ -539,13 +636,13 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		Status playerstatus=null;
 		if(player!=null)
 		
-	{		if(player.isPlaying())
+	{		if(isplaying())
 			{	
-			playerstatus= new Status(player.getCurrentPosition(),player.getDuration(),player.isPlaying());
+			playerstatus= new Status(player.getCurrentPosition(),player.getDuration(),isplaying());
 			}
 			else
 			{ 	if(CurrentSong!=null)		
-				playerstatus= new Status(0,(int)CurrentSong.getSong().getDuration(),player.isPlaying());
+				playerstatus= new Status(0,(int)CurrentSong.getSong().getDuration(),isplaying());
 
 			}
 	}

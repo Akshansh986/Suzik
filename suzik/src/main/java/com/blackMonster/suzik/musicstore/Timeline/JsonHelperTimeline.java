@@ -2,20 +2,17 @@ package com.blackMonster.suzik.musicstore.Timeline;
 
 import android.content.Context;
 
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.blackMonster.suzik.musicstore.module.Song;
+import com.blackMonster.suzik.util.ServerUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.blackMonster.suzik.musicstore.module.Song;
-import com.blackMonster.suzik.sync.music.InAapSongTable;
-import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
-import com.blackMonster.suzik.util.NetworkUtils;
-import com.blackMonster.suzik.util.ServerUtils;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 public class JsonHelperTimeline {
     private static final String TAG = "JsonHelperTimeline";
@@ -56,7 +53,9 @@ public class JsonHelperTimeline {
         for (int i = 0; i < n; i++) {
             JSONObject o = (JSONObject) responseArray.get(i);
 
-            if (!NetworkUtils.isValidUrl(o.getString(P_R_SONG_URL))) continue;
+            if (o.getString(P_R_SONG_URL).equals("")) continue;
+
+//            if (!NetworkUtils.isValidUrl(o.getString(P_R_SONG_URL))) continue;
 
             song = new Song(o.getString(P_R_TITLE),
                     o.isNull(P_R_ARTIST) ? null : o.getString(P_R_ARTIST),
