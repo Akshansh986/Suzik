@@ -3,18 +3,19 @@ package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
 
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+
 public class BroadcastPlaystateChage extends MusicBroadcastManager {
 	private static final String TAG = "BroadcastPlaystateChage";
 
 	@Override
-	public void run(Context context) {
-		Log.d(TAG, "run");
+	public void runIt(Context context) {
+		Log.d(TAG, "runIt");
 		if (isPlaying())
 			handlePlay(context);
 		else

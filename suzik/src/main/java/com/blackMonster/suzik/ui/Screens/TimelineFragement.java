@@ -1,17 +1,7 @@
 package com.blackMonster.suzik.ui.Screens;
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,7 +21,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.R;
@@ -40,7 +29,14 @@ import com.blackMonster.suzik.musicstore.Timeline.JsonHelperTimeline;
 import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
 import com.blackMonster.suzik.sync.ContentObserverService;
 import com.blackMonster.suzik.ui.TimelineAdapter;
-import com.blackMonster.suzik.ui.UiBroadcasts;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 public class TimelineFragement extends Fragment implements OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = "ActivityTimeline";
@@ -107,7 +103,7 @@ UIcontroller uiController;
 //		JSONObject postJson = JsonHelperTimeline.ServerAllSongs.getCredentials();
 
         JsonObjectRequest jsonReq = new JsonObjectRequest(Method.POST,
-                AppConfig.MAIN_URL, postJson, new Response.Listener<JSONObject>() {
+                /*AppConfig.MAIN_URL*/"https://dl.dropboxusercontent.com/u/95984737/akki.txt", postJson, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -171,6 +167,7 @@ UIcontroller uiController;
 
         uiController.setList(adapter);
         uiController.setSongpos(position);
+
 
 
 

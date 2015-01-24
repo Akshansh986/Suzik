@@ -1,11 +1,5 @@
 package com.blackMonster.suzik.sync.music;
 
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
-import static com.blackMonster.suzik.util.LogUtils.LOGE;
-
-import java.util.HashSet;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -14,6 +8,12 @@ import android.database.sqlite.SQLiteDatabase;
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.music.AllSongsTable.AllSongData;
+
+import java.util.HashSet;
+import java.util.List;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.LOGE;
 
 public class InAapSongTable {
 
@@ -255,6 +255,18 @@ public class InAapSongTable {
 
         ContentValues updates = new ContentValues();
         updates.put(C_ALBUM_ART_LOCATION, newLocation);
+
+
+        return db.update(TABLE, updates, C_ID + "='" + id + "'", null) > 0 ;
+
+    }
+
+    public static boolean updateSongLocation(long id, String newLocation, Context context) {
+        LOGD(TABLE, "update");
+        SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
+
+        ContentValues updates = new ContentValues();
+        updates.put(C_SONG_LOCATION, newLocation);
 
 
         return db.update(TABLE, updates, C_ID + "='" + id + "'", null) > 0 ;

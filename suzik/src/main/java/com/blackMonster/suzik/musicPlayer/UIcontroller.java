@@ -14,7 +14,16 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.blackMonster.suzik.musicstore.Timeline.Playable;
+import com.blackMonster.suzik.sync.music.InAapSongTable;
+import com.blackMonster.suzik.ui.FileDownloader;
 import com.blackMonster.suzik.ui.Playlist;
+import com.blackMonster.suzik.ui.UiBroadcasts;
+
+import java.util.Random;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.LOGE;
 
 import java.util.Random;
 
@@ -27,7 +36,7 @@ public class UIcontroller {
 	{
 	     @Override
 	     public void run() {
-	    	 Log.d(TAG,"Runnable setsong");
+	    	 Log.d(TAG, "Runnable setsong");
 	    	 musicSrv.setSong(songs.getPlayable(songpos));
 
 	     }
@@ -92,8 +101,8 @@ public class UIcontroller {
 
 	private UIcontroller(Context context) {
 	// TODO Auto-generated constructor stub
-		
-		Log.d(TAG,"UIcontroller constuctor"); 
+
+		Log.d(TAG,"UIcontroller constuctor");
 		this.context=context;
 
 	Intent_uidataupdate=new Intent(brodcast_uidataupdate);
@@ -203,7 +212,7 @@ public class UIcontroller {
 				if(repeat==1)
 				{
 						//seek(0);
-						setSong();
+					      setSong();
 				}
 				else
 				{	if(shuffle)
@@ -379,6 +388,10 @@ public class UIcontroller {
 			{
 			pauseSong();
 			}
+            if(isfocuslost)
+            {	requestfocus();
+
+            }
 			//delay100ms
 			mHandler.removeCallbacks(mHandlerTask);
 		    mHandler.postDelayed(mHandlerTask,500);
@@ -405,20 +418,16 @@ public class UIcontroller {
 		// TODO Auto-generated method stub
 		Log.d(TAG,"next song"); 
 		if(songs!=null)
-		{	
-			
-			//resetui();
+		{
 
-			if(repeat==1)
-			{      
-				seek(0);
-			}
-			else
-			{	if(shuffle)
+
+
+				if(shuffle)
 				{
 					shuffleSong();
 				}
-				else{
+				else
+                {
 					if(songpos==songs.getSongCount()-1 )
 					{songpos=0;
 					}
@@ -430,8 +439,8 @@ public class UIcontroller {
 
 
 				}
-	
-			}
+
+
 
 		}
 	}
@@ -440,30 +449,28 @@ public class UIcontroller {
 		Log.d(TAG,"prevsong"); 
 		if(songs!=null)
 		{		
-			//resetui();
-			if(repeat==1)
-			{
-			
-					seek(0);
-			}
-			else
-			{	if(shuffle)
+
+
+				if(shuffle)
 				{
 					shuffleSong();
 				}
-				else{
-				if(songpos==0)
-					   songpos=songs.getSongCount()-1;
-				   else
+				else
+                {
+				   if(songpos==0)
+                   {
+                       songpos = songs.getSongCount() - 1;
+                   }
+                   else
 				   {   songpos--;
 				   }
-				
-				setSong();
+
+				   setSong();
 
 
 				}
-	
-			}
+
+
 
 			
 		}
@@ -484,26 +491,29 @@ public class UIcontroller {
 		songpos=r.nextInt(songs.getSongCount());
 		setSong();
 	}
-	public void setrepeatStatus() {
+	public void setrepeatStatus(int value) {
 		// TODO Auto-generated method stub
 		Log.d(TAG,"setrepeatStatus");
 
-		repeat=(repeat+1)%3;
+		repeat=value;
 	}
-	public void setshuffleStatus() {
+	public void setshuffleStatus(boolean value) {
 		// TODO Auto-generated method stub
 		Log.d(TAG,"setshuffleStatus");
 
-		shuffle=!shuffle;
+		shuffle=value;
 	}
 	public void seek(int progress) {
 		// TODO Auto-generated method stub
 		Log.d(TAG,"seek");
 
-		intent_uiseekintent.putExtra("seekui",progress);
+        if(musicSrv!=null){
+            musicSrv.seek(progress);
+        }
+        /*intent_uiseekintent.putExtra("seekui",progress);
 		context.sendBroadcast(intent_uiseekintent);
-		
-		
+		*/
+
 	}
 
 	public void unbind() {
@@ -542,11 +552,12 @@ public class UIcontroller {
 			Intent_playercurrentstatus.putExtra("isplaying",s.isPlaying());
 			Intent_playercurrentstatus.putExtra("currentpos",s.getCurrentPosition());
 			Intent_playercurrentstatus.putExtra("duration",s.getDuration());
-			Intent_playercurrentstatus.putExtra("shuffle",shuffle);
+            Intent_playercurrentstatus.putExtra("isbuffering",s.isBuffering());
+            Intent_playercurrentstatus.putExtra("shuffle",shuffle);
 			Intent_playercurrentstatus.putExtra("repeat",repeat);
-			
-			
-			
+
+
+
 			context.sendBroadcast(Intent_playercurrentstatus);
 			Log.d(TAG,"playercurrentstatus\n"+Intent_playercurrentstatus.toString()); 
 				
@@ -615,9 +626,33 @@ public class UIcontroller {
 		}
 		
 	}
-	
-	
-	
-	
-	
+
+
+
+    public void onError(Playable playable) {
+
+
+        startDownload(playable.getId(), playable.getAlternatePlayable());
+
+    }
+
+    private void startDownload(long id, Playable playable) {
+        String songFileName = FileDownloader.getNewSongFileName();
+        String songLocation = FileDownloader.getLocationFromFilename(songFileName, context);
+
+        FileDownloader.saveSongToDisk(playable.getSong().getTitle(),playable.getSong().getArtist(),
+                playable.getSongPath(),songFileName,context);
+
+        if (InAapSongTable.updateSongLocation(id,songLocation,context))
+            LOGD(TAG,"Successfuly updated table " + playable.toString());
+        else
+            LOGE(TAG,"Failed table update " + playable.toString());
+
+        UiBroadcasts.broadcastMusicDataChanged(context);
+
+
+
+    }
+
+
 }

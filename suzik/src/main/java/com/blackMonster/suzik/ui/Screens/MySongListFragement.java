@@ -5,16 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
-
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,17 +22,15 @@ import android.widget.Toast;
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.R;
-
 import com.blackMonster.suzik.musicPlayer.UIcontroller;
-import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
 import com.blackMonster.suzik.sync.music.AddedSongsResponseHandler;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
-import com.blackMonster.suzik.sync.music.InitMusicDb;
 import com.blackMonster.suzik.ui.MySongsAdapter;
 import com.blackMonster.suzik.ui.UiBroadcasts;
 
-import java.io.IOException;
 import java.math.BigDecimal;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 
 public class MySongListFragement extends Fragment implements OnItemClickListener {
@@ -108,10 +101,10 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
     }
 
     public void loadData() {
-        if (MainPrefs.isFirstTimeMusicSyncDone(getActivity())) {
+//        if (MainPrefs.isFirstTimeMusicSyncDone(getActivity())) {
             androidCursor = getAndroidSongs();
             inAppCursor = getInAppSong();
-        }
+//        }
 
     }
 
