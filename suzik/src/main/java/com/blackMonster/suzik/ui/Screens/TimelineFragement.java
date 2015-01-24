@@ -1,4 +1,5 @@
 package com.blackMonster.suzik.ui.Screens;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.R;
@@ -103,7 +105,7 @@ UIcontroller uiController;
 //		JSONObject postJson = JsonHelperTimeline.ServerAllSongs.getCredentials();
 
         JsonObjectRequest jsonReq = new JsonObjectRequest(Method.POST,
-                /*AppConfig.MAIN_URL*/"https://dl.dropboxusercontent.com/u/95984737/akki.txt", postJson, new Response.Listener<JSONObject>() {
+                AppConfig.MAIN_URL, postJson, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {

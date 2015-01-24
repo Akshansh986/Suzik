@@ -28,8 +28,13 @@ import android.widget.Toast;
 import com.blackMonster.suzik.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeListener {
@@ -165,27 +170,9 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
 
     private void setAlbumart(String link) {
-        ImageLoader.getInstance().displayImage(link, albumart, options , new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
 
-            }
-
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-
-            }
-
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-
-            }
-
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
-
-            }
-        });
+        ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
+        ImageLoader.getInstance().displayImage(link, albumart, options ,animateFirstListener);
         }
 
     private BroadcastReceiver broadcastreciever_seekrecieve = new BroadcastReceiver() {
@@ -317,7 +304,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             case 1:
                 isbuffering = true;
                 Log.d(TAG, "Animationstarted");
-                animationHandler.postDelayed(animationRunnable,0);
+                animationHandler.postDelayed(animationRunnable, 0);
                 break;
             case 0:
                 isbuffering = false;
@@ -760,4 +747,23 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         });
 
     }
+
+    private static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
+
+        static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
+
+        @Override
+        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+            if (loadedImage != null) {
+                ImageView imageView = (ImageView) view;
+                boolean firstDisplay = !displayedImages.contains(imageUri);
+                if (firstDisplay) {
+                    FadeInBitmapDisplayer.animate(imageView, 500);
+                    displayedImages.add(imageUri);
+                }
+            }
+        }
+    }
+
+
 }
