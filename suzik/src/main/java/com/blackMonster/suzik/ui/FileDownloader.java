@@ -4,9 +4,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.util.Patterns;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.blackMonster.suzik.util.NetworkUtils;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -23,6 +21,10 @@ import static com.blackMonster.suzik.util.LogUtils.LOGE;
  */
 public class FileDownloader {
     public static final String TAG = "FileDownloader";
+    public static final String SONG_FILE_EXTENSION = ".msk";
+    public static final String ALBUM_ART_FILE_EXTENSION = ".psk";
+
+
 
     public static void saveSongToDisk(String title, String artist, String url, String fileName, Context context){
 
@@ -131,10 +133,10 @@ public class FileDownloader {
     }
 
     public static String getNewSongFileName() {
-        return "a" + System.currentTimeMillis() + ".msk";
+        return "a" + System.currentTimeMillis() + SONG_FILE_EXTENSION;
     }
 
-    public static String getNewAlbumArtName() {return "a" + System.currentTimeMillis() + ".psk"; }
+    public static String getNewAlbumArtName() {return "a" + System.currentTimeMillis() + ALBUM_ART_FILE_EXTENSION; }
 
 
 

@@ -16,6 +16,7 @@ import com.blackMonster.suzik.musicstore.Timeline.Playable;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.music.AllSongsTable;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
+import com.blackMonster.suzik.util.Utils;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
@@ -191,7 +192,7 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
             id = androidCurosr.getLong(androidCurosr.getColumnIndex(MediaStore.Audio.Media._ID));
             
             songPath = androidCurosr.getString(androidCurosr.getColumnIndex(MediaStore.Audio.Media.DATA));
-            albumartPath = androidCurosr.getInt(androidCurosr.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)) + "";
+            albumartPath = Utils.getAndroidAlumartUri(androidCurosr.getInt(androidCurosr.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))).toString();
 
             songUrl = null;
             albumartUrl = null;

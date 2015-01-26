@@ -1,7 +1,6 @@
 package com.blackMonster.suzik.ui;
 
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -33,7 +32,6 @@ import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 public class LazyImageLoader {
     public static final String TAG ="LazyImageLoader";
-    private static final Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
     private static final BitmapFactory.Options sBitmapOptions = new BitmapFactory.Options();
     private static final BitmapFactory.Options sBitmapOptionsCache = new BitmapFactory.Options();
 
@@ -97,25 +95,24 @@ public class LazyImageLoader {
         return inSampleSize;
     }
 
-    private static Bitmap getArtworkQuick(Context context, int album_id, int w, int h) {
+    private static Bitmap getArtworkQuick(Context context, Uri uri, int w, int h) {
         // NOTE: There is in fact a 1 pixel frame in the ImageView used to
         // display this drawable. Take it into account now, so we don't have to
         // scale later.
 
-        if (album_id < 0) {
-            // This is something that is not in the database, so get the album art directly
-            // from the file.
-//            Bitmap bm = getArtworkFromFile(context, null, -1);
-//            if (bm != null) {
-//                return bm;
-//            }
-//            return getDefaultArtwork(context);
-            return null;
-        }
+//        if (album_id < 0) {
+//            // This is something that is not in the database, so get the album art directly
+//            // from the file.
+////            Bitmap bm = getArtworkFromFile(context, null, -1);
+////            if (bm != null) {
+////                return bm;
+////            }
+////            return getDefaultArtwork(context);
+//            return null;
+//        }
         w -= 2;
         h -= 2;
         ContentResolver res = context.getContentResolver();
-        Uri uri = ContentUris.withAppendedId(sArtworkUri, album_id);
         if (uri != null) {
             ParcelFileDescriptor fd = null;
             try {
@@ -165,21 +162,20 @@ public class LazyImageLoader {
 
 
 
-    public static Bitmap getArtwork(Context context, int album_id) {
+    public static Bitmap getArtwork(Context context, Uri uri) {
 
-        if (album_id < 0) {
-            // This is something that is not in the database, so get the album art directly
-            // from the file.
-//            Bitmap bm = getArtworkFromFile(context, null, -1);
-//            if (bm != null) {
-//                return bm;
-//            }
-//            return getDefaultArtwork(context);
-            return null;
-        }
+//        if (album_id < 0) {
+//            // This is something that is not in the database, so get the album art directly
+//            // from the file.
+////            Bitmap bm = getArtworkFromFile(context, null, -1);
+////            if (bm != null) {
+////                return bm;
+////            }
+////            return getDefaultArtwork(context);
+//            return null;
+//        }
 
         ContentResolver res = context.getContentResolver();
-        Uri uri = ContentUris.withAppendedId(sArtworkUri, album_id);
         if (uri != null) {
             InputStream in = null;
             try {
@@ -275,7 +271,7 @@ public class LazyImageLoader {
                 return getCachedBitmap(data);
             }
             else {
-                return getArtworkQuick(context,Integer.parseInt(data),size,size);
+                return getArtworkQuick(context,Uri.parse(data),size,size);
             }
 
 //            return getArtwork(context,data);

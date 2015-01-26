@@ -1,9 +1,5 @@
 package com.blackMonster.suzik.ui;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,11 +10,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
-import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicstore.Timeline.Playable;
 import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
@@ -30,14 +23,14 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import static com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
-import static com.blackMonster.suzik.sync.music.InAapSongTable.insert;
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
-import static com.blackMonster.suzik.util.LogUtils.LOGE;
 
 public class TimelineAdapter extends BaseAdapter implements Playlist {
     private static final String TAG = "TimelineAdapter";
@@ -330,7 +323,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 //    }
 
     private void updateUi(TimelineItem item) {
-        item.setInappMirrorIfAvailable(context);
+//        item.setInappMirrorIfAvailable(context);
         UiBroadcasts.broadcastMusicDataChanged(context);
     }
 

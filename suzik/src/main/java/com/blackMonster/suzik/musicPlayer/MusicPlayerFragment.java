@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blackMonster.suzik.R;
+import com.blackMonster.suzik.util.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
@@ -55,20 +56,13 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     private DisplayImageOptions options;
     private int seekmax;
 
-
-    private boolean isbplayercurrentstatus;
-    private boolean isbrodcastseekregistered;
-    private boolean isbrodcastuidataupdateregistered;
-    private boolean isbrodcastuibtnupdateregistered;
     private boolean isbuffering;
-    private boolean isbufferregistered;
-    private boolean isrestui;
 
     Animation fadeIn;
     Animation fadeOut;
     AnimationSet animation;
-    android.os.Handler animationHandler=new android.os.Handler();
-    Runnable animationRunnable=new Runnable() {
+    android.os.Handler animationHandler = new android.os.Handler();
+    Runnable animationRunnable = new Runnable() {
         @Override
         public void run() {
             songProgressBar.startAnimation(animation);
@@ -111,19 +105,18 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         setAlbumart(Albumart);
         songProgressBar.setMax(duration);
         songProgressBar.setProgress(currentpos);
-        if(!islbuffering){
+        if (!islbuffering) {
             isbuffering = false;
             Log.d(TAG, "Animationstopeed");
             animationHandler.removeCallbacks(animationRunnable);
 
-        }
-        else
-        {               isbuffering = false;
+        } else {
+            isbuffering = false;
             animationHandler.removeCallbacks(animationRunnable);
             isbuffering = true;
             Log.d(TAG, "Animationstarted");
-            animationHandler.postDelayed(animationRunnable,0);
-            isplaying=true;
+            animationHandler.postDelayed(animationRunnable, 0);
+            isplaying = true;
 
         }
         if (isplaying) {
@@ -139,7 +132,6 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         if (shuffle) {
             btnShuffle.setImageResource(R.drawable.shuffleon);
             btnShuffle.setTag("shuffleon");
-
 
 
         } else {
@@ -164,16 +156,15 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         }
 
 
-
     }
 
 
-
-    private void setAlbumart(String link) {
+    private void setAlbumart(String uri) {
+        Log.d(TAG,"albumart path " + uri);
 
         ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
-        ImageLoader.getInstance().displayImage(link, albumart, options ,animateFirstListener);
-        }
+        ImageLoader.getInstance().displayImage(Utils.formatStringForUIL(uri), albumart, options, animateFirstListener);
+    }
 
     private BroadcastReceiver broadcastreciever_seekrecieve = new BroadcastReceiver() {
 
@@ -352,33 +343,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
         uicontroller = UIcontroller.getInstance(getActivity().getApplicationContext());
 
-
-        Log.d(TAG, "oncreate:Register broadcast");
-        getActivity(). registerReceiver(broadcastreciever_seekrecieve, new IntentFilter(MusicPlayerService.broadcast_playerseek));
-        isbrodcastseekregistered = true;
-        getActivity().registerReceiver(broadcastreciever_uidataupdate, new IntentFilter(UIcontroller.brodcast_uidataupdate));
-        isbrodcastuidataupdateregistered = true;
-        getActivity().registerReceiver(broadcastreciever_uibtnupdate, new IntentFilter(UIcontroller.brodcast_uibtnupdate));
-        isbrodcastuibtnupdateregistered = true;
-        getActivity().registerReceiver(broadcastreciever_bufferingplayerrecieve, new IntentFilter(MusicPlayerService.brodcast_bufferingplayer));
-        isbufferregistered = true;
-        getActivity().registerReceiver(broadcastreciever_playercurrentstatus, new IntentFilter(UIcontroller.brodcast_playercurrentstatus));
-        isbplayercurrentstatus = true;
-        getActivity().registerReceiver(broadcastreciever_resetui, new IntentFilter(UIcontroller.brodcast_resetui));
-        isrestui = true;
-
-
-
-
-
-
-
-
-
-
-
-
-        return  rootView;
+        return rootView;
 
 
     }
@@ -399,39 +364,13 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     public void onPause() {
         // TODO Auto-generated method stub
         Log.d(TAG, "onPause");
-        if(uicontroller.getList()!=null) {
-            if (isrestui) {
                 getActivity().unregisterReceiver(broadcastreciever_resetui);
-                isrestui = false;
-
-            }
-
-            if (isbplayercurrentstatus) {
-                getActivity().unregisterReceiver(broadcastreciever_playercurrentstatus);
-                isbplayercurrentstatus = false;
-
-            }
-            if (isbrodcastuidataupdateregistered) {
+               getActivity().unregisterReceiver(broadcastreciever_playercurrentstatus);
                 getActivity().unregisterReceiver(broadcastreciever_uidataupdate);
-                isbrodcastuidataupdateregistered = false;
-
-            }
-            if (isbrodcastuibtnupdateregistered) {
                 getActivity().unregisterReceiver(broadcastreciever_uibtnupdate);
-                isbrodcastuibtnupdateregistered = false;
-
-            }
-            if (isbufferregistered) {
                 getActivity().unregisterReceiver(broadcastreciever_bufferingplayerrecieve);
-                isbufferregistered = false;
-
-            }
-
-            if (isbrodcastseekregistered) {
                 getActivity().unregisterReceiver(broadcastreciever_seekrecieve);
-                isbrodcastseekregistered = false;
 
-            }
             Log.d(TAG, "onPause:unregister broadcast");
 
             if (uicontroller != null) {
@@ -440,7 +379,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
                 uicontroller.stophandler();
             }
-        }
+
         super.onPause();
     }
 
@@ -449,58 +388,33 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     public void onResume() {
         // TODO Auto-generated method stub
         Log.d(TAG, "onResume");
-    if(uicontroller.getList()!=null) {
-    if (!isrestui) {
-        getActivity().registerReceiver(broadcastreciever_resetui, new IntentFilter(UIcontroller.brodcast_resetui));
-        isrestui = true;
+                getActivity().registerReceiver(broadcastreciever_resetui, new IntentFilter(UIcontroller.brodcast_resetui));
+                getActivity().registerReceiver(broadcastreciever_playercurrentstatus, new IntentFilter(UIcontroller.brodcast_playercurrentstatus));
+                getActivity().registerReceiver(broadcastreciever_uidataupdate, new IntentFilter(UIcontroller.brodcast_uidataupdate));
+                getActivity().registerReceiver(broadcastreciever_uibtnupdate, new IntentFilter(UIcontroller.brodcast_uibtnupdate));
+                getActivity().registerReceiver(broadcastreciever_bufferingplayerrecieve, new IntentFilter(MusicPlayerService.brodcast_bufferingplayer));
+                getActivity().registerReceiver(broadcastreciever_seekrecieve, new IntentFilter(MusicPlayerService.broadcast_playerseek));
 
-    }
-    if (!isbplayercurrentstatus) {
-        getActivity().registerReceiver(broadcastreciever_playercurrentstatus, new IntentFilter(UIcontroller.brodcast_playercurrentstatus));
-        isbplayercurrentstatus = true;
+            Log.d(TAG, "onResume:registerbroadcast");
 
-    }
-    if (!isbrodcastuidataupdateregistered) {
-        getActivity().registerReceiver(broadcastreciever_uidataupdate, new IntentFilter(UIcontroller.brodcast_uidataupdate));
-        isbrodcastuidataupdateregistered = true;
+            if (uicontroller != null) {
+                if (uicontroller.isplaying()) {
+                    Log.d(TAG, "loadcurrentplayerstatus");
 
-    }
-    if (!isbrodcastuibtnupdateregistered) {
-        getActivity().registerReceiver(broadcastreciever_uibtnupdate, new IntentFilter(UIcontroller.brodcast_uibtnupdate));
-        isbrodcastuibtnupdateregistered = true;
+                    uicontroller.loadcurrentplayerstatus();
+                } else {
+                    Log.d(TAG, "loadcurrentplayerstatus");
+                    uicontroller.loadcurrentplayerstatus();
 
-    }
-    if (!isbufferregistered) {
-        getActivity().registerReceiver(broadcastreciever_bufferingplayerrecieve, new IntentFilter(MusicPlayerService.brodcast_bufferingplayer));
-        isbufferregistered = true;
+                    //uicontroller.loadsavedplayerstatus();
+                }
 
-    }
-    if (!isbrodcastseekregistered) {
-        getActivity().registerReceiver(broadcastreciever_seekrecieve, new IntentFilter(MusicPlayerService.broadcast_playerseek));
-        isbrodcastseekregistered = true;
+                Log.d(TAG, "onResume:starthandler");
 
-    }
-    Log.d(TAG, "onResume:registerbroadcast");
+                uicontroller.starthandler();
 
-    if (uicontroller != null) {
-        if (uicontroller.isplaying()) {
-            Log.d(TAG, "loadcurrentplayerstatus");
+            }
 
-            uicontroller.loadcurrentplayerstatus();
-        } else {
-            Log.d(TAG, "loadcurrentplayerstatus");
-            uicontroller.loadcurrentplayerstatus();
-
-            //uicontroller.loadsavedplayerstatus();
-        }
-
-        Log.d(TAG, "onResume:starthandler");
-
-        uicontroller.starthandler();
-
-    }
-
-}
         super.onResume();
     }
 
@@ -590,8 +504,8 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
                 Log.d(TAG, "onClick:btnNext");
 
                 if (uicontroller.getList() != null) {
-                    if(isbuffering){
-                        isbuffering=false;
+                    if (isbuffering) {
+                        isbuffering = false;
                         songProgressBar.clearAnimation();
                     }
                     uicontroller.nextSong();
@@ -608,8 +522,8 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
                 Log.d(TAG, "onClick:btnPrevious");
 
                 if (uicontroller.getList() != null) {
-                    if(isbuffering){
-                        isbuffering=false;
+                    if (isbuffering) {
+                        isbuffering = false;
                         songProgressBar.clearAnimation();
                     }
                     uicontroller.prevSong();
@@ -728,7 +642,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             public void onAnimationRepeat(Animation animation) {
                 // TODO Auto-generated method stub
                 Log.d(TAG, "onAnimationRepeat");
-                if(!isbuffering) {
+                if (!isbuffering) {
 
                     animationHandler.removeCallbacks(animationRunnable);
                 }
@@ -738,11 +652,11 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             public void onAnimationEnd(Animation animation) {
                 // TODO Auto-generated method stub
                 Log.d(TAG, "onAnimationEnd");
-                    if(isbuffering) {
-                        animationHandler.removeCallbacks(animationRunnable);
+                if (isbuffering) {
+                    animationHandler.removeCallbacks(animationRunnable);
 
-                        animationHandler.postDelayed(animationRunnable,0);
-                    }
+                    animationHandler.postDelayed(animationRunnable, 0);
+                }
             }
         });
 

@@ -2,14 +2,14 @@ package com.blackMonster.suzik;
 
 import android.app.Application;
 import android.content.Context;
-import android.provider.Contacts;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.blackMonster.suzik.musicPlayer.UIcontroller;
+import com.blackMonster.suzik.ui.FileDownloader;
+import com.blackMonster.suzik.util.NetworkUtils;
 import com.crashlytics.android.Crashlytics;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -17,6 +17,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+
 import io.fabric.sdk.android.Fabric;
 
 public class AppController extends Application {
@@ -97,4 +98,6 @@ public class AppController extends Application {
 			mRequestQueue.cancelAll(tag);
 		}
 	}
+
+
 }

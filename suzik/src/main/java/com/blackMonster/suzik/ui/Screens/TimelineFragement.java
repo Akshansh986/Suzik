@@ -1,11 +1,15 @@
 package com.blackMonster.suzik.ui.Screens;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.util.TypedValue;
@@ -31,6 +35,7 @@ import com.blackMonster.suzik.musicstore.Timeline.JsonHelperTimeline;
 import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
 import com.blackMonster.suzik.sync.ContentObserverService;
 import com.blackMonster.suzik.ui.TimelineAdapter;
+import com.blackMonster.suzik.ui.UiBroadcasts;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +58,7 @@ UIcontroller uiController;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
+        registerReceivers();
         uiController=UIcontroller.getInstance(getActivity());
 
 
@@ -211,6 +216,40 @@ UIcontroller uiController;
         getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
         swipeLayout.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
         swipeLayout.setRefreshing(true);
+    }
+
+
+    private BroadcastReceiver broadcastMusicDataChanged = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LOGD(TAG, "received : broadcastMusicDataChanged");
+
+            //Resetting all local data available in timeline items.
+            for (TimelineItem timelineItem : timelineItems) {
+                timelineItem.setInappMirrorIfAvailable(getActivity());
+            }
+        }
+    };
+
+
+    private void unregisterReceivers() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(
+                broadcastMusicDataChanged);
+
+    }
+
+    private void registerReceivers() {
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
+                broadcastMusicDataChanged,
+                new IntentFilter(UiBroadcasts.MUSIC_DATA_CHANGED));
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceivers();
     }
 
 
