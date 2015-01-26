@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicstore.Timeline.Playable;
@@ -126,16 +127,17 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
             @Override
             public void onClick(View v) {
                 LOGD(TAG, "buttondownload");
+                if (NetworkUtils.isInternetAvailable(context)) {
+                    if (item.isCached()) {
+                        likeButton.setImageResource(R.drawable.whiteheart);
+                        onDelete(item);
 
-                if (item.isCached()) {
-                    likeButton.setImageResource(R.drawable.whiteheart);
-                    onDelete(item);
-
-                } else {
-                    likeButton.setImageResource(R.drawable.redheart);
-                    OnDownload(item);
-                }
-
+                    } else {
+                        likeButton.setImageResource(R.drawable.redheart);
+                        OnDownload(item);
+                    }
+                } else
+                    Toast.makeText(context, R.string.device_offline, Toast.LENGTH_SHORT).show();
 
 
             }
@@ -204,7 +206,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
                 FileDownloader.saveImageToDisk(item.getAlbumArtPath(), albumartLocation);
                 FileDownloader.saveSongToDisk(item.getSong().getTitle(), item.getSong().getArtist(),
                         item.getSongPath(), songFileName, context);
-               long localId =  insertInAppSongTable(item, songLocation, albumartLocation);
+                long localId = insertInAppSongTable(item, songLocation, albumartLocation);
                 updateUi(item);
 
                 UserActivityManager.add(new UserActivity(item.getSong(), null, localId, UserActivity.ACTION_IN_APP_DOWNLOAD, 0, System.currentTimeMillis()), context);
@@ -331,8 +333,8 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
         InAppSongData inAppSongData = new InAppSongData(null, item.getId(),
                 item.getSong(), "", item.getAlbumArtPath(), item.getSongPath(),
                 songLocatoin, albumartLocation);
-       return  InAapSongTable.insert(inAppSongData, context);
-    }
+    return InAapSongTable.insert(inAppSongData, context);
+}
 
 
     @Override
