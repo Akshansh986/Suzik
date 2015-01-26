@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.blackMonster.suzik.musicstore.Timeline.Playable;
+import com.blackMonster.suzik.ui.Playlist;
+
 /**
  * Created by akshanshsingh on 07/01/15.
  */
@@ -29,12 +32,27 @@ public class SearchResultFragment extends MySongListFragement {
         adapter.updateCursors(andrCursor,inAppCursor);
     }
 
-
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-//        super.onItemClick(arg0, arg1, position, arg3);
-    }
 
+        final Playable playable = adapter.getPlayable(position);
+
+        Playlist playlist = new Playlist() {
+            @Override
+            public Playable getPlayable(int position) {
+                return playable;
+            }
+
+            @Override
+            public int getSongCount() {
+                return 1;
+            }
+        };
+
+        uiController.setList(playlist);
+        uiController.setSongpos(0);
+
+    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {

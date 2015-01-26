@@ -93,18 +93,21 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
             Double truncatedDouble=new BigDecimal(ftime ).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
             if (ftime == 0)
-                message = "Syncing music with servers, try again later!";
+                message = "Syncing music with servers";
             else
-                message = "Syncing music with servers, try after " + truncatedDouble + " minutes";
+                message = "Syncing music with servers. Complete in  " + truncatedDouble + " minutes";
             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
         }
     }
 
     public void loadData() {
-//        if (MainPrefs.isFirstTimeMusicSyncDone(getActivity())) {
+        if (MainPrefs.isFirstTimeMusicSyncDone(getActivity())) {
             androidCursor = getAndroidSongs();
             inAppCursor = getInAppSong();
-//        }
+        } else {
+            androidCursor = getAndroidSongs();
+            inAppCursor = null;
+        }
 
     }
 

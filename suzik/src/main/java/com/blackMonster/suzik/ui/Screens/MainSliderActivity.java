@@ -22,8 +22,6 @@ import android.view.View;
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicPlayer.MusicPlayerFragment;
 import com.blackMonster.suzik.musicPlayer.UIcontroller;
-import com.blackMonster.suzik.sync.music.AddedSongsResponseHandler;
-import com.blackMonster.suzik.sync.music.SongsSyncer;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 

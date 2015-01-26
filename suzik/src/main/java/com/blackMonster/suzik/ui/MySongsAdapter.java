@@ -4,6 +4,7 @@ package com.blackMonster.suzik.ui;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,7 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
         this.androidCurosr = androidC;
         this.inappCursor = inappCursor;
         setCount();
+        Log.d(TAG,"update cursors " + inappCount + " " + androidCount);
         notifyDataSetChanged();
     }
 
@@ -172,7 +174,7 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
 
     @Override
     public Playable getPlayable(int position) {
-
+    Log.d(TAG,"getPlayable  " + position);
         String title, artist, album, albumartPath, songPath, songUrl, albumartUrl;
         int pos;
         long duration,id,serverId;
