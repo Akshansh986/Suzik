@@ -1,19 +1,27 @@
 package com.blackMonster.suzik.ui.Screens;
 
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.blackMonster.suzik.DbHelper;
@@ -24,18 +32,15 @@ import com.blackMonster.suzik.sync.contacts.ContactsSyncer;
 import com.blackMonster.suzik.sync.music.InitMusicDb;
 import com.blackMonster.suzik.sync.music.SongsSyncer;
 import com.blackMonster.suzik.util.NetworkUtils;
-import com.blackMonster.suzik.util.UiUtils;
-import com.digits.sdk.android.AuthCallback;
-import com.digits.sdk.android.DigitsAuthButton;
-import com.digits.sdk.android.DigitsException;
-import com.digits.sdk.android.DigitsSession;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 public class ActivitySignup extends Activity {
     private static final String TAG = "ActivitySignup";
     private static final int RUNNING = 1;
     private static final int STOPPED = 0;
     private static final int COMPLETED = 2;
-
+    Bitmap bm;
 
     AlertDialog dialog;
 
@@ -57,6 +62,24 @@ public class ActivitySignup extends Activity {
         resetGlobals();
         registerReceivers();
 
+
+        Drawable drawable = ((RelativeLayout)findViewById(R.id.RelativeLayout1)).getBackground();
+
+        bm = BitmapFactory.decodeResource(getResources(), R.drawable.photo);
+
+
+
+        final RenderScript rs = RenderScript.create(this);
+        final Allocation input = Allocation.createFromBitmap( rs, bm, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT );
+        final Allocation output = Allocation.createTyped( rs, input.getType() );
+        final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create( rs, Element.U8_4(rs) );
+        script.setRadius( 20.f /* e.g. 3.f */ );
+        script.setInput( input );
+        script.forEach( output );
+        output.copyTo( bm );
+
+
+
 //        DigitsAuthButton digitsButton = (DigitsAuthButton) findViewById(R.id.auth_button);
 //        digitsButton.setCallback(new AuthCallback() {
 //            @Override
@@ -75,6 +98,19 @@ public class ActivitySignup extends Activity {
 //            }
 //        });
 
+    }
+
+    public static Bitmap drawableToBitmap (Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable)drawable).getBitmap();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
     }
 
     public void buttonSubmit(View v) {
@@ -103,9 +139,10 @@ public class ActivitySignup extends Activity {
 
         clearDatabaseAndPrefs();
         MainPrefs.setMyNo(number, getApplicationContext());
+        setNewUi();
 
-        dialog = UiUtils.createProgressDialog(getString(R.string.logging_in), this);
-        dialog.show();
+       // dialog = UiUtils.createProgressDialog(getString(R.string.logging_in), this);
+       // dialog.show();
 
         startService(new Intent(this, InitMusicDb.class));
         status[0] = RUNNING;
@@ -116,7 +153,15 @@ public class ActivitySignup extends Activity {
     }
 
 
-
+    private void setNewUi(){
+        findViewById(R.id.act_songs_list_song_name).setVisibility(View.INVISIBLE);
+        findViewById(R.id.signup_button_submit).setVisibility(View.INVISIBLE);
+        findViewById(R.id.textView1).setVisibility(View.INVISIBLE);
+        findViewById(R.id. signup_number).setVisibility(View.INVISIBLE);
+        ((ImageView ) findViewById(R.id.imageView)).setImageBitmap(bm);
+        findViewById(R.id.gloss).setVisibility(View.VISIBLE);
+        findViewById(R.id.progressBar2).setVisibility(View.VISIBLE);
+    }
     private BroadcastReceiver broadcastInitMusicDbResult = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -151,10 +196,11 @@ public class ActivitySignup extends Activity {
     void onTaskComplete() {
 
         if (status[0] == COMPLETED && status[1] == COMPLETED) {
+            findViewById(R.id.progressBar2).setVisibility(View.GONE);
 
-            if (dialog != null)
-                dialog.dismiss();
-            dialog = null;
+            //if (dialog != null)
+            //    dialog.dismiss();
+           // dialog = null;
 
             if (finalResult) {
                 MainPrefs.setLoginDone(getBaseContext());
