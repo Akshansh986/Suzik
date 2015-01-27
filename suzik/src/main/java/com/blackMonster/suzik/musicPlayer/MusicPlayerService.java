@@ -22,6 +22,7 @@ import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicstore.Timeline.Playable;
@@ -59,9 +60,14 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 
     WorkerThread worker;
 
+	private boolean isbufferingstate=false;
+    private boolean onErrorState=false;
+
 	//for binding with the uicontrollerclass
 	private final IBinder musicBind = new MusicBinder();
-	public class MusicBinder extends Binder
+
+
+    public class MusicBinder extends Binder
 	{
 		  public MusicPlayerService getService() {
 		    return MusicPlayerService.this;
@@ -77,7 +83,9 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 	//for completion
 			public static String brodcast_playcomplete="playingcomplete";
 			Intent Intent_completionplayerintent;
-
+   //for error
+            public static String broadcastError="errorBroadcast";
+            Intent Intent_error;
 	//for seekbar
 		int seekpos;
 		int mediapos;
@@ -192,8 +200,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 
 
 
-                isplay=false;
-                isasyncplay=false;
+
                 if(player!=null)
                 {
                     player.reset();
@@ -245,8 +252,6 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
                         .setOngoing(true);
                 notification=builder.build();
                 startForeground(notification.FLAG_ONGOING_EVENT, notification);
-
-
 
                 if(mediaplayerstate==initialized||mediaplayerstate==stopped)
                 {		sendbufferingbroadcast();
@@ -321,11 +326,14 @@ worker.doRunnable(playRunnable);
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
 		// TODO Auto-generated method stub
 		Log.d(TAG,"service: On error"+"\n"+arg1+"\n"+arg2);
-
-		return false;
+        Toast.makeText(getApplicationContext(), "onError"+arg1+arg2, Toast.LENGTH_SHORT).show();
+        onErrorState=true;
+        sendOnErrorStateBroadcast();
+        return false;
 	}
 
-	public void seek(int posn)
+
+    public void seek(int posn)
 	{	
 		if(player!=null)
 		{	if(mediaplayerstate==prepared||mediaplayerstate==started||mediaplayerstate==paused||mediaplayerstate==playbackcomplete)
@@ -439,7 +447,7 @@ worker.doRunnable(playRunnable);
                 Intent_Musicplayer_seekIntent = new Intent(broadcast_playerseek);
                 Intent_bufferplayerintent = new Intent(brodcast_bufferingplayer);
                 Intent_completionplayerintent = new Intent(brodcast_playcomplete);
-
+                Intent_error=new Intent(broadcastError);
 
                 LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(broadcastReceiver_seekbaruiupdate, new IntentFilter(UIcontroller.brodcast_uiseek));
                 isseekbarupdateuiregistered = true;
@@ -518,10 +526,14 @@ worker.doRunnable(playRunnable);
 				isseekbarupdateuiregistered=false;
 				
 			}
-		  if(!isplaying())
-		  { 
-			  stopForeground(true);
-		  }
+        if(!isbufferingstate){
+            if(!isplaying())
+            {
+                stopForeground(true);
+            }
+
+        }
+
 
 
 		return true;
@@ -539,17 +551,25 @@ worker.doRunnable(playRunnable);
 	//buffering complete functions
 	private void sendbufferingbroadcast() {
 	// TODO Auto-generated method stub
-		Log.d(TAG,"buffering broadcast start"); 
+		Log.d(TAG,"buffering broadcast start");
+        isbufferingstate=true;
 
 	Intent_bufferplayerintent.putExtra("buffering","1");
 	LocalBroadcastManager.getInstance(this).sendBroadcast(Intent_bufferplayerintent);
 
 		   }
-	
-	private void sendautoseekupdatebroadcast() {
+    private void sendOnErrorStateBroadcast() {
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(Intent_error);
+    }
+
+
+    private void sendautoseekupdatebroadcast() {
 		// TODO Auto-generated method stub
 		mediapos=player.getCurrentPosition();
 		mediamax=player.getDuration();
+        if((mediapos*0.6)>=mediamax){
+           // TODO
+        }
 		Intent_Musicplayer_seekIntent.putExtra("counter",String.valueOf(mediapos));
 		Intent_Musicplayer_seekIntent.putExtra("mediamax",String.valueOf(mediamax));
 		Intent_Musicplayer_seekIntent.putExtra("songended",String.valueOf(songended));
@@ -558,7 +578,8 @@ worker.doRunnable(playRunnable);
 			   }
 	private void sendbufferingcompletebroadcast() {
 	// TODO Auto-generated method stub
-		Log.d(TAG,"buffering broadcast complete"); 
+		Log.d(TAG,"buffering broadcast complete");
+        isbufferingstate=false;
 
 	Intent_bufferplayerintent.putExtra("buffering","0");
         LocalBroadcastManager.getInstance(this).sendBroadcast(Intent_bufferplayerintent);
@@ -595,11 +616,11 @@ worker.doRunnable(playRunnable);
 		
 	{		if(isplaying())
 			{	
-			playerstatus= new Status(player.getCurrentPosition(),player.getDuration(),isplaying());
+			playerstatus= new Status(CurrentSong,player.getCurrentPosition(),player.getDuration(),isplaying(),isbufferingstate,onErrorState);
 			}
 			else
 			{ 	if(CurrentSong!=null)		
-				playerstatus= new Status(0,(int)CurrentSong.getSong().getDuration(),isplaying());
+				playerstatus= new Status(CurrentSong,0,(int)CurrentSong.getSong().getDuration(),isplaying(),isbufferingstate,onErrorState);
 
 			}
 	}

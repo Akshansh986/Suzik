@@ -556,16 +556,18 @@ public class UIcontroller {
             {
                 Status s = musicSrv.getplayerstatus();
                 if (s != null) {
-                    Intent_playercurrentstatus.putExtra("songTitleLabel", songs.getPlayable(songpos).getSong().getTitle());
-                    Intent_playercurrentstatus.putExtra("songAlbumName", songs.getPlayable(songpos).getSong().getAlbum());
-                    Intent_playercurrentstatus.putExtra("songArtistName", songs.getPlayable(songpos).getSong().getArtist());
-                    Intent_playercurrentstatus.putExtra("albumart", songs.getPlayable(songpos).getAlbumArtPath());
-                    Intent_playercurrentstatus.putExtra("isplaying", s.isPlaying());
-                    Intent_playercurrentstatus.putExtra("currentpos", s.getCurrentPosition());
-                    Intent_playercurrentstatus.putExtra("duration", s.getDuration());
-                    Intent_playercurrentstatus.putExtra("isbuffering", s.isBuffering());
-                    Intent_playercurrentstatus.putExtra("shuffle", shuffle);
-                    Intent_playercurrentstatus.putExtra("repeat", repeat);
+                    Intent_playercurrentstatus.putExtra("songTitleLabel",s.playable.getSong().getTitle());
+                    Intent_playercurrentstatus.putExtra("songAlbumName",s.playable.getSong().getAlbum());
+                    Intent_playercurrentstatus.putExtra("songArtistName",s.playable.getSong().getArtist());
+                    Intent_playercurrentstatus.putExtra("albumart",s.playable.getAlbumArtPath());
+                    Intent_playercurrentstatus.putExtra("isplaying",s.isPlaying());
+                    Intent_playercurrentstatus.putExtra("currentpos",s.getCurrentPosition());
+                    Intent_playercurrentstatus.putExtra("duration",s.getDuration());
+                    Intent_playercurrentstatus.putExtra("isbuffering",s.isBuffering());
+                    Intent_playercurrentstatus.putExtra("onError",s.isOnErrorState());
+                    Intent_playercurrentstatus.putExtra("shuffle",shuffle);
+                    Intent_playercurrentstatus.putExtra("repeat",repeat);
+
 
 
                     LocalBroadcastManager.getInstance(context).sendBroadcast(Intent_playercurrentstatus);

@@ -113,6 +113,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
         } else {
             isbuffering = false;
+
             animationHandler.removeCallbacks(animationRunnable);
             isbuffering = true;
             Log.d(TAG, "Animationstarted");
@@ -122,7 +123,6 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         }
         if (isplaying) {
             btnPlay.setImageResource(R.drawable.pause);
-
             btnPlay.setTag("pause");
 
         } else {
@@ -634,7 +634,10 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             public void onAnimationStart(Animation animation) {
                 // TODO Auto-generated method stub
                 Log.d(TAG, "onAnimationStart");
+                if(!isbuffering) {
 
+                    animationHandler.removeCallbacks(animationRunnable);
+                }
 
             }
 
@@ -642,10 +645,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             public void onAnimationRepeat(Animation animation) {
                 // TODO Auto-generated method stub
                 Log.d(TAG, "onAnimationRepeat");
-                if (!isbuffering) {
 
-                    animationHandler.removeCallbacks(animationRunnable);
-                }
             }
 
             @Override
