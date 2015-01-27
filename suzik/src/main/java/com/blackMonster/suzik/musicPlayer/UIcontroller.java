@@ -244,9 +244,6 @@ public class UIcontroller {
 			Intent_uidataupdate.putExtra("songArtistName", songs.getPlayable(songpos).getSong().getArtist());
 			Intent_uidataupdate.putExtra("albumart",songs.getPlayable(songpos).getAlbumArtPath());
 			Intent_uidataupdate.putExtra("songduration", songs.getPlayable(songpos).getSong().getDuration());
-
-			 
-			
 			context.sendBroadcast(Intent_uidataupdate);
 			Log.d(TAG,"uidataupdatebroadcast\n"+Intent_uidataupdate.toString()); 
 		}
@@ -545,14 +542,15 @@ public class UIcontroller {
 			{
 		Status s=musicSrv.getplayerstatus();
 		if(s!=null){
-			Intent_playercurrentstatus.putExtra("songTitleLabel",songs.getPlayable(songpos).getSong().getTitle());
-			Intent_playercurrentstatus.putExtra("songAlbumName",songs.getPlayable(songpos).getSong().getAlbum());
-			Intent_playercurrentstatus.putExtra("songArtistName",songs.getPlayable(songpos).getSong().getArtist());
-			Intent_playercurrentstatus.putExtra("albumart",songs.getPlayable(songpos).getAlbumArtPath());
+			Intent_playercurrentstatus.putExtra("songTitleLabel",s.playable.getSong().getTitle());
+			Intent_playercurrentstatus.putExtra("songAlbumName",s.playable.getSong().getAlbum());
+			Intent_playercurrentstatus.putExtra("songArtistName",s.playable.getSong().getArtist());
+			Intent_playercurrentstatus.putExtra("albumart",s.playable.getAlbumArtPath());
 			Intent_playercurrentstatus.putExtra("isplaying",s.isPlaying());
 			Intent_playercurrentstatus.putExtra("currentpos",s.getCurrentPosition());
 			Intent_playercurrentstatus.putExtra("duration",s.getDuration());
             Intent_playercurrentstatus.putExtra("isbuffering",s.isBuffering());
+            Intent_playercurrentstatus.putExtra("onError",s.isOnErrorState());
             Intent_playercurrentstatus.putExtra("shuffle",shuffle);
 			Intent_playercurrentstatus.putExtra("repeat",repeat);
 
@@ -627,7 +625,9 @@ public class UIcontroller {
 		
 	}
 
-
+    public boolean isSet(Playlist playlist,int pos){
+        return songpos==pos&&songs==playlist;
+    }
 
     public void onError(Playable playable) {
 
