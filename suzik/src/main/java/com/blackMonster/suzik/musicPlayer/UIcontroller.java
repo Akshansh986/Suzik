@@ -10,6 +10,7 @@ import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -138,7 +139,7 @@ public class UIcontroller {
         Intent_playersavedstatus = new Intent(brodcast_playersavedstatus);
         Intent_resetui = new Intent(brodcast_resetui);
 
-        context.registerReceiver(broadcastreciever_songcomplete, new IntentFilter(MusicPlayerService.brodcast_playcomplete));
+        LocalBroadcastManager.getInstance(context).registerReceiver(broadcastreciever_songcomplete, new IntentFilter(MusicPlayerService.brodcast_playcomplete));
         context.registerReceiver(Broadcastreciever_headsetreciever, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
 
         setaudiodocus();
@@ -279,7 +280,7 @@ public class UIcontroller {
         Intent_uidataupdate.putExtra("songduration", playable.getSong().getDuration());
 
 
-        context.sendBroadcast(Intent_uidataupdate);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(Intent_uidataupdate);
         Log.d(TAG, "uidataupdatebroadcast\n" + Intent_uidataupdate.toString());
     }
 
@@ -293,14 +294,14 @@ public class UIcontroller {
         Intent_uibtnupdate.putExtra("shuffle", shuffle);
 
 
-        context.sendBroadcast(Intent_uibtnupdate);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(Intent_uibtnupdate);
         Log.d(TAG, "uibtnupdatebroadcast\n" + Intent_uibtnupdate.toString());
     }
 
 
     private void resetui() {
         // TODO Auto-generated method stub
-        context.sendBroadcast(Intent_resetui);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(Intent_resetui);
         Log.d(TAG, "resetuibroadcast");
 
 
@@ -567,7 +568,7 @@ public class UIcontroller {
                     Intent_playercurrentstatus.putExtra("repeat", repeat);
 
 
-                    context.sendBroadcast(Intent_playercurrentstatus);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(Intent_playercurrentstatus);
                     Log.d(TAG, "playercurrentstatus\n" + Intent_playercurrentstatus.toString());
 
                 }
@@ -606,7 +607,7 @@ public class UIcontroller {
         Intent_playersavedstatus.putExtra("repeat", repeat);
 
 
-        context.sendBroadcast(Intent_playersavedstatus);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(Intent_playersavedstatus);
         Log.d(TAG, "playersavedstatus\n" + Intent_playersavedstatus.toString());
 
 
@@ -655,6 +656,10 @@ public class UIcontroller {
         UiBroadcasts.broadcastMusicDataChanged(context);
 
 
+    }
+
+    public boolean isSongPlaying(Playlist playlist,int pos){
+        return songpos==pos&&songs==playlist;
     }
 
 

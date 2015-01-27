@@ -30,6 +30,7 @@ import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.R;
+import com.blackMonster.suzik.musicPlayer.MusicPlayerService;
 import com.blackMonster.suzik.musicPlayer.UIcontroller;
 import com.blackMonster.suzik.musicstore.Timeline.JsonHelperTimeline;
 import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
@@ -54,12 +55,13 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
     TimelineAdapter adapter;
     SwipeRefreshLayout swipeLayout;
 
-UIcontroller uiController;
+    UIcontroller uiController;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         registerReceivers();
-        uiController=UIcontroller.getInstance(getActivity());
+        uiController = UIcontroller.getInstance(getActivity());
 
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.timeline_view,
@@ -76,7 +78,7 @@ UIcontroller uiController;
 
 
         try {
-            adapter = new TimelineAdapter(getActivity(), timelineItems,getActivity());
+            adapter = new TimelineAdapter(getActivity(), timelineItems, getActivity());
             listView.setAdapter(adapter);
             loadInitData();
             setSwipeLayoutRefreshing();
@@ -96,7 +98,7 @@ UIcontroller uiController;
             String data = MainPrefs.getTimelineCache(getActivity());
             if (data.equals("")) return;
             setData(new JSONObject(data));
-            LOGD(TAG,(new JSONObject(data)).toString());
+            LOGD(TAG, (new JSONObject(data)).toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -162,7 +164,7 @@ UIcontroller uiController;
     private void setData(JSONObject response) throws JSONException {
 //        timelineItems = JsonHelperTimeline.ServerAllSongs.parseTimelineItems(response,getActivity());
 
-        timelineItems = JsonHelperTimeline.parseTimelineItems(response,getActivity());
+        timelineItems = JsonHelperTimeline.parseTimelineItems(response, getActivity());
         adapter.setData(timelineItems);
         adapter.notifyDataSetChanged();
     }
@@ -170,12 +172,10 @@ UIcontroller uiController;
     @Override
     public void onItemClick(AdapterView<?> arg0, View view, final int position, long arg3) {
 
-        Log.d(TAG, "fsdf " + position +  adapter.getPlayable(position).getSongPath());
+        Log.d(TAG, "fsdf " + position + adapter.getPlayable(position).getSongPath());
 
         uiController.setList(adapter);
         uiController.setSongpos(position);
-
-
 
 
 //        ((CardView) view.findViewById(R.id.card_view)).setCardElevation(200);
@@ -188,8 +188,6 @@ UIcontroller uiController;
 
 
     }
-
-
 
 
     @Override
@@ -235,6 +233,12 @@ UIcontroller uiController;
     private void unregisterReceivers() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(
                 broadcastMusicDataChanged);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(
+                broadcastPlayerCurrentStatus);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(
+                broadcastUiDataUpdate);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(
+                broadcastBufferingPlayerRecieve);
 
     }
 
@@ -244,7 +248,54 @@ UIcontroller uiController;
                 broadcastMusicDataChanged,
                 new IntentFilter(UiBroadcasts.MUSIC_DATA_CHANGED));
 
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastPlayerCurrentStatus, new IntentFilter(UIcontroller.brodcast_playercurrentstatus));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastUiDataUpdate, new IntentFilter(UIcontroller.brodcast_uidataupdate));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastBufferingPlayerRecieve, new IntentFilter(MusicPlayerService.brodcast_bufferingplayer));
     }
+
+    private BroadcastReceiver broadcastPlayerCurrentStatus = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Boolean islbuffering = intent.getBooleanExtra("isbuffering", false);
+            if (islbuffering) {
+                adapter.isBuffring=true;
+                adapter.animateView();
+            } else {
+                adapter.isBuffring=false;
+                adapter.stopAnimation();
+            }
+
+        }
+    };
+    private BroadcastReceiver broadcastUiDataUpdate = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG,"uiUpdate called");
+            adapter.notifyDataSetChanged();
+
+        }
+    };
+    private BroadcastReceiver broadcastBufferingPlayerRecieve = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG,"broadcastBufferingPlayerRecieve");
+            if (isBuffering(intent)) {
+                adapter.isBuffring =true;
+                adapter.animateView();
+            } else {
+                adapter.isBuffring=false;
+                adapter.stopAnimation();
+            }
+
+        }
+
+        private boolean isBuffering(Intent intent) {
+            String buffval = intent.getStringExtra("buffering");
+            int bval = Integer.parseInt(buffval);
+            return bval == 1;
+        }
+    };
+
 
     @Override
     public void onDestroy() {

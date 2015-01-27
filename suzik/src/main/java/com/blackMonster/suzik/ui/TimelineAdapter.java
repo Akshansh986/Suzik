@@ -7,6 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -14,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blackMonster.suzik.R;
+import com.blackMonster.suzik.musicPlayer.UIcontroller;
+import com.blackMonster.suzik.musicPlayer.WorkerThread;
 import com.blackMonster.suzik.musicstore.Timeline.Playable;
 import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
@@ -45,12 +52,19 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
     DisplayImageOptions options;
 
+    WorkerThread worker;
+
+
+    private View playingView=null;
+    private AnimationSet animation= null;
+
     public TimelineAdapter(Activity activity, List<TimelineItem> timelineItems, Context context) {
         this.activity = activity;
         this.timelineItems = timelineItems;
         this.context = context;
-
-
+        worker = new WorkerThread();
+        worker.start();
+        setAnimation();
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.white)
                 .showImageForEmptyUri(R.drawable.album_art)
@@ -60,6 +74,8 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
                 .considerExifParams(true)
                 .build();
     }
+
+
 
     public void setData(List<TimelineItem> timelineItems) {
         this.timelineItems = timelineItems;
@@ -84,18 +100,62 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Log.d("TimelineAdapter", "getview : " + position);
-        if (inflater == null)
-            inflater = (LayoutInflater) activity
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null)
+        final ViewHolder viewHolder;
+
+        if (convertView == null) {
+            if (inflater == null)
+                inflater = (LayoutInflater) activity
+                       .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
             convertView = inflater.inflate(R.layout.timeline_row, null);
 
+            viewHolder = new ViewHolder();
+            viewHolder.title =  ((TextView) convertView.findViewById(R.id.song_title));
+            viewHolder.artist = ((TextView) convertView.findViewById(R.id.song_artist));
+            viewHolder.albumArtView =  (ImageView) convertView.findViewById(R.id.album_art);
+            viewHolder.likeButton = ((ImageView) convertView.findViewById(R.id.like_icon));
+            viewHolder.progressBar =  (ProgressBar) convertView.findViewById(R.id.progressBar);
+            convertView.setTag(viewHolder);
+
+        }else{
+
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+
+//        handleSongPlaying(position,convertView);
+
+
+
+
+        if (uiconroller.isSongPlaying(this,position)) {
+            viewHolder.title.setTextColor(context.getResources().getColor(R.color.primary));
+            viewHolder.artist.setTextColor(context.getResources().getColor(R.color.primary));
+            playingView = convertView;
+            UIcontroller.getInstance(context).loadcurrentplayerstatus();
+        } else {
+            viewHolder.title.setTextColor(context.getResources().getColor(R.color.white));
+           viewHolder.artist.setTextColor(context.getResources().getColor(R.color.white));
+            stopAnimation();
+            if (playingView == convertView) playingView = null;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
         //View load
-        ImageView albumArtView = (ImageView) convertView
-                .findViewById(R.id.album_art);
+
 
         final TimelineItem item = timelineItems.get(position);
-        final ImageView likeButton = ((ImageView) convertView.findViewById(R.id.like_icon));
+//        final ImageView likeButton =
 
         String title, artist;
         int likeIconResource;
@@ -113,27 +173,27 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
         artist = item.getSong().getArtist();
 
         //setting values to views
-        ((TextView) convertView.findViewById(R.id.song_title)).setText(title);
+        viewHolder.title.setText(title);
 
         if (artist == null) {
-            ((TextView) convertView.findViewById(R.id.song_artist)).setVisibility(View.GONE);
+            viewHolder.artist.setVisibility(View.GONE);
         } else {
-            ((TextView) convertView.findViewById(R.id.song_artist)).setText(artist);
+            viewHolder.artist.setText(artist);
         }
 
-        likeButton.setImageResource(likeIconResource);
+        viewHolder.likeButton.setImageResource(likeIconResource);
 
-        likeButton.setOnClickListener(new View.OnClickListener() {
+        viewHolder.likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LOGD(TAG, "buttondownload");
                 if (NetworkUtils.isInternetAvailable(context)) {
                     if (item.isCached()) {
-                        likeButton.setImageResource(R.drawable.whiteheart);
+                        viewHolder.likeButton.setImageResource(R.drawable.whiteheart);
                         onDelete(item);
 
                     } else {
-                        likeButton.setImageResource(R.drawable.redheart);
+                        viewHolder.likeButton.setImageResource(R.drawable.redheart);
                         OnDownload(item);
                     }
                 } else
@@ -144,33 +204,33 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
         });
 
 
-        final ProgressBar pb = (ProgressBar) convertView.findViewById(R.id.progressBar);
-        pb.setVisibility(View.GONE);
+//        final ProgressBar pb =
+        viewHolder.progressBar.setVisibility(View.GONE);
 
         if (NetworkUtils.isValidUrl(item.getOnlineAlbumArtUrl())) {
 
-            imageLoader.displayImage(item.getOnlineAlbumArtUrl(), albumArtView, options, new ImageLoadingListener() {
+            imageLoader.displayImage(item.getOnlineAlbumArtUrl(), viewHolder.albumArtView, options, new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
-                    pb.setVisibility(View.VISIBLE);
+                    viewHolder.progressBar.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                    pb.setVisibility(View.GONE);
+                    viewHolder.progressBar.setVisibility(View.GONE);
 
                 }
 
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    pb.setVisibility(View.GONE);
+                    viewHolder.progressBar.setVisibility(View.GONE);
 
                     if (loadedImage != null) {
                         ImageView imageView = (ImageView) view;
 
                         boolean firstDisplay = !displayedImages.contains(imageUri);
                         if (firstDisplay) {
-                            pb.setVisibility(View.GONE);
+                            viewHolder.progressBar.setVisibility(View.GONE);
                             FadeInBitmapDisplayer.animate(imageView, 500);
                             displayedImages.add(imageUri);
                         }
@@ -181,17 +241,53 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
                 @Override
                 public void onLoadingCancelled(String imageUri, View view) {
-                    pb.setVisibility(View.GONE);
+                    viewHolder.progressBar.setVisibility(View.GONE);
 
                 }
             });
 
         } else {
-            albumArtView.setImageResource(R.drawable.album_art);
+            viewHolder.albumArtView.setImageResource(R.drawable.album_art);
         }
 
 
         return convertView;
+    }
+
+    static class ViewHolder {
+
+        ImageView albumArtView,likeButton;
+        TextView title,artist;
+        ProgressBar progressBar;
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    UIcontroller uiconroller = UIcontroller.getInstance(context);
+    private void handleSongPlaying(int position, View convertView) {
+
+        if (uiconroller.isSongPlaying(this, position)) {
+            ((TextView) convertView.findViewById(R.id.song_title)).setTextColor(context.getResources().getColor(R.color.primary));
+            ((TextView) convertView.findViewById(R.id.song_artist)).setTextColor(context.getResources().getColor(R.color.primary));
+            playingView = convertView;
+            UIcontroller.getInstance(context).loadcurrentplayerstatus();
+        } else {
+            ((TextView) convertView.findViewById(R.id.song_title)).setTextColor(context.getResources().getColor(R.color.white));
+            ((TextView) convertView.findViewById(R.id.song_artist)).setTextColor(context.getResources().getColor(R.color.white));
+            stopAnimation();
+            if (playingView == convertView) playingView = null;
+        }
     }
 
     private void OnDownload(final TimelineItem item) {
@@ -229,100 +325,6 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
     }
 
 
-//    private void fetchAlbumArtFromNet(final TimelineItem item, final NetworkImageView feedImageView, final boolean shouldSave) {
-//
-//        if (item.getAlbumArtPath() != null) {
-//
-//            feedImageView.setImageUrl(item.getAlbumArtPath(),imageLoader);
-//            feedImageView.setDefaultImageResId(R.drawable.album_art);
-////            feedImageView.set
-//        }
-
-//        if (item.getAlbumArtPath() != null) {
-//            feedImageView.setImageUrl(item.getOnlineAlbumArtUrl(), imageLoader);
-//            feedImageView
-//                    .setResponseObserver(new FeedImageView.ResponseObserver() {
-//                        @Override
-//                        public void onError() {
-//                            LOGE(TAG, "unable to load albumart");
-//                        }
-//
-//                        @Override
-//                        public void onSuccess(Bitmap bmp) {
-////
-////                            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mlayout.getLayoutParams();
-////
-//////                            f
-//////                            if (bWidth == 0 || bHeight == 0)
-//////                                return;
-//////
-//////                            int swidth = getWidth();
-//////                            int new_height = 0;
-//////                            new_height = (int) ((swidth * bHeight / bWidth) );
-////                            params.width = feedImageView.w;
-////                            params.height = feedImageView.h;
-////                            mlayout.setLayoutParams(params);
-//
-//
-////
-////                            if (shouldSave) {
-////                                String location = item.getInAppSongMirror().getAlbumartLocation();
-////                                if (location == null || location.equals(("")))
-////                                    location = FileDownloader.getLocationFromFilename(FileDownloader.getNewAlbumArtName(),context);
-////                                FileDownloader.writeToDisk(bmp, location);
-////                                InAapSongTable.updateAlbumArtLocation(item.getInAppSongMirror().getId(),location,context);
-//                        }
-////                            if (bitmap == null) return;
-////                            Palette.generateAsync(bitmap,
-////                                    new Palette.PaletteAsyncListener() {
-////                                        @Override
-////                                        public void onGenerated(Palette palette) {
-////                                            Palette.Swatch vibrant =
-////                                                    palette.getVibrantSwatch();
-////                                            if (vibrant != null) {
-////                                                // If we have a vibrant color
-////                                                // update the title TextView
-////
-////                                                (finalConvertView.findViewById(R.id.ll_title_artist))
-////                                                        .setBackgroundColor(
-////                                                                vibrant.getRgb());
-////
-////                                                title.setTextColor(vibrant.getTitleTextColor());
-////                                                artist.setTextColor(vibrant.getTitleTextColor());
-////                                            }
-////                                        }
-////                                    });
-////                        }
-//                    });
-//        }
-
-    //   }
-
-//    private boolean loadLocalAlbumArtIfAvailable(final TimelineItem item, FeedImageView feedImageView) {
-//
-//        String location = item.getInAppSongMirror().getAlbumartLocation();
-//        if (location==null || location.equals("")) {
-//            LOGD(TAG,"albumart null or empty location");
-//            return false;
-//        }
-//
-//        File file = new File(location);
-//        if (file.exists()) {
-//            LOGD(TAG, "albumart found..setting");
-//            BitmapFactory.Options options = new BitmapFactory.Options();
-//            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//            Bitmap bitmap = BitmapFactory.decodeFile(item.getInAppSongMirror().getAlbumartLocation(), options);
-//
-//            Bitmap bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.album_art);
-//
-//            feedImageView.setImageBitmap(bm);
-//            return true;
-//        }
-//        LOGD(TAG, "albumart not found");
-//
-//        return false;
-//
-//    }
 
     private void updateUi(TimelineItem item) {
 //        item.setInappMirrorIfAvailable(context);
@@ -345,6 +347,89 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
     @Override
     public int getSongCount() {
         return getCount();
+    }
+public boolean isBuffring;
+
+    public void animateView() {
+        Log.d(TAG, "setanimation");
+        if (playingView == null) return;
+        final View view = playingView.findViewById(R.id.song_title);
+
+
+
+        Animation fadeIn = new AlphaAnimation((float) 0.2, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setDuration(500);
+        fadeIn.setFillAfter(true);
+
+        Animation fadeOut = new AlphaAnimation(1, (float) 0.2);
+        fadeOut.setInterpolator(new AccelerateInterpolator()); //and this
+        fadeOut.setStartOffset(500);
+        fadeOut.setDuration(500);
+//        fadeOut.setRepeatMode(Animation.REVERSE);
+//        fadeOut.setRepeatCount(Animation.INFINITE);
+//        view.startAnimation(fadeOut);
+
+
+        fadeOut.setFillAfter(true);
+
+        animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeOut);
+        animation.addAnimation(fadeIn);
+//        animation.setRepeatCount(Animation.INFINITE);
+
+        animation.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                // TODO Auto-generated method stub
+                Log.d(TAG, "onAnimationStart");
+
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+//                // TODO Auto-generated method stub
+//                Log.d(TAG, "onAnimationRepeat");
+//                if (!isbuffering) {
+//
+//                    animationHandler.removeCallbacks(animationRunnable);
+//                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // TODO Auto-generated method stub
+                Log.d(TAG, "onAnimationEnd");
+
+              if (isBuffring) view.startAnimation(animation);
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+        view.startAnimation(animation);
+
+
+    }
+
+    public void stopAnimation() {
+        if (playingView == null) return;
+        isBuffring = false;
+//        playingView.findViewById(R.id.song_title).clearAnimation();
+    }
+
+    private void setAnimation() {
+
+
     }
 
 

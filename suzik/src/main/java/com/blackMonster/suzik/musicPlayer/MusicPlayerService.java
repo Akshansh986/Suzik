@@ -17,10 +17,9 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.os.Binder;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.IBinder;
-import android.os.Message;
 import android.os.PowerManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -57,7 +56,8 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 	private Playable CurrentSong;
 	private boolean isplay;
 	private boolean isasyncplay;
-	
+
+    WorkerThread worker;
 
 	//for binding with the uicontrollerclass
 	private final IBinder musicBind = new MusicBinder();
@@ -164,49 +164,6 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 		player.setOnInfoListener(this);
 		
 	}
-
-
-
-    private class WorkerThread extends HandlerThread implements Handler.Callback {
-
-        private Handler mHandler;
-
-        public WorkerThread() {
-            super("Worker");
-        }
-
-        public void doRunnable(Runnable runnable) {
-            if (mHandler == null) {
-                mHandler = new Handler(getLooper(), this);
-            }
-            Message msg = mHandler.obtainMessage(0, runnable);
-            mHandler.sendMessage(msg);
-        }
-
-        @Override
-        public boolean handleMessage(Message msg) {
-            Runnable runnable = (Runnable) msg.obj;
-            runnable.run();
-            return true;
-        }
-
-
-
-    }
-    WorkerThread worker;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -484,7 +441,7 @@ worker.doRunnable(playRunnable);
                 Intent_completionplayerintent = new Intent(brodcast_playcomplete);
 
 
-                registerReceiver(broadcastReceiver_seekbaruiupdate, new IntentFilter(UIcontroller.brodcast_uiseek));
+                LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(broadcastReceiver_seekbaruiupdate, new IntentFilter(UIcontroller.brodcast_uiseek));
                 isseekbarupdateuiregistered = true;
 
 
@@ -512,8 +469,8 @@ worker.doRunnable(playRunnable);
 		 mediaplayerstate=end;
 		 
 		  if(isseekbarupdateuiregistered)
-			{					
-			  unregisterReceiver(broadcastReceiver_seekbaruiupdate);
+			{
+                LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver_seekbaruiupdate);
 
 				isseekbarupdateuiregistered=false;
 				
@@ -530,7 +487,7 @@ worker.doRunnable(playRunnable);
 
 		setuphandler();
 		if(!isseekbarupdateuiregistered)
-		{					registerReceiver(broadcastReceiver_seekbaruiupdate,new IntentFilter(UIcontroller.brodcast_uiseek));
+		{				LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver_seekbaruiupdate,new IntentFilter(UIcontroller.brodcast_uiseek));
 
 			isseekbarupdateuiregistered=true;
 			
@@ -555,8 +512,8 @@ worker.doRunnable(playRunnable);
 		Log.d(TAG,"onunbind"); 
 		  handler.removeCallbacks(sendUpdatestoui);
 		  if(isseekbarupdateuiregistered)
-			{					
-			  unregisterReceiver(broadcastReceiver_seekbaruiupdate);
+			{
+                LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver_seekbaruiupdate);
 
 				isseekbarupdateuiregistered=false;
 				
@@ -585,7 +542,7 @@ worker.doRunnable(playRunnable);
 		Log.d(TAG,"buffering broadcast start"); 
 
 	Intent_bufferplayerintent.putExtra("buffering","1");
-	sendBroadcast(Intent_bufferplayerintent);
+	LocalBroadcastManager.getInstance(this).sendBroadcast(Intent_bufferplayerintent);
 
 		   }
 	
@@ -596,7 +553,7 @@ worker.doRunnable(playRunnable);
 		Intent_Musicplayer_seekIntent.putExtra("counter",String.valueOf(mediapos));
 		Intent_Musicplayer_seekIntent.putExtra("mediamax",String.valueOf(mediamax));
 		Intent_Musicplayer_seekIntent.putExtra("songended",String.valueOf(songended));
-		sendBroadcast(Intent_Musicplayer_seekIntent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent_Musicplayer_seekIntent);
 
 			   }
 	private void sendbufferingcompletebroadcast() {
@@ -604,13 +561,13 @@ worker.doRunnable(playRunnable);
 		Log.d(TAG,"buffering broadcast complete"); 
 
 	Intent_bufferplayerintent.putExtra("buffering","0");
-	sendBroadcast(Intent_bufferplayerintent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent_bufferplayerintent);
 
 	}
 	private void sendcompletionbroadcast() {
 		// TODO Auto-generated method stub
 		Intent_completionplayerintent.putExtra("complete","1");
-		sendBroadcast(Intent_completionplayerintent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent_completionplayerintent);
 		Log.d(TAG,"song  complete broadcast"); 
 
 	}

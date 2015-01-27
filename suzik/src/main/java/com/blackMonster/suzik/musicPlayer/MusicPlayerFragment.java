@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -364,12 +365,12 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     public void onPause() {
         // TODO Auto-generated method stub
         Log.d(TAG, "onPause");
-                getActivity().unregisterReceiver(broadcastreciever_resetui);
-               getActivity().unregisterReceiver(broadcastreciever_playercurrentstatus);
-                getActivity().unregisterReceiver(broadcastreciever_uidataupdate);
-                getActivity().unregisterReceiver(broadcastreciever_uibtnupdate);
-                getActivity().unregisterReceiver(broadcastreciever_bufferingplayerrecieve);
-                getActivity().unregisterReceiver(broadcastreciever_seekrecieve);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(broadcastreciever_resetui);
+               LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(broadcastreciever_playercurrentstatus);
+                LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(broadcastreciever_uidataupdate);
+                LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(broadcastreciever_uibtnupdate);
+                LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(broadcastreciever_bufferingplayerrecieve);
+                LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(broadcastreciever_seekrecieve);
 
             Log.d(TAG, "onPause:unregister broadcast");
 
@@ -388,12 +389,12 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     public void onResume() {
         // TODO Auto-generated method stub
         Log.d(TAG, "onResume");
-                getActivity().registerReceiver(broadcastreciever_resetui, new IntentFilter(UIcontroller.brodcast_resetui));
-                getActivity().registerReceiver(broadcastreciever_playercurrentstatus, new IntentFilter(UIcontroller.brodcast_playercurrentstatus));
-                getActivity().registerReceiver(broadcastreciever_uidataupdate, new IntentFilter(UIcontroller.brodcast_uidataupdate));
-                getActivity().registerReceiver(broadcastreciever_uibtnupdate, new IntentFilter(UIcontroller.brodcast_uibtnupdate));
-                getActivity().registerReceiver(broadcastreciever_bufferingplayerrecieve, new IntentFilter(MusicPlayerService.brodcast_bufferingplayer));
-                getActivity().registerReceiver(broadcastreciever_seekrecieve, new IntentFilter(MusicPlayerService.broadcast_playerseek));
+                LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastreciever_resetui, new IntentFilter(UIcontroller.brodcast_resetui));
+                LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastreciever_playercurrentstatus, new IntentFilter(UIcontroller.brodcast_playercurrentstatus));
+                LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastreciever_uidataupdate, new IntentFilter(UIcontroller.brodcast_uidataupdate));
+                LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastreciever_uibtnupdate, new IntentFilter(UIcontroller.brodcast_uibtnupdate));
+                LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastreciever_bufferingplayerrecieve, new IntentFilter(MusicPlayerService.brodcast_bufferingplayer));
+                LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastreciever_seekrecieve, new IntentFilter(MusicPlayerService.broadcast_playerseek));
 
             Log.d(TAG, "onResume:registerbroadcast");
 
@@ -627,7 +628,6 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeOut);
         animation.addAnimation(fadeIn);
-
         animation.setAnimationListener(new AnimationListener() {
 
             @Override
