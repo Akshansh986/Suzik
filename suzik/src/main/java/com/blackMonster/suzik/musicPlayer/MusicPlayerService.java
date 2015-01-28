@@ -208,6 +208,9 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
                     fullfillintent();
                 }
                 CurrentSong=playable;
+                if(CurrentSong!=null)
+                Log.d(TAG,"ab update hoga%%%%%%%%%%%"+CurrentSong.getSong().getAlbum()+CurrentSong.getSong().getTitle()+"%%%%%%%%%%%%");
+                Log.d(TAG,"^^^^^^^^^^^^^^^^^^"+CurrentSong);
                 if(mediaplayerstate==idle)
                 {
                     try
@@ -615,13 +618,16 @@ worker.doRunnable(playRunnable);
 		if(player!=null)
 		
 	{		if(isplaying())
-			{	
+			{	Log.d(TAG,"isPlaying ################");
 			playerstatus= new Status(CurrentSong,player.getCurrentPosition(),player.getDuration(),isplaying(),isbufferingstate,onErrorState);
-			}
+			Log.d(TAG,"@@@"+CurrentSong.getSong().getAlbum()+CurrentSong.getSong().getTitle()+"@@@");
+            }
 			else
-			{ 	if(CurrentSong!=null)		
-				playerstatus= new Status(CurrentSong,0,(int)CurrentSong.getSong().getDuration(),isplaying(),isbufferingstate,onErrorState);
-
+			{ 	Log.d(TAG,"isnotPlaying ################");
+                if(CurrentSong!=null) {
+                    playerstatus = new Status(CurrentSong, 0, (int) CurrentSong.getSong().getDuration(), isplaying(), isbufferingstate, onErrorState);
+                    Log.d(TAG, "@@@" + CurrentSong.getSong().getAlbum() + CurrentSong.getSong().getTitle() + "@@@");
+                }
 			}
 	}
 			

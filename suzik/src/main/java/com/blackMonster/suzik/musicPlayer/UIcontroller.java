@@ -406,7 +406,7 @@ public class UIcontroller {
 
         senduidatasetbroadcast();
         if (isplaying()) {
-            pauseSong();
+           // pauseSong();
         }
         if (isfocuslost) {
             requestfocus();
@@ -414,7 +414,7 @@ public class UIcontroller {
         }
         //delay100ms
         mHandler.removeCallbacks(mHandlerTask);
-        mHandler.postDelayed(mHandlerTask, 500);
+        mHandler.postDelayed(mHandlerTask,500);
 
 
     }

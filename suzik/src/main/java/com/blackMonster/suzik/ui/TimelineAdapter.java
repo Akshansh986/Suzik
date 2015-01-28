@@ -132,7 +132,10 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
             viewHolder.title.setTextColor(context.getResources().getColor(R.color.primary));
             viewHolder.artist.setTextColor(context.getResources().getColor(R.color.primary));
             playingView = convertView;
-            UIcontroller.getInstance(context).loadcurrentplayerstatus();
+            Log.d(TAG,"#########################################################");
+            uiconroller.loadcurrentplayerstatus();
+            Log.d(TAG,"#########################################################");
+
         } else {
             viewHolder.title.setTextColor(context.getResources().getColor(R.color.white));
            viewHolder.artist.setTextColor(context.getResources().getColor(R.color.white));
@@ -383,7 +386,7 @@ public boolean isBuffring;
             @Override
             public void onAnimationStart(Animation animation) {
                 // TODO Auto-generated method stub
-                Log.d(TAG, "onAnimationStart");
+            //    Log.d(TAG, "onAnimationStart");
 
 
             }
@@ -401,7 +404,7 @@ public boolean isBuffring;
             @Override
             public void onAnimationEnd(Animation animation) {
                 // TODO Auto-generated method stub
-                Log.d(TAG, "onAnimationEnd");
+          //      Log.d(TAG, "onAnimationEnd");
 
               if (isBuffring) view.startAnimation(animation);
             }

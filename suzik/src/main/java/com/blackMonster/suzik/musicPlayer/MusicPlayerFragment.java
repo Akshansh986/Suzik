@@ -186,7 +186,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
         String counter = intent.getStringExtra("counter");
         String mediamax = intent.getStringExtra("mediamax");
-        Log.d(TAG, "Current Postiton:" + counter + "Max Duration" + mediamax);
+   //     Log.d(TAG, "Current Postiton:" + counter + "Max Duration" + mediamax);
         int seekprogress = Integer.parseInt(counter);
         seekmax = Integer.parseInt(mediamax);
         songProgressBar.setMax(seekmax);
@@ -633,7 +633,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             @Override
             public void onAnimationStart(Animation animation) {
                 // TODO Auto-generated method stub
-                Log.d(TAG, "onAnimationStart");
+             //   Log.d(TAG, "onAnimationStart");
                 if(!isbuffering) {
 
                     animationHandler.removeCallbacks(animationRunnable);
@@ -651,7 +651,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             @Override
             public void onAnimationEnd(Animation animation) {
                 // TODO Auto-generated method stub
-                Log.d(TAG, "onAnimationEnd");
+             //   Log.d(TAG, "onAnimationEnd");
                 if (isbuffering) {
                     animationHandler.removeCallbacks(animationRunnable);
 
