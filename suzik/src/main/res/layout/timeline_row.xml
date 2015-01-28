@@ -42,6 +42,13 @@
                 android:background="@drawable/gradient"
 
                 >
+                <View
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@drawable/gradient_corner"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    ></View>
                 <TextView
                     android:id="@+id/song_title"
                     android:textSize="20sp"
