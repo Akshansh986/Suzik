@@ -2,6 +2,7 @@ package com.blackMonster.suzik.musicstore.Timeline;
 
 import android.content.Context;
 
+import com.blackMonster.suzik.musicstore.Flag.Flag;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
 
@@ -13,11 +14,14 @@ public class TimelineItem implements Playable{
 
     private InAapSongTable.InAppSongData inAppSongMirror;
 
-    public TimelineItem(Song song, long id, String albumArtUrl, String songUrl, Context context) {
+    private Flag flag;
+
+    public TimelineItem(Song song, long id, String albumArtUrl, String songUrl,Flag flag, Context context) {
         this.song = song;
         this.id = id;
         this.albumArtPath = albumArtUrl;
         this.songPath = songUrl;
+        this.flag = flag;
         setInappMirrorIfAvailable(context);
 	}
 
@@ -25,6 +29,13 @@ public class TimelineItem implements Playable{
         inAppSongMirror = InAapSongTable.getDataFromServerId(id,context);
       }
 
+    public long getServerId() {
+        return id;
+    }
+
+    public Flag getFlag() {
+        return flag;
+    }
 
     public InAapSongTable.InAppSongData getInAppSongMirror() {
         return inAppSongMirror;
@@ -121,6 +132,7 @@ public class TimelineItem implements Playable{
         return "TimelineItem [song=" + song + ", id=" + id + ", albumArt="
                 + albumArtPath + ", audio=" + songPath + "]";
     }
+
 
 
 }

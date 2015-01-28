@@ -18,9 +18,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicPlayer.UIcontroller;
 import com.blackMonster.suzik.musicPlayer.WorkerThread;
+import com.blackMonster.suzik.musicstore.Flag.Flag;
+import com.blackMonster.suzik.musicstore.Flag.FlagTable;
+import com.blackMonster.suzik.musicstore.Timeline.JsonHelperTimeline;
 import com.blackMonster.suzik.musicstore.Timeline.Playable;
 import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
@@ -33,9 +39,13 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
@@ -55,8 +65,8 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
     WorkerThread worker;
 
 
-    private View playingView=null;
-    private AnimationSet animation= null;
+    private View playingView = null;
+    private AnimationSet animation = null;
 
     public TimelineAdapter(Activity activity, List<TimelineItem> timelineItems, Context context) {
         this.activity = activity;
@@ -74,7 +84,6 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
                 .considerExifParams(true)
                 .build();
     }
-
 
 
     public void setData(List<TimelineItem> timelineItems) {
@@ -105,56 +114,46 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
         if (convertView == null) {
             if (inflater == null)
                 inflater = (LayoutInflater) activity
-                       .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             convertView = inflater.inflate(R.layout.timeline_row, null);
 
             viewHolder = new ViewHolder();
-            viewHolder.title =  ((TextView) convertView.findViewById(R.id.song_title));
+            viewHolder.title = ((TextView) convertView.findViewById(R.id.song_title));
             viewHolder.artist = ((TextView) convertView.findViewById(R.id.song_artist));
-            viewHolder.albumArtView =  (ImageView) convertView.findViewById(R.id.album_art);
+            viewHolder.albumArtView = (ImageView) convertView.findViewById(R.id.album_art);
             viewHolder.likeButton = ((ImageView) convertView.findViewById(R.id.like_icon));
-            viewHolder.progressBar =  (ProgressBar) convertView.findViewById(R.id.progressBar);
+            viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
+            viewHolder.flag = (ImageView) convertView.findViewById(R.id.flag);
             convertView.setTag(viewHolder);
 
-        }else{
+        } else {
 
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        final TimelineItem item = timelineItems.get(position);
 
 //        handleSongPlaying(position,convertView);
+        handleFlag(item, viewHolder.flag);
 
 
-
-
-        if (uiconroller.isSongPlaying(this,position)) {
+        if (uiconroller.isSongPlaying(this, position)) {
             viewHolder.title.setTextColor(context.getResources().getColor(R.color.primary));
             viewHolder.artist.setTextColor(context.getResources().getColor(R.color.primary));
             playingView = convertView;
             UIcontroller.getInstance(context).loadcurrentplayerstatus();
         } else {
             viewHolder.title.setTextColor(context.getResources().getColor(R.color.white));
-           viewHolder.artist.setTextColor(context.getResources().getColor(R.color.white));
+            viewHolder.artist.setTextColor(context.getResources().getColor(R.color.white));
             stopAnimation();
             if (playingView == convertView) playingView = null;
         }
 
 
-
-
-
-
-
-
-
-
-
-
         //View load
 
 
-        final TimelineItem item = timelineItems.get(position);
 //        final ImageView likeButton =
 
         String title, artist;
@@ -254,27 +253,87 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
         return convertView;
     }
 
+    private void handleFlag(final TimelineItem item, final ImageView flagView) {
+        final Flag flag = item.getFlag();
+
+        if (flag.shouldDisplay()) {
+            flagView.setVisibility(View.VISIBLE);
+            if (flag.isServerBadSong()) flagView.setImageResource(R.drawable.flagred);
+            else {
+                if (flag.isLocalBadSong()) flagView.setImageResource(R.drawable.flagred);
+                else flagView.setImageResource(R.drawable.flagwhite);
+            }
+
+        } else flagView.setVisibility(View.INVISIBLE);
+
+
+        flagView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LOGD(TAG, "buttonflag");
+
+                if (flag.isLocalBadSong() || flag.isServerBadSong())
+                    return;
+
+                if (NetworkUtils.isInternetAvailable(context)) {
+                    flag.setLocalBadSong(true);
+                    flagView.setImageResource(R.drawable.flagred);
+
+                    sendFlagtoServer(item.getServerId());
+
+
+                } else
+                    Toast.makeText(context, R.string.device_offline, Toast.LENGTH_SHORT).show();
+
+
+            }
+
+            private void sendFlagtoServer(final long serverId) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        LOGD(TAG, "postFlag");
+                        JSONObject postJson;
+                        try {
+                            postJson = JsonHelperTimeline.FlagJosnHelper.toJson(serverId);
+                            RequestFuture<JSONObject> future = RequestFuture.newFuture();
+                            JsonObjectRequest request = new JsonObjectRequest("http://socialmusic.in/music/songLink/flagSong.php",
+                                    postJson, future, future);
+                            AppController.getInstance().addToRequestQueue(request);
+
+                            JSONObject response = future.get();
+                            LOGD(TAG, "response " + response.toString());
+                            if (JsonHelperTimeline.FlagJosnHelper.isSuccessfull(response))
+                                FlagTable.insert(serverId, context);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }).start();
+            }
+        });
+
+
+    }
+
     static class ViewHolder {
 
-        ImageView albumArtView,likeButton;
-        TextView title,artist;
+        ImageView albumArtView, likeButton, flag;
+        TextView title, artist;
         ProgressBar progressBar;
 
 
     }
 
 
-
-
-
-
-
-
-
-
-
-
     UIcontroller uiconroller = UIcontroller.getInstance(context);
+
     private void handleSongPlaying(int position, View convertView) {
 
         if (uiconroller.isSongPlaying(this, position)) {
@@ -325,7 +384,6 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
     }
 
 
-
     private void updateUi(TimelineItem item) {
 //        item.setInappMirrorIfAvailable(context);
         UiBroadcasts.broadcastMusicDataChanged(context);
@@ -335,8 +393,8 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
         InAppSongData inAppSongData = new InAppSongData(null, item.getId(),
                 item.getSong(), "", item.getAlbumArtPath(), item.getSongPath(),
                 songLocatoin, albumartLocation);
-    return InAapSongTable.insert(inAppSongData, context);
-}
+        return InAapSongTable.insert(inAppSongData, context);
+    }
 
 
     @Override
@@ -348,14 +406,21 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
     public int getSongCount() {
         return getCount();
     }
-public boolean isBuffring;
+
+    public boolean isBuffring;
 
     public void animateView() {
+//        if (true) return;
         Log.d(TAG, "setanimation");
         if (playingView == null) return;
+
+        startTitleAnimation();
+        startArtistAnimation();
+
+    }
+
+    private void startTitleAnimation() {
         final View view = playingView.findViewById(R.id.song_title);
-
-
 
         Animation fadeIn = new AlphaAnimation((float) 0.2, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
@@ -403,25 +468,77 @@ public boolean isBuffring;
                 // TODO Auto-generated method stub
                 Log.d(TAG, "onAnimationEnd");
 
-              if (isBuffring) view.startAnimation(animation);
+                if (isBuffring) view.startAnimation(animation);
             }
         });
 
 
-
-
-
-
-
-
-
-
         view.startAnimation(animation);
 
+    }
+    AnimationSet animationNew;
+    private void startArtistAnimation() {
+        final View view = playingView.findViewById(R.id.song_artist);
+
+        Animation fadeIn = new AlphaAnimation((float) 0.2, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setStartOffset(500);
+        fadeIn.setDuration(500);
+        fadeIn.setFillAfter(true);
+
+        Animation fadeOut = new AlphaAnimation(1, (float) 0.2);
+        fadeOut.setInterpolator(new AccelerateInterpolator()); //and this
+        fadeOut.setDuration(500);
+//        fadeOut.setRepeatMode(Animation.REVERSE);
+//        fadeOut.setRepeatCount(Animation.INFINITE);
+//        view.startAnimation(fadeOut);
+
+
+        fadeOut.setFillAfter(true);
+
+        animationNew = new AnimationSet(false); //change to false
+        animationNew.addAnimation(fadeIn);
+        animationNew.addAnimation(fadeOut);
+
+//        animation.setRepeatCount(Animation.INFINITE);
+
+        animationNew.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                // TODO Auto-generated method stub
+                Log.d(TAG, "onAnimationStart");
+
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+//                // TODO Auto-generated method stub
+//                Log.d(TAG, "onAnimationRepeat");
+//                if (!isbuffering) {
+//
+//                    animationHandler.removeCallbacks(animationRunnable);
+//                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // TODO Auto-generated method stub
+                Log.d(TAG, "onAnimationEnd");
+
+                if (isBuffring) view.startAnimation(animation);
+            }
+        });
+
+
+        view.startAnimation(animationNew);
 
     }
 
+
     public void stopAnimation() {
+//        if (true) return;
         if (playingView == null) return;
         isBuffring = false;
 //        playingView.findViewById(R.id.song_title).clearAnimation();

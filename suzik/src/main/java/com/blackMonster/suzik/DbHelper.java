@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.blackMonster.suzik.musicstore.Flag.FlagTable;
 import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.TableCompletedSongs;
 import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.TablePausedSongs;
 import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.TableAllPlayed;
@@ -47,6 +48,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		TableUserSelectedCompleted.createTable(db);
 		
 		QueueUserActivity.createTable(db);
+        FlagTable.createTable(db);
 		
 		SyncMusicCreateTable.createAll(db);
 		SyncContactsCreateTable.createAll(db);
