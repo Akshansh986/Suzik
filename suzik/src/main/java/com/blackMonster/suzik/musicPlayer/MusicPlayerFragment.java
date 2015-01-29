@@ -110,7 +110,18 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             isbuffering = false;
             Log.d(TAG, "Animationstopeed");
             animationHandler.removeCallbacks(animationRunnable);
+            if (isplaying) {
+                btnPlay.setImageResource(R.drawable.pause);
+                btnPlay.setTag("pause");
+                Log.d(TAG, "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
+
+            } else {
+                btnPlay.setImageResource(R.drawable.play);
+                btnPlay.setTag("play");
+                Log.d(TAG, "****************************");
+
+            }
         } else {
             isbuffering = false;
 
@@ -118,18 +129,13 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             isbuffering = true;
             Log.d(TAG, "Animationstarted");
             animationHandler.postDelayed(animationRunnable, 0);
-            isplaying = true;
+            Log.d(TAG, "^^^^^^^^BUFFERING TRUE^^^^^^^^^^^^^^^^^^^");
 
-        }
-        if (isplaying) {
             btnPlay.setImageResource(R.drawable.pause);
             btnPlay.setTag("pause");
 
-        } else {
-            btnPlay.setImageResource(R.drawable.play);
-            btnPlay.setTag("play");
-
         }
+
         if (shuffle) {
             btnShuffle.setImageResource(R.drawable.shuffleon);
             btnShuffle.setTag("shuffleon");

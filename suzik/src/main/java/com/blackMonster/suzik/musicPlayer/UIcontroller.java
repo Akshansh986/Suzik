@@ -404,9 +404,10 @@ public class UIcontroller {
         Log.d(TAG, "setsong");
         resetui();
 
+        musicSrv.syncCurrentSong(songs.getPlayable(songpos));
         senduidatasetbroadcast();
         if (isplaying()) {
-           // pauseSong();
+         //   pauseSong();
         }
         if (isfocuslost) {
             requestfocus();

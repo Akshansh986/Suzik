@@ -67,6 +67,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 	private final IBinder musicBind = new MusicBinder();
 
 
+
     public class MusicBinder extends Binder
 	{
 		  public MusicPlayerService getService() {
@@ -633,6 +634,13 @@ worker.doRunnable(playRunnable);
 			
 	return playerstatus;
 	}
+
+    public void syncCurrentSong(Playable playable) {
+       if(CurrentSong!=null) {
+           if (CurrentSong != playable)
+               CurrentSong = playable;
+       }
+    }
 
 
 	public void stophandler() {
