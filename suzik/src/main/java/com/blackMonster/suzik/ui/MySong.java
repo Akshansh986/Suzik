@@ -74,7 +74,7 @@ public class MySong implements Playable {
 
             @Override
             public Song getSong() {
-                return getSong();
+                return MySong.this.getSong();
             }
 
             @Override
