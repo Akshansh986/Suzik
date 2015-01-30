@@ -327,6 +327,13 @@ public class UIcontroller {
 
                         }
                     }
+                    else{
+                        if(isBuffering()){
+                            isphonestatechange = true;
+                            pauseSong();
+                            senduibtnsetbroadcast();
+                        }
+                    }
 
 
                 } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
@@ -350,6 +357,13 @@ public class UIcontroller {
 
                         }
                     }
+                    else{
+                        if(isBuffering()){
+                            isphonestatechange = true;
+                            pauseSong();
+                            senduibtnsetbroadcast();
+                        }
+                    }
 
 
                     am.abandonAudioFocus(afChangeListener);
@@ -358,7 +372,8 @@ public class UIcontroller {
             }
         };
         // Request audio focus for playback
-        requestfocus();
+        isfocuslost =true;
+       // requestfocus();
 
 
     }
@@ -404,10 +419,10 @@ public class UIcontroller {
         Log.d(TAG, "setsong");
         resetui();
 
-        musicSrv.syncCurrentSong(songs.getPlayable(songpos));
+     //   musicSrv.syncCurrentSong(songs.getPlayable(songpos));
         senduidatasetbroadcast();
         if (isplaying()) {
-         //   pauseSong();
+            pauseSong();
         }
         if (isfocuslost) {
             requestfocus();
@@ -546,6 +561,18 @@ public class UIcontroller {
         }
         return false;
     }
+    public boolean isBuffering() {
+        if (musicSrv != null) {
+            return musicSrv.isBuffering();
+        }
+        return false;
+    }
+    public int getErrorState(){
+        if(musicSrv!=null){
+            return musicSrv.getErrorState();
+        }
+        return PlayerErrorCodes.DEFAULT;
+    }
 
     public void loadcurrentplayerstatus() {
         // TODO Auto-generated method stub
@@ -565,7 +592,6 @@ public class UIcontroller {
                     Intent_playercurrentstatus.putExtra("currentpos",s.getCurrentPosition());
                     Intent_playercurrentstatus.putExtra("duration",s.getDuration());
                     Intent_playercurrentstatus.putExtra("isbuffering",s.isBuffering());
-                    Intent_playercurrentstatus.putExtra("onError",s.isOnErrorState());
                     Intent_playercurrentstatus.putExtra("shuffle",shuffle);
                     Intent_playercurrentstatus.putExtra("repeat",repeat);
 

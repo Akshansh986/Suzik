@@ -234,8 +234,6 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(
                 broadcastMusicDataChanged);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(
-                broadcastPlayerCurrentStatus);
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(
                 broadcastUiDataUpdate);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(
                 broadcastBufferingPlayerRecieve);
@@ -248,25 +246,11 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
                 broadcastMusicDataChanged,
                 new IntentFilter(UiBroadcasts.MUSIC_DATA_CHANGED));
 
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastPlayerCurrentStatus, new IntentFilter(UIcontroller.brodcast_playercurrentstatus));
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastUiDataUpdate, new IntentFilter(UIcontroller.brodcast_uidataupdate));
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastBufferingPlayerRecieve, new IntentFilter(MusicPlayerService.brodcast_bufferingplayer));
     }
 
-    private BroadcastReceiver broadcastPlayerCurrentStatus = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Boolean islbuffering = intent.getBooleanExtra("isbuffering", false);
-            if (islbuffering) {
-                adapter.isBuffring=true;
-                adapter.animateView();
-            } else {
-                adapter.isBuffring=false;
-                adapter.stopAnimation();
-            }
 
-        }
-    };
     private BroadcastReceiver broadcastUiDataUpdate = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

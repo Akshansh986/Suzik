@@ -133,8 +133,13 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
             viewHolder.artist.setTextColor(context.getResources().getColor(R.color.primary));
             playingView = convertView;
             Log.d(TAG,"#########################################################");
-            uiconroller.loadcurrentplayerstatus();
-            Log.d(TAG,"#########################################################");
+            if (uiconroller.isBuffering()) {
+                isBuffring=true;
+                animateView();
+            } else {
+                isBuffring=false;
+                stopAnimation();
+            }            Log.d(TAG,"#########################################################");
 
         } else {
             viewHolder.title.setTextColor(context.getResources().getColor(R.color.white));

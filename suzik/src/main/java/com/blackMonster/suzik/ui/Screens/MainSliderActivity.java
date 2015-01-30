@@ -1,14 +1,18 @@
 package com.blackMonster.suzik.ui.Screens;
 
 
-
+import android.app.AlertDialog;
 import android.app.SearchManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -21,6 +25,8 @@ import android.view.View;
 
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicPlayer.MusicPlayerFragment;
+import com.blackMonster.suzik.musicPlayer.MusicPlayerService;
+import com.blackMonster.suzik.musicPlayer.PlayerErrorCodes;
 import com.blackMonster.suzik.musicPlayer.UIcontroller;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
@@ -55,9 +61,15 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
         //TODO jugad
         mPager.setCurrentItem(1);
         onPageSelected(1);
+        registerReceivers();
 
-
+        hadleError(uIcontroller.getErrorState());
 	}
+
+    private void registerReceivers() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastPlayerError, new IntentFilter(MusicPlayerService.broadcastError));
+
+    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -159,7 +171,44 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
     }
 
 
+    private BroadcastReceiver broadcastPlayerError = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int error= intent.getIntExtra("Error",100);
+            if (error == 100 ) return;
+            hadleError(error);
 
+
+        }
+
+
+
+    };
+
+    private void hadleError(int error) {
+        switch (error){
+            case PlayerErrorCodes.DATA_SRC : showAlertDialog(R.string.player_data_not_set);
+                break;
+            case PlayerErrorCodes.UNKNOWN : showAlertDialog(R.string.player_unknown_error);
+                     break;
+         }
+    }
+
+
+    private void showAlertDialog(int message) {
+
+
+        new AlertDialog.Builder(this)
+                .setMessage(getResources().getString(message))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                    }
+                })
+
+                .show();
+
+    }
 
     @Override
     protected void onDestroy() {
@@ -167,5 +216,12 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
         if (uIcontroller != null) {
             uIcontroller.unbind();
         }
+        unregisterReceivers();
+    }
+
+    private void unregisterReceivers() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastPlayerError);
+
+
     }
 }
