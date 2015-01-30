@@ -3,7 +3,7 @@ package com.blackMonster.suzik.musicPlayer;
 import com.blackMonster.suzik.musicstore.Timeline.Playable;
 
 public class Status {
-    boolean errorState;
+
     Playable playable;
 	int currentPosition;
 	int duration;
@@ -33,17 +33,8 @@ public class Status {
 
     }
 
-    public Status(Playable currentSong, int currentPosition, int duration, boolean isplaying, boolean isbufferingstate, boolean onErrorState) {
-        this.playable=currentSong;
-        this.currentPosition=currentPosition;
-        this.duration=duration;
-        this.playing=isplaying;
-        this.buffering=isbufferingstate;
-        this.errorState=onErrorState;
-    }
 
-    public boolean isOnErrorState() { return errorState; }
-    public void setErrorState(boolean errorState) {  this.errorState = errorState;}
+
     public int getCurrentPosition() {
 		return currentPosition;
 	}

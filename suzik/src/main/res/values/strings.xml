@@ -14,6 +14,8 @@
     <string name="title_allSongs">All Songs</string>
     <string name="title_search">Search</string>
     <string name="title_player">Player</string>
+    <string name="player_data_not_set">File cant be played</string>
+    <string name="player_unknown_error">Unknown error</string>
 
 
 

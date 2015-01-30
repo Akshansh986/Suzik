@@ -22,11 +22,11 @@ import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicstore.Timeline.Playable;
 import com.blackMonster.suzik.ui.Screens.MainSliderActivity;
+import com.blackMonster.suzik.util.NetworkUtils;
 
 public class MusicPlayerService extends Service
 implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekCompleteListener,OnInfoListener{
@@ -57,14 +57,16 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 	private Playable CurrentSong;
 	private boolean isplay;
 	private boolean isasyncplay;
-
+    private boolean isInternetAvailable;
     WorkerThread worker;
 
-	private boolean isbufferingstate=false;
-    private boolean onErrorState=false;
+	private boolean isBufferingState=false;
+    private int  onErrorState=PlayerErrorCodes.NO_ERROR;
 
 	//for binding with the uicontrollerclass
 	private final IBinder musicBind = new MusicBinder();
+
+
 
 
     public class MusicBinder extends Binder
@@ -208,6 +210,12 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
                     fullfillintent();
                 }
                 CurrentSong=playable;
+                if(CurrentSong!=null)
+                Log.d(TAG,"ab update hoga%%%%%%%%%%%"+CurrentSong.getSong().getAlbum()+CurrentSong.getSong().getTitle()+"%%%%%%%%%%%%");
+                Log.d(TAG,"^^^^^^^^^^^^^^^^^^"+CurrentSong);
+               if(playable.isOffline()==false){
+                isInternetAvailable=NetworkUtils.isInternetAvailable(getApplicationContext());
+               }
                 if(mediaplayerstate==idle)
                 {
                     try
@@ -223,6 +231,8 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
                     }
                     catch(Exception e)
                     {   Log.e("MUSIC SERVICE", "Error setting data source", e);
+                        onErrorState=PlayerErrorCodes.DATA_SRC;
+                        sendOnErrorStateBroadcast(onErrorState);
                     }
                     Log.d(TAG,"Musicplayerservice: songs set complete ");
                 }
@@ -263,6 +273,8 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
                 {
                     Log.d(TAG,"Error prepareAsync ");
                 }
+
+
             }
         };
 
@@ -326,10 +338,9 @@ worker.doRunnable(playRunnable);
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
 		// TODO Auto-generated method stub
 		Log.d(TAG,"service: On error"+"\n"+arg1+"\n"+arg2);
-        Toast.makeText(getApplicationContext(), "onError"+arg1+arg2, Toast.LENGTH_SHORT).show();
-        onErrorState=true;
-        sendOnErrorStateBroadcast();
-        return false;
+        onErrorState=PlayerErrorCodes.UNKNOWN;
+        sendOnErrorStateBroadcast(onErrorState);
+        return true;
 	}
 
 
@@ -526,7 +537,7 @@ worker.doRunnable(playRunnable);
 				isseekbarupdateuiregistered=false;
 				
 			}
-        if(!isbufferingstate){
+        if(!isBufferingState){
             if(!isplaying())
             {
                 stopForeground(true);
@@ -552,13 +563,15 @@ worker.doRunnable(playRunnable);
 	private void sendbufferingbroadcast() {
 	// TODO Auto-generated method stub
 		Log.d(TAG,"buffering broadcast start");
-        isbufferingstate=true;
+        isBufferingState=true;
 
 	Intent_bufferplayerintent.putExtra("buffering","1");
 	LocalBroadcastManager.getInstance(this).sendBroadcast(Intent_bufferplayerintent);
 
 		   }
-    private void sendOnErrorStateBroadcast() {
+    private void sendOnErrorStateBroadcast(int error) {
+
+        Intent_error.putExtra("Error",error);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(Intent_error);
     }
 
@@ -579,7 +592,7 @@ worker.doRunnable(playRunnable);
 	private void sendbufferingcompletebroadcast() {
 	// TODO Auto-generated method stub
 		Log.d(TAG,"buffering broadcast complete");
-        isbufferingstate=false;
+        isBufferingState=false;
 
 	Intent_bufferplayerintent.putExtra("buffering","0");
         LocalBroadcastManager.getInstance(this).sendBroadcast(Intent_bufferplayerintent);
@@ -607,26 +620,44 @@ worker.doRunnable(playRunnable);
 		return false;
 		
 	}
+    public boolean isBuffering() {
+        return isBufferingState;
+    }
+    public int getErrorState() {
+
+    return onErrorState;
+    }
 
 
-	public Status getplayerstatus() {
+
+    public Status getplayerstatus() {
 		// TODO Auto-generated method stub
 		Status playerstatus=null;
 		if(player!=null)
 		
 	{		if(isplaying())
-			{	
-			playerstatus= new Status(CurrentSong,player.getCurrentPosition(),player.getDuration(),isplaying(),isbufferingstate,onErrorState);
-			}
+			{	Log.d(TAG,"isPlaying ################");
+			playerstatus= new Status(CurrentSong,player.getCurrentPosition(),player.getDuration(),isplaying(),isBufferingState);
+			Log.d(TAG,"@@@"+CurrentSong.getSong().getAlbum()+CurrentSong.getSong().getTitle()+"@@@");
+            }
 			else
-			{ 	if(CurrentSong!=null)		
-				playerstatus= new Status(CurrentSong,0,(int)CurrentSong.getSong().getDuration(),isplaying(),isbufferingstate,onErrorState);
-
+			{ 	Log.d(TAG,"isnotPlaying ################");
+                if(CurrentSong!=null) {
+                    playerstatus = new Status(CurrentSong, 0, (int) CurrentSong.getSong().getDuration(), isplaying(),isBufferingState);
+                    Log.d(TAG, "@@@" + CurrentSong.getSong().getAlbum() + CurrentSong.getSong().getTitle() + "@@@");
+                }
 			}
 	}
 			
 	return playerstatus;
 	}
+
+    public void syncCurrentSong(Playable playable) {
+       if(CurrentSong!=null) {
+           if (CurrentSong != playable)
+               CurrentSong = playable;
+       }
+    }
 
 
 	public void stophandler() {

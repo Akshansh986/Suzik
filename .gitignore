@@ -52,3 +52,4 @@ assets/crashlytics-build.properties
 
 
 suzik/src/main/res/layout/timeline_view.xml
+build/intermediates/model_data.bin

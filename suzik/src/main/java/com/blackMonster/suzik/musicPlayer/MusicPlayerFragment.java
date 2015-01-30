@@ -110,7 +110,18 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             isbuffering = false;
             Log.d(TAG, "Animationstopeed");
             animationHandler.removeCallbacks(animationRunnable);
+            if (isplaying) {
+                btnPlay.setImageResource(R.drawable.pause);
+                btnPlay.setTag("pause");
+                Log.d(TAG, "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
+
+            } else {
+                btnPlay.setImageResource(R.drawable.play);
+                btnPlay.setTag("play");
+                Log.d(TAG, "****************************");
+
+            }
         } else {
             isbuffering = false;
 
@@ -118,18 +129,13 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             isbuffering = true;
             Log.d(TAG, "Animationstarted");
             animationHandler.postDelayed(animationRunnable, 0);
-            isplaying = true;
+            Log.d(TAG, "^^^^^^^^BUFFERING TRUE^^^^^^^^^^^^^^^^^^^");
 
-        }
-        if (isplaying) {
             btnPlay.setImageResource(R.drawable.pause);
             btnPlay.setTag("pause");
 
-        } else {
-            btnPlay.setImageResource(R.drawable.play);
-            btnPlay.setTag("play");
-
         }
+
         if (shuffle) {
             btnShuffle.setImageResource(R.drawable.shuffleon);
             btnShuffle.setTag("shuffleon");
@@ -186,7 +192,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
         String counter = intent.getStringExtra("counter");
         String mediamax = intent.getStringExtra("mediamax");
-        Log.d(TAG, "Current Postiton:" + counter + "Max Duration" + mediamax);
+   //     Log.d(TAG, "Current Postiton:" + counter + "Max Duration" + mediamax);
         int seekprogress = Integer.parseInt(counter);
         seekmax = Integer.parseInt(mediamax);
         songProgressBar.setMax(seekmax);
@@ -633,7 +639,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             @Override
             public void onAnimationStart(Animation animation) {
                 // TODO Auto-generated method stub
-                Log.d(TAG, "onAnimationStart");
+             //   Log.d(TAG, "onAnimationStart");
                 if(!isbuffering) {
 
                     animationHandler.removeCallbacks(animationRunnable);
@@ -651,7 +657,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             @Override
             public void onAnimationEnd(Animation animation) {
                 // TODO Auto-generated method stub
-                Log.d(TAG, "onAnimationEnd");
+             //   Log.d(TAG, "onAnimationEnd");
                 if (isbuffering) {
                     animationHandler.removeCallbacks(animationRunnable);
 
