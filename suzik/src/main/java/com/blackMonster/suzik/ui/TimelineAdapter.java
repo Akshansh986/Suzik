@@ -139,8 +139,8 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
 
         if (uiconroller.isSongPlaying(this, position)) {
-            viewHolder.title.setTextColor(context.getResources().getColor(R.color.primary));
-            viewHolder.artist.setTextColor(context.getResources().getColor(R.color.primary));
+            viewHolder.title.setTextColor(context.getResources().getColor(R.color.timeline_text));
+            viewHolder.artist.setTextColor(context.getResources().getColor(R.color.timeline_text));
             playingView = convertView;
             Log.d(TAG,"#########################################################");
             if (uiconroller.isBuffering()) {

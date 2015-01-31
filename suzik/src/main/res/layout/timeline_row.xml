@@ -33,7 +33,11 @@
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"/>
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/corner_drawable"
+                ></View>
 
             <RelativeLayout
                 android:id="@+id/relative_l"
@@ -84,11 +88,10 @@
                     android:layout_centerHorizontal="true" />
 
                 <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:id="@+id/flag"
                     android:layout_alignParentTop="true"
-                    android:padding="5dp"
                    android:layout_alignParentRight="true" />
 
             </RelativeLayout>
