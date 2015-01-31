@@ -100,7 +100,6 @@ public class SongsSyncer extends Syncer {
             last = i + 10;
             if (last > n) last = n;
             ServerHelper.postAddedSongs(addedSongs.subList(i, last));
-            return true;
         }
         return true;
     }
