@@ -10,9 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.blackMonster.suzik.R;
+import com.blackMonster.suzik.musicPlayer.UIcontroller;
 import com.blackMonster.suzik.musicstore.Timeline.Playable;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.music.AllSongsTable;
@@ -104,6 +106,7 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
 
         ((TextView) convertView.findViewById(R.id.inapp_title)).setText(playable.getSong().getTitle());
         ((TextView) convertView.findViewById(R.id.inapp_artist)).setText(playable.getSong().getArtist());
+        handleSongPlaying(position,convertView);
 
         ImageView imv = ((ImageView) convertView.findViewById(R.id.inapp_image));
 
@@ -228,5 +231,27 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
     @Override
     public int getSongCount() {
         return getCount();
+    }
+
+    UIcontroller uiconroller = UIcontroller.getInstance(context);
+
+    private void handleSongPlaying(int position, View convertView) {
+        if (uiconroller.isSongPlaying(this, position)) {
+            ((TextView) convertView.findViewById(R.id.inapp_title)).setTextColor(context.getResources().getColor(R.color.timeline_text));
+            ((TextView) convertView.findViewById(R.id.inapp_artist)).setTextColor(context.getResources().getColor(R.color.timeline_text));
+        } else {
+            ((TextView) convertView.findViewById(R.id.inapp_title)).setTextColor(context.getResources().getColor(R.color.black));
+            ((TextView) convertView.findViewById(R.id.inapp_artist)).setTextColor(context.getResources().getColor(R.color.black));
+        }
+
+    }
+
+    public void updatePlayingOnSongChange(ListView listView) {
+        int lastVisible = listView.getLastVisiblePosition();
+            View child;
+        for (int i=listView.getFirstVisiblePosition() ; i <=lastVisible ; ++i) {
+            child = listView.getChildAt(i);
+            if (child!=null) handleSongPlaying(i, child);
+        }
     }
 }

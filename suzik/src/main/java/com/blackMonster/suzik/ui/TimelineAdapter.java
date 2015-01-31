@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.blackMonster.suzik.AppController;
+import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicPlayer.UIcontroller;
 import com.blackMonster.suzik.musicPlayer.WorkerThread;
@@ -76,7 +77,6 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
         this.context = context;
         worker = new WorkerThread();
         worker.start();
-        setAnimation();
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.white)
                 .showImageForEmptyUri(R.drawable.album_art)
@@ -136,88 +136,26 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
         final TimelineItem item = timelineItems.get(position);
 
-//        handleSongPlaying(position,convertView);
+        handleSongPlaying(position,viewHolder,convertView);
         handleFlag(item, viewHolder.flag);
-
-
-        if (uiconroller.isSongPlaying(this, position)) {
-            viewHolder.title.setTypeface(null, Typeface.BOLD);
-            viewHolder.title.setTextColor(context.getResources().getColor(R.color.timeline_text));
-            viewHolder.artist.setTextColor(context.getResources().getColor(R.color.timeline_text));
-
-            playingView = convertView;
-            Log.d(TAG,"#########################################################");
-            if (uiconroller.isBuffering()) {
-                isBuffring=true;
-                animateView();
-            } else {
-                isBuffring=false;
-                stopAnimation();
-            }            Log.d(TAG,"#########################################################");
-
-        } else {
-            viewHolder.title.setTextColor(context.getResources().getColor(R.color.white));
-            viewHolder.artist.setTextColor(context.getResources().getColor(R.color.white));
-            stopAnimation();
-            if (playingView == convertView) playingView = null;
-        }
-
-
-        //View load
-
-
-//        final ImageView likeButton =
+        handleLikeButton(item, viewHolder.likeButton);
+        handleAlbumart(item,viewHolder);
+        viewHolder.progressBar.setVisibility(View.GONE);
 
         String title, artist;
-        int likeIconResource;
-
-        if (item.isCached()) {
-            LOGD(TAG, "already downloaded");
-            likeIconResource = R.drawable.redheart;
-        } else {
-            LOGD(TAG, "online song");
-            likeIconResource = R.drawable.whiteheart;
-        }
-
-
         title = item.getSong().getTitle();
         artist = item.getSong().getArtist();
-
-        //setting values to views
         viewHolder.title.setText(title);
-
         if (artist == null) {
             viewHolder.artist.setVisibility(View.GONE);
         } else {
             viewHolder.artist.setText(artist);
         }
 
-        viewHolder.likeButton.setImageResource(likeIconResource);
+        return convertView;
+    }
 
-        viewHolder.likeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LOGD(TAG, "buttondownload");
-                if (NetworkUtils.isInternetAvailable(context)) {
-                    if (item.isCached()) {
-                        viewHolder.likeButton.setImageResource(R.drawable.whiteheart);
-                        onDelete(item);
-
-                    } else {
-                        viewHolder.likeButton.setImageResource(R.drawable.redheart);
-                        OnDownload(item);
-                    }
-                } else
-                    Toast.makeText(context, R.string.device_offline, Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
-
-
-//        final ProgressBar pb =
-        viewHolder.progressBar.setVisibility(View.GONE);
-
+    private void handleAlbumart(final TimelineItem item,final ViewHolder viewHolder) {
         if (NetworkUtils.isValidUrl(item.getOnlineAlbumArtUrl())) {
 
             imageLoader.displayImage(item.getOnlineAlbumArtUrl(), viewHolder.albumArtView, options, new ImageLoadingListener() {
@@ -260,9 +198,47 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
         } else {
             viewHolder.albumArtView.setImageResource(R.drawable.album_art);
         }
+    }
+
+    private void handleLikeButton(final TimelineItem item,final ImageView likeButton) {
+
+        if (!MainPrefs.isFirstTimeMusicSyncDone(context)) {
+            likeButton.setVisibility(View.INVISIBLE);
+            return;
+        }
 
 
-        return convertView;
+        int likeIconResource;
+
+        if (item.isCached()) {
+            LOGD(TAG, "already downloaded");
+            likeIconResource = R.drawable.redheart;
+        } else {
+            LOGD(TAG, "online song");
+            likeIconResource = R.drawable.whiteheart;
+        }
+        likeButton.setImageResource(likeIconResource);
+
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LOGD(TAG, "buttondownload");
+                if (NetworkUtils.isInternetAvailable(context)) {
+                    if (item.isCached()) {
+                        likeButton.setImageResource(R.drawable.whiteheart);
+                        onDelete(item);
+
+                    } else {
+                        likeButton.setImageResource(R.drawable.redheart);
+                        OnDownload(item);
+                    }
+                } else
+                    Toast.makeText(context, R.string.device_offline, Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+
     }
 
     private void handleFlag(final TimelineItem item, final ImageView flagView) {
@@ -346,19 +322,29 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
     UIcontroller uiconroller = UIcontroller.getInstance(context);
 
-    private void handleSongPlaying(int position, View convertView) {
-
+    private void handleSongPlaying(int position, ViewHolder viewHolder, View convertView) {
         if (uiconroller.isSongPlaying(this, position)) {
-            ((TextView) convertView.findViewById(R.id.song_title)).setTextColor(context.getResources().getColor(R.color.primary));
-            ((TextView) convertView.findViewById(R.id.song_artist)).setTextColor(context.getResources().getColor(R.color.primary));
+            viewHolder.title.setTypeface(null, Typeface.BOLD);
+            viewHolder.title.setTextColor(context.getResources().getColor(R.color.timeline_text));
+            viewHolder.artist.setTextColor(context.getResources().getColor(R.color.timeline_text));
+
             playingView = convertView;
-            UIcontroller.getInstance(context).loadcurrentplayerstatus();
+            Log.d(TAG,"#########################################################");
+            if (uiconroller.isBuffering()) {
+                isBuffring=true;
+                animateView();
+            } else {
+                isBuffring=false;
+                stopAnimation();
+            }            Log.d(TAG,"#########################################################");
+
         } else {
-            ((TextView) convertView.findViewById(R.id.song_title)).setTextColor(context.getResources().getColor(R.color.white));
-            ((TextView) convertView.findViewById(R.id.song_artist)).setTextColor(context.getResources().getColor(R.color.white));
+            viewHolder.title.setTextColor(context.getResources().getColor(R.color.white));
+            viewHolder.artist.setTextColor(context.getResources().getColor(R.color.white));
             stopAnimation();
             if (playingView == convertView) playingView = null;
         }
+
     }
 
     private void OnDownload(final TimelineItem item) {
@@ -575,11 +561,5 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
         isBuffring = false;
 //        playingView.findViewById(R.id.song_title).clearAnimation();
     }
-
-    private void setAnimation() {
-
-
-    }
-
 
 }

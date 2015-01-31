@@ -11,4 +11,5 @@
     <color name="primary">#009688</color>
     <!--<color name="timeline_text">#6C405B</color>-->
     <color name="timeline_text">#41A99B</color>
+    <color name="black">#8a000000</color>
 </resources>

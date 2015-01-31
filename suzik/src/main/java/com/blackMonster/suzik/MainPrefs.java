@@ -9,6 +9,7 @@ public class MainPrefs {
 	public static final String FIRST_TIME_MUSIC_SYNC = "firstMusicSync";
 	private static final String LOGIN_DONE = "loginDone";
     private static final String TIMELINE_CACHE = "timelineCache";
+    private static final String FIRST_TIME_MUSIC_POST_SERVER_SYNC = "firstPostMusicSync";
 
 
     private static SharedPreferences prefs=null;
@@ -98,4 +99,13 @@ public class MainPrefs {
 		prefs = null;
 	}
 
+    public static void setFirstTimeSongPostedToServer( Context context) {
+        initPrefInstance(context);
+        prefs.edit().putBoolean(FIRST_TIME_MUSIC_POST_SERVER_SYNC, true).commit();
+    }
+
+    public static boolean getFirstTimeSongPostedToServer(Context context){
+        initPrefInstance(context);
+        return prefs.getBoolean(FIRST_TIME_MUSIC_POST_SERVER_SYNC, false);
+    }
 }

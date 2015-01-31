@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ import java.math.BigDecimal;
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 
-public class MySongListFragement extends Fragment implements OnItemClickListener {
+public class MySongListFragement extends Fragment implements OnItemClickListener{
     private static final String TAG = "MySongListFragement";
 
     ListView listView;
@@ -58,13 +59,11 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
 
         uiController=UIcontroller.getInstance(getActivity());
         listView = (ListView) rootView.findViewById(R.id.list_view);
-
         loadData();
 
         adapter = new MySongsAdapter(androidCursor, inAppCursor, getActivity());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
-
         return rootView;
 
 
@@ -159,10 +158,21 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
         }
     };
 
+    private BroadcastReceiver broadcastPlayerDataUpdate = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "uiUpdate called");
+//            adapter.notifyDataSetChanged();
+            adapter.updatePlayingOnSongChange(listView);
+        }
+    };
+
 
     private void unregisterReceivers() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(
                 broadcastMusicDataChanged);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(
+                broadcastPlayerDataUpdate);
 
     }
 
@@ -172,6 +182,10 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
                 broadcastMusicDataChanged,
                 new IntentFilter(UiBroadcasts.MUSIC_DATA_CHANGED));
 
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
+                broadcastPlayerDataUpdate,
+                new IntentFilter(UIcontroller.brodcast_uidataupdate));
+
     }
 
     @Override
@@ -179,4 +193,6 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
         super.onDestroy();
         unregisterReceivers();
     }
+
+
 }
