@@ -53,9 +53,9 @@ class ServerHelper {
 		if (addedSongs.isEmpty()) return true;
 		boolean result = false;
 		JSONObject addedSongsJson = JsonHelper.AddedSong.toJson(addedSongs);
-		LOGD("srverhelop", "josn received");
+		LOGD("serverHelper", "josn received");
 		
-		
+		//TODO jugad to be fixed
 		postAsyncronousJson(addedSongsJson);
 		return true;
 		

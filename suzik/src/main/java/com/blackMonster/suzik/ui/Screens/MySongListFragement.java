@@ -100,7 +100,7 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
     }
 
     public void loadData() {
-        if (MainPrefs.isFirstTimeMusicSyncDone(getActivity())) {
+        if (MainPrefs.getFirstTimeSongPostedToServer(getActivity())) {
             androidCursor = getAndroidSongs();
             inAppCursor = getInAppSong();
         } else {

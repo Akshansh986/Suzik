@@ -3,7 +3,6 @@ package com.blackMonster.suzik.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -202,7 +201,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
     private void handleLikeButton(final TimelineItem item,final ImageView likeButton) {
 
-        if (!MainPrefs.isFirstTimeMusicSyncDone(context)) {
+        if (!MainPrefs.getFirstTimeSongPostedToServer(context)) {
             likeButton.setVisibility(View.INVISIBLE);
             return;
         }
@@ -324,7 +323,6 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
     private void handleSongPlaying(int position, ViewHolder viewHolder, View convertView) {
         if (uiconroller.isSongPlaying(this, position)) {
-            viewHolder.title.setTypeface(null, Typeface.BOLD);
             viewHolder.title.setTextColor(context.getResources().getColor(R.color.timeline_text));
             viewHolder.artist.setTextColor(context.getResources().getColor(R.color.timeline_text));
 
@@ -432,13 +430,12 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
         Log.d(TAG, "setanimation");
         if (playingView == null) return;
 
-        startTitleAnimation();
-        startArtistAnimation();
+        startBufferingAinmation();
 
     }
 
-    private void startTitleAnimation() {
-        final View view = playingView.findViewById(R.id.song_title);
+    private void startBufferingAinmation() {
+        final View view = playingView.findViewById(R.id.relative_l);
 
         Animation fadeIn = new AlphaAnimation((float) 0.2, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
@@ -494,65 +491,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
         view.startAnimation(animation);
 
     }
-    AnimationSet animationNew;
-    private void startArtistAnimation() {
-        final View view = playingView.findViewById(R.id.song_artist);
 
-        Animation fadeIn = new AlphaAnimation((float) 0.2, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setStartOffset(500);
-        fadeIn.setDuration(500);
-        fadeIn.setFillAfter(true);
-
-        Animation fadeOut = new AlphaAnimation(1, (float) 0.2);
-        fadeOut.setInterpolator(new AccelerateInterpolator()); //and this
-        fadeOut.setDuration(500);
-//        fadeOut.setRepeatMode(Animation.REVERSE);
-//        fadeOut.setRepeatCount(Animation.INFINITE);
-//        view.startAnimation(fadeOut);
-
-
-        fadeOut.setFillAfter(true);
-
-        animationNew = new AnimationSet(false); //change to false
-        animationNew.addAnimation(fadeIn);
-        animationNew.addAnimation(fadeOut);
-
-//        animation.setRepeatCount(Animation.INFINITE);
-
-        animationNew.setAnimationListener(new Animation.AnimationListener() {
-
-            @Override
-            public void onAnimationStart(Animation animation) {
-                // TODO Auto-generated method stub
-                Log.d(TAG, "onAnimationStart");
-
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-//                // TODO Auto-generated method stub
-//                Log.d(TAG, "onAnimationRepeat");
-//                if (!isbuffering) {
-//
-//                    animationHandler.removeCallbacks(animationRunnable);
-//                }
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                // TODO Auto-generated method stub
-                Log.d(TAG, "onAnimationEnd");
-
-                if (isBuffring) view.startAnimation(animation);
-            }
-        });
-
-
-        view.startAnimation(animationNew);
-
-    }
 
 
     public void stopAnimation() {

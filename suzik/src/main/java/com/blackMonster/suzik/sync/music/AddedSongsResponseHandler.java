@@ -1,13 +1,4 @@
 package com.blackMonster.suzik.sync.music;
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
-import static com.blackMonster.suzik.util.LogUtils.LOGI;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import org.json.JSONException;
-
 import android.content.Context;
 import android.content.Intent;
 
@@ -19,6 +10,15 @@ import com.blackMonster.suzik.sync.Syncer;
 import com.blackMonster.suzik.sync.music.CacheTable.CacheData;
 import com.blackMonster.suzik.sync.music.QueueAddedSongs.QueueData;
 import com.blackMonster.suzik.ui.UiBroadcasts;
+
+import org.json.JSONException;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.LOGI;
 
 public class AddedSongsResponseHandler extends Syncer {
 private static final  String TAG = "AddedSongsResponseHandler";
@@ -105,8 +105,9 @@ private static final  String TAG = "AddedSongsResponseHandler";
 	}
 
     public static long getRemainingTimeMs(Context context) {
-        return QueueAddedSongs.getRowCount(context)
-                * AppConfig.TIME_PROCESSING_NEW_SONG_SERVER_MS;
+//        return QueueAddedSongs.getRowCount(context)
+//                * AppConfig.TIME_PROCESSING_NEW_SONG_SERVER_MS;
+        return AppConfig.MINUTE_IN_MILLISEC;
     }
 
 	@Override

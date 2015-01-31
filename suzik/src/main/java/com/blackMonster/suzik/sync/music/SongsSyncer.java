@@ -48,7 +48,7 @@ public class SongsSyncer extends Syncer {
 
         if (changes.noChanges()) return true;
     /*
-		int count=0;
+        int count=0;
 		for (AndroidData son : changes.getAddedSongs()) {
 			QueueAddedSongs.remove(son.getfPrint(), context);
 			CacheTable.insert(new CacheData(count++, son.getSong(), son.getfPrint(),son.getFileName()) , context);
@@ -71,7 +71,7 @@ public class SongsSyncer extends Syncer {
         LOGI(TAG, "delete songs done");
 
 
-        if (ServerHelper.postAddedSongs(changes.getAddedSongs()) == false) return false;
+        if (postInBatches(changes.getAddedSongs()) == false) return false;
         LOGI(TAG, "post added songs done");
 
 
@@ -87,6 +87,21 @@ public class SongsSyncer extends Syncer {
         }
 
         LOGI(TAG, "All done");
+        return true;
+    }
+
+    private boolean postInBatches(List<AndroidData> addedSongs) throws InterruptedException, ExecutionException, JSONException {
+
+        int n = addedSongs.size();
+        int last;
+
+        for (int i = 0; i < n; i += 10) {
+            LOGD(TAG,"batch " + i);
+            last = i + 10;
+            if (last > n) last = n;
+            ServerHelper.postAddedSongs(addedSongs.subList(i, last));
+            return true;
+        }
         return true;
     }
 
