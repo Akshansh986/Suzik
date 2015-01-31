@@ -32,6 +32,7 @@ import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
+import com.blackMonster.suzik.sync.music.InappSongServerHelper;
 import com.blackMonster.suzik.util.NetworkUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -373,7 +374,18 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
                 updateUi(item);
 
                 UserActivityManager.add(new UserActivity(item.getSong(), null, localId, UserActivity.ACTION_IN_APP_DOWNLOAD, 0, System.currentTimeMillis()), context);
+                try {
+                    InappSongServerHelper.addToServer(item.getServerId(), "dummy fp ");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+
+
         }.start();
 
 
@@ -387,6 +399,15 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
                 FileDownloader.deleteFile(item.getInAppSongMirror().getSongLocation());
                 InAapSongTable.remove(item.getInAppSongMirror().getId(), context);
                 updateUi(item);
+                try {
+                    InappSongServerHelper.deleteFromServer(item.getServerId());
+                } catch (InterruptedException e) {
+                      e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }.start();
     }
