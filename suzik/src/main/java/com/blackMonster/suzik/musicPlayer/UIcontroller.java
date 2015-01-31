@@ -546,9 +546,13 @@ public class UIcontroller {
     public void unbind() {
         // TODO Auto-generated method stub
         Log.d(TAG, "unbind");
-        if (musicConnection != null) {
-            context.unbindService(musicConnection);
 
+        if (musicConnection != null) {
+            {if(musicBound) {
+                context.unbindService(musicConnection);
+                musicBound=false;
+            }
+            }
         }
     }
 

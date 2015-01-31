@@ -22,6 +22,7 @@ import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicstore.Timeline.Playable;
@@ -58,6 +59,8 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
 	private boolean isplay;
 	private boolean isasyncplay;
     private boolean isInternetAvailable;
+
+    private boolean sendInAppPlay=false;
     WorkerThread worker;
 
 	private boolean isBufferingState=false;
@@ -198,8 +201,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
             initMusicPlayer();
 
 
-
-
+                sendInAppPlayBroadcast();
 
 
 
@@ -260,7 +262,7 @@ implements OnPreparedListener,OnErrorListener,OnCompletionListener,OnSeekComplet
                         .setContentIntent(pendInt)
                         .setContent(views)
                         .setOngoing(true);
-                notification=builder.build();
+                notification=builder.getNotification();
                 startForeground(notification.FLAG_ONGOING_EVENT, notification);
 
                 if(mediaplayerstate==initialized||mediaplayerstate==stopped)
@@ -289,6 +291,7 @@ worker.doRunnable(playRunnable);
 
 	@Override
 	public void onPrepared(MediaPlayer mp) {
+
 		// TODO Auto-generated method stub
 		mediaplayerstate=prepared;
 		fullfillintent();
@@ -580,8 +583,14 @@ worker.doRunnable(playRunnable);
 		// TODO Auto-generated method stub
 		mediapos=player.getCurrentPosition();
 		mediamax=player.getDuration();
-        if((mediapos*0.6)>=mediamax){
-           // TODO
+        if((mediapos*1.0)>=(mediamax*0.6)){
+            Log.d(TAG,"sendInAppPlayBroadcast");
+           sendInAppPlay=true;
+        }
+        else
+        {
+            Log.d(TAG,"dontsendInAppPlayBroadcast");
+
         }
 		Intent_Musicplayer_seekIntent.putExtra("counter",String.valueOf(mediapos));
 		Intent_Musicplayer_seekIntent.putExtra("mediamax",String.valueOf(mediamax));
@@ -589,7 +598,17 @@ worker.doRunnable(playRunnable);
         LocalBroadcastManager.getInstance(this).sendBroadcast(Intent_Musicplayer_seekIntent);
 
 			   }
-	private void sendbufferingcompletebroadcast() {
+
+    private void sendInAppPlayBroadcast() {
+       if(sendInAppPlay) {
+           Toast.makeText(getApplicationContext(), "Inappbroadcastsent", Toast.LENGTH_LONG).show();
+
+           sendInAppPlay = false;
+
+       }
+    }
+
+    private void sendbufferingcompletebroadcast() {
 	// TODO Auto-generated method stub
 		Log.d(TAG,"buffering broadcast complete");
         isBufferingState=false;
