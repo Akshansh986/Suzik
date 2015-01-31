@@ -3,6 +3,7 @@ package com.blackMonster.suzik.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -140,8 +141,10 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
 
         if (uiconroller.isSongPlaying(this, position)) {
+            viewHolder.title.setTypeface(null, Typeface.BOLD);
             viewHolder.title.setTextColor(context.getResources().getColor(R.color.timeline_text));
             viewHolder.artist.setTextColor(context.getResources().getColor(R.color.timeline_text));
+
             playingView = convertView;
             Log.d(TAG,"#########################################################");
             if (uiconroller.isBuffering()) {
