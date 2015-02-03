@@ -33,11 +33,7 @@
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/corner_drawable"
-                ></View>
+
 
             <RelativeLayout
                 android:id="@+id/relative_l"
@@ -47,12 +43,13 @@
 
                 >
                 <View
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:background="@drawable/gradient_corner"
-                    android:layout_alignParentRight="true"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/gradient_corner"
                     ></View>
+
                 <TextView
                     android:id="@+id/song_title"
                     android:textSize="20sp"
@@ -82,7 +79,10 @@
                     android:id="@+id/like_icon"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:padding="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="13dp"
                     android:src="@drawable/whiteheart"
                     android:layout_gravity="center_horizontal" />
 
@@ -95,8 +95,12 @@
                     android:layout_centerHorizontal="true" />
 
                 <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="43dp"
+                    android:layout_height="50dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="6dp"
                     android:id="@+id/flag"
                     android:layout_alignParentTop="true"
                    android:layout_alignParentRight="true" />

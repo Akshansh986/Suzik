@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
+import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.R;
@@ -284,7 +285,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
                         try {
                             postJson = JsonHelperTimeline.FlagJosnHelper.toJson(serverId);
                             RequestFuture<JSONObject> future = RequestFuture.newFuture();
-                            JsonObjectRequest request = new JsonObjectRequest("http://socialmusic.in/music/songLink/flagSong.php",
+                            JsonObjectRequest request = new JsonObjectRequest(AppConfig.FLAG_URL,
                                     postJson, future, future);
                             AppController.getInstance().addToRequestQueue(request);
 

@@ -24,6 +24,10 @@ public class SongsSyncer extends Syncer {
     private static final String TAG = "SongsSyncer";
     static final String LOCK = "lock";
 
+    private static final int MIN_BATCH_SIZE = 10;
+    private static final int MAX_BATCH_SIZE = 100;
+    private static final int PREFERRED_NO_BATCH = 5;
+
     @Override
     public boolean onPerformSync() throws Exception {
 
@@ -91,17 +95,32 @@ public class SongsSyncer extends Syncer {
     }
 
     private boolean postInBatches(List<AndroidData> addedSongs) throws InterruptedException, ExecutionException, JSONException {
+//            ServerHelper.postAddedSongs(addedSongs);
+//        return true;
 
         int n = addedSongs.size();
+        int batchSize = getBatchSize(n);
+        LOGD(TAG,"batch size : " + batchSize);
         int last;
 
-        for (int i = 0; i < n; i += 10) {
-            LOGD(TAG,"batch " + i);
-            last = i + 10;
+        for (int i = 0; i < n; i += batchSize) {
+            last = i + batchSize;
             if (last > n) last = n;
             ServerHelper.postAddedSongs(addedSongs.subList(i, last));
         }
         return true;
+    }
+
+
+
+
+    private int getBatchSize(int max) {
+        int batchSize = max / PREFERRED_NO_BATCH;
+
+        if (batchSize < MIN_BATCH_SIZE)  batchSize = MIN_BATCH_SIZE;
+        else if (batchSize > MAX_BATCH_SIZE)  batchSize = MAX_BATCH_SIZE;
+
+        return batchSize;
     }
 
 

@@ -105,9 +105,9 @@ private static final  String TAG = "AddedSongsResponseHandler";
 	}
 
     public static long getRemainingTimeMs(Context context) {
-//        return QueueAddedSongs.getRowCount(context)
-//                * AppConfig.TIME_PROCESSING_NEW_SONG_SERVER_MS;
-        return AppConfig.MINUTE_IN_MILLISEC;
+        return QueueAddedSongs.getRowCount(context)
+                * AppConfig.TIME_PROCESSING_NEW_SONG_SERVER_MS;
+//        return AppConfig.MINUTE_IN_MILLISEC;
     }
 
 	@Override
