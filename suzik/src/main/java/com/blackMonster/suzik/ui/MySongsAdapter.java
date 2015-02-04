@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.blackMonster.suzik.R;
@@ -246,12 +245,12 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
 
     }
 
-    public void updatePlayingOnSongChange(ListView listView) {
-        int lastVisible = listView.getLastVisiblePosition();
-            View child;
-        for (int i=listView.getFirstVisiblePosition() ; i <=lastVisible ; ++i) {
-            child = listView.getChildAt(i);
-            if (child!=null) handleSongPlaying(i, child);
-        }
-    }
+//    public void updatePlayingOnSongChange(ListView listView) {
+//        int lastVisible = listView.getLastVisiblePosition();
+//            View child;
+//        for (int i=listView.getFirstVisiblePosition() ; i <=lastVisible ; ++i) {
+//            child = listView.getChildAt(i);
+//            if (child!=null) handleSongPlaying(i, child);
+//        }
+//    }
 }

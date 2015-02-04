@@ -162,8 +162,8 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "uiUpdate called");
-//            adapter.notifyDataSetChanged();
-            adapter.updatePlayingOnSongChange(listView);
+            adapter.notifyDataSetChanged();
+//            adapter.updatePlayingOnSongChange(listView);
         }
     };
 
