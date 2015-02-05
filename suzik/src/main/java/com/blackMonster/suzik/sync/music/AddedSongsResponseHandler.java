@@ -1,6 +1,8 @@
 package com.blackMonster.suzik.sync.music;
+
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteException;
 
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.MainPrefs;
@@ -21,90 +23,122 @@ import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import static com.blackMonster.suzik.util.LogUtils.LOGI;
 
 public class AddedSongsResponseHandler extends Syncer {
-private static final  String TAG = "AddedSongsResponseHandler";
-	@Override
-	public  boolean onPerformSync() throws Exception {
+    private static final String TAG = "AddedSongsResponseHandler";
 
-		synchronized (SongsSyncer.LOCK) {
-			return startSync();
-		}
-	
-	}
+    @Override
+    public boolean onPerformSync() throws Exception {
 
-	private boolean startSync() throws JSONException, InterruptedException, ExecutionException {
-		LOGI(TAG,"onPerformSync start");
+        synchronized (SongsSyncer.LOCK) {
+            return startSync();
+        }
 
-		if (QueueAddedSongs.isEmpty(this))
-			return true;
+    }
 
-		HashMap<String, Long> fPrintIdMap;
-		LOGD(TAG,"going to contact server");
+    List<QueueData> queueSongs;
 
 
-    	fPrintIdMap = getQueueStatusFromServer();
-		LOGD(TAG,"server response and json parsing done");
+    private boolean startSync() throws JSONException, InterruptedException, ExecutionException, SQLiteException {
+        LOGI(TAG, "onPerformSync start");
 
-		if (fPrintIdMap.size() > 0) {
-			LOGD(TAG,"replied " + fPrintIdMap.size());
-			List<QueueData> queueDataList = QueueAddedSongs.getAllData(this);
-			
-			
-			for (QueueData currQd : queueDataList) {
-				Long serverId = fPrintIdMap.get(currQd.getfPrint());
-				if (serverId == null) continue;
-				
-		
-				LOGD(TAG,"inserting " + currQd.getFileName() + " to cachel table");
+        queueSongs = QueueAddedSongs.getAllData(this);
+        if (queueSongs == null) throw new SQLiteException();
 
-				long id = CacheTable.insert(
-						new CacheData(null, serverId, currQd.getSong(), currQd.getfPrint(), currQd.getFileName()), this);
-				LOGD(TAG,"removing from queue");
+        int n = queueSongs.size();
+        if (n==0) return true;
 
-				QueueAddedSongs.remove(currQd.getId(), this);
+        int batchSize = 100;
+        LOGD(TAG, "batch size : " + batchSize);
+        int last;
 
-				if (MainPrefs.isFirstTimeMusicSyncDone(this)) {
-					UserActivityManager.add(new UserActivity(currQd.getSong(),null, id, UserActivity.ACTION_OUT_APP_DOWNLOAD, UserActivity.STREAMING_FALSE, System.currentTimeMillis()), this);
-				}
-			
-			}
-			
+        boolean anySongProcessed = false;
+
+        for (int i = 0; i < n; i += batchSize) {
+            last = i + batchSize;
+            if (last > n) last = n;
+            anySongProcessed = processBatch(i, last) || anySongProcessed;
+
+        }
 
 
-			if (!QueueAddedSongs.isEmpty(this)) {
-				futureCall(this);
-			}
-			else {
-				MainPrefs.setFirstTimeMusicSyncDone(this);
+        if (anySongProcessed) {
+
+            if (!QueueAddedSongs.isEmpty(this)) {
+                futureCall(this);
+            } else {
+                MainPrefs.setFirstTimeMusicSyncDone(this);
                 UiBroadcasts.broadcastMusicDataChanged(this);
-			}
-		} else {
-			LOGD(TAG,"reply size zero");
-			QueueAddedSongs.clearAll(this);
-			// SongsSyncer.syncNow(context); //test this
-			startService(new Intent(this, SongsSyncer.class));
-		}
-		LOGI(TAG,"onperformSync done");
+            }
 
-		return true;		
-	}
+        } else {
+            LOGD(TAG, "reply size zero");
+            QueueAddedSongs.clearAll(this);
+            startService(new Intent(this, SongsSyncer.class));
+        }
+
+        LOGI(TAG, "onperformSync done");
+
+        return true;
+    }
+
+    private boolean processBatch(int first, int last) throws InterruptedException, ExecutionException, JSONException {
+
+
+        HashMap<String, Long> fPrintIdMap;
+        LOGD(TAG, "going to contact server");
+
+        List<QueueData> songsList = queueSongs.subList(first,last);
+
+        fPrintIdMap = getQueueStatusFromServer(songsList);
+        LOGD(TAG, "server response and json parsing done");
+
+        if (fPrintIdMap.size() > 0) {
+            LOGD(TAG, "replied " + fPrintIdMap.size());
+
+
+            for (QueueData currQd : songsList) {
+                Long serverId = fPrintIdMap.get(currQd.getfPrint());
+                if (serverId == null) continue;
+
+
+                LOGD(TAG, "inserting " + currQd.getFileName() + " to cachel table");
+
+                long id = CacheTable.insert(
+                        new CacheData(null, serverId, currQd.getSong(), currQd.getfPrint(), currQd.getFileName()), this);
+                LOGD(TAG, "removing from queue");
+
+                QueueAddedSongs.remove(currQd.getId(), this);
+
+                if (MainPrefs.isFirstTimeMusicSyncDone(this)) {
+                    UserActivityManager.add(new UserActivity(currQd.getSong(), null, id, UserActivity.ACTION_OUT_APP_DOWNLOAD, UserActivity.STREAMING_FALSE, System.currentTimeMillis()), this);
+                }
+
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+
+
+    }
 
 	/*private long getNewSongId() {
-		int id = MainPrefs.getUnIdentifiableSongId(this) + 1;
+        int id = MainPrefs.getUnIdentifiableSongId(this) + 1;
 		MainPrefs.setUnIndetifiableSongId(id, this);
 		return id;
 	}*/
 
-	private HashMap<String, Long> getQueueStatusFromServer()
-			throws JSONException, InterruptedException, ExecutionException {
-		return ServerHelper.postFingerPrints(this);
+    private HashMap<String, Long> getQueueStatusFromServer(List<QueueData> data)
+            throws JSONException, InterruptedException, ExecutionException {
+        return ServerHelper.postFingerPrints(data);
 
-	}
+    }
 
-	static void futureCall(Context context) {
-		long time = getRemainingTimeMs(context);
-		Syncer.callFuture(AddedSongsResponseHandler.class, time, context);
+    static void futureCall(Context context) {
+        long time = getRemainingTimeMs(context);
+        Syncer.callFuture(AddedSongsResponseHandler.class, time, context);
 
-	}
+    }
 
     public static long getRemainingTimeMs(Context context) {
 //        return QueueAddedSongs.getRowCount(context)
@@ -112,9 +146,9 @@ private static final  String TAG = "AddedSongsResponseHandler";
         return AppConfig.MINUTE_IN_MILLISEC;
     }
 
-	@Override
-	public String getBroadcastString() {
-		return null;
-	}
+    @Override
+    public String getBroadcastString() {
+        return null;
+    }
 
 }
