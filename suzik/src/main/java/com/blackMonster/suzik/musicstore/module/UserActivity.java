@@ -20,7 +20,20 @@ public class UserActivity {
 	private int streaming;
 	private int action;
 
-	public UserActivity(Song song, Long id, long songId, int action, int streaming,
+
+    /**
+     *
+     * @param song Song whose activity has to be sended.
+     * @param id  pass null, it is automatically assigned by system.
+     * @param songId  Local id of song i.e id used to refer song in this app.
+     * @param action  Action InappDownlaod | outappDownload.....
+     * @param streaming true if song is streamed.
+     * @param completedTS   Completed timestamp of activity. (System.currentTimeMillis() can be used)
+
+     */
+
+
+    public UserActivity(Song song, Long id, long songId, int action, int streaming,
 			long completedTS) {
 		super();
 		this.song = song;
@@ -72,5 +85,10 @@ public class UserActivity {
 		}
 		return null;
 	}
+
+    public static int streamingToInt(boolean streaming) {
+        if (streaming) return  1;
+        else return 0;
+    }
 
 }

@@ -17,6 +17,7 @@ import com.blackMonster.suzik.sync.music.InAapSongTable.InAppSongData;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -105,11 +106,11 @@ class ServerHelper {
 		
 	}
 
-	static HashMap<String, Long> postFingerPrints(Context context) throws JSONException, InterruptedException,
+	static HashMap<String, Long> postFingerPrints(List<QueueAddedSongs.QueueData> data) throws JSONException, InterruptedException,
 			ExecutionException {
 
 		JSONObject fPrintsJson = JsonHelper.AddedSongsQueue
-				.toJson(QueueAddedSongs.getAllFprints(context));
+				.toJson(getFprintsFromQueueData(data));
 
 		RequestFuture<JSONObject> future = RequestFuture.newFuture();
 		JsonObjectRequest request = new JsonObjectRequest(AppConfig.MAIN_URL,
@@ -117,14 +118,23 @@ class ServerHelper {
 		AppController.getInstance().addToRequestQueue(request);
 
 		JSONObject response = future.get();
-		LOGD(TAG,response.toString());
+//		LOGD(TAG,response.toString());
 		HashMap<String, Long> parsedResponse = JsonHelper.AddedSongsQueue
 				.parseResponse(response);
 		return parsedResponse;
 
 	}
 
-	 static List<InAppSongData> getAllMySongs(Context context) throws InterruptedException, ExecutionException, JSONException {
+    private static List<String> getFprintsFromQueueData(List<QueueAddedSongs.QueueData> data) {
+
+        List<String> fprints  = new ArrayList<>();
+        for (QueueAddedSongs.QueueData queueData : data) {
+            fprints.add(queueData.getfPrint());
+        }
+        return  fprints;
+    }
+
+    static List<InAppSongData> getAllMySongs(Context context) throws InterruptedException, ExecutionException, JSONException {
 		JSONObject credintials = JsonHelper.ServerAllSongs.getCredentials();
 
 		RequestFuture<JSONObject> future = RequestFuture.newFuture();

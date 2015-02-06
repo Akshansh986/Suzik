@@ -106,6 +106,7 @@ public class SongsSyncer extends Syncer {
         for (int i = 0; i < n; i += batchSize) {
             last = i + batchSize;
             if (last > n) last = n;
+            LOGD(TAG,"batch " + i + " range : " + i + "  " + last);
             ServerHelper.postAddedSongs(addedSongs.subList(i, last));
         }
         return true;
@@ -115,7 +116,7 @@ public class SongsSyncer extends Syncer {
 
 
     private int getBatchSize(int max) {
-        int batchSize = max / PREFERRED_NO_BATCH;
+        int batchSize = (int) Math.ceil( (double) max / PREFERRED_NO_BATCH );
 
         if (batchSize < MIN_BATCH_SIZE)  batchSize = MIN_BATCH_SIZE;
         else if (batchSize > MAX_BATCH_SIZE)  batchSize = MAX_BATCH_SIZE;

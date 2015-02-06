@@ -1,10 +1,5 @@
 package com.blackMonster.suzik.sync.music;
 
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,6 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.musicstore.module.Song;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 class QueueAddedSongs {
 
@@ -33,28 +33,7 @@ class QueueAddedSongs {
 				TABLE, C_ID, C_FILENAME, C_TITLE,C_ARTIST, C_ALBUM, C_DURATION, C_FPRINT);
 		db.execSQL(sql);
 	}
-	/*
-	static QueueData search(String fPrint, Context context) {
-		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
-		QueueData queueData = null;
-		Cursor cursor = db.query(TABLE, null, C_FPRINT + "='" + fPrint + "'" , null, null, null, null);
 
-		if (cursor != null) {
-			if (cursor.moveToFirst()) {
-				Song song = new Song(cursor.getString(cursor
-						.getColumnIndex(C_TITLE)), cursor.getString(cursor
-						.getColumnIndex(C_ARTIST)), cursor.getString(cursor
-						.getColumnIndex(C_ALBUM)), cursor.getLong(cursor
-						.getColumnIndex(C_DURATION)));
-			queueData = new QueueData(song, fPrint, cursor.getString(cursor.getColumnIndex(C_FILENAME)));
-				
-			}
-			cursor.close();
-		}
-
-		return queueData;
-	}
-	*/
 	static List<QueueData> getAllData(Context context) {
 		SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
 		List<QueueData> queueDataSet = null;
