@@ -157,8 +157,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
     private void handleAlbumart(final TimelineItem item,final ViewHolder viewHolder) {
         if (NetworkUtils.isValidUrl(item.getOnlineAlbumArtUrl())) {
-
-            imageLoader.displayImage(item.getOnlineAlbumArtUrl(), viewHolder.albumArtView, options, new ImageLoadingListener() {
+            imageLoader.displayImage("sdfdsf", viewHolder.albumArtView, options, new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
                     viewHolder.progressBar.setVisibility(View.VISIBLE);
@@ -246,10 +245,10 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
         if (flag.shouldDisplay()) {
             flagView.setVisibility(View.VISIBLE);
-            if (flag.isServerBadSong()) flagView.setImageResource(R.drawable.flagred);
+            if (flag.isServerBadSong()) flagView.setImageResource(R.drawable.flagredgradient);
             else {
-                if (flag.isLocalBadSong()) flagView.setImageResource(R.drawable.flagred);
-                else flagView.setImageResource(R.drawable.flagwhite);
+                if (flag.isLocalBadSong()) flagView.setImageResource(R.drawable.flagredgradient);
+                else flagView.setImageResource(R.drawable.flagwhitegradient);
             }
 
         } else flagView.setVisibility(View.INVISIBLE);
@@ -265,7 +264,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
                 if (NetworkUtils.isInternetAvailable(context)) {
                     flag.setLocalBadSong(true);
-                    flagView.setImageResource(R.drawable.flagred);
+                    flagView.setImageResource(R.drawable.flagredgradient);
 
                     sendFlagtoServer(item.getServerId());
 
@@ -436,7 +435,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
     }
 
     private void startBufferingAinmation() {
-        final View view = playingView.findViewById(R.id.relative_l);
+        final View view = playingView.findViewById(R.id.relative_for_fade);
 
         Animation fadeIn = new AlphaAnimation((float) 0.2, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this

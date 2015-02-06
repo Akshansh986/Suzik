@@ -37,6 +37,7 @@ import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
 import com.blackMonster.suzik.sync.ContentObserverService;
 import com.blackMonster.suzik.ui.TimelineAdapter;
 import com.blackMonster.suzik.ui.UiBroadcasts;
+import com.blackMonster.suzik.util.NetworkUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -107,7 +108,11 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
 
 
     private void loadData() throws JSONException {
-
+    if (!NetworkUtils.isInternetAvailable(getActivity())) {
+        Toast.makeText(getActivity(),R.string.device_offline,Toast.LENGTH_SHORT).show();
+        swipeLayout.setRefreshing(false);
+        return;
+    }
         JSONObject postJson = JsonHelperTimeline.getCredentials();
 //		JSONObject postJson = JsonHelperTimeline.ServerAllSongs.getCredentials();
 
@@ -173,7 +178,10 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
     public void onItemClick(AdapterView<?> arg0, View view, final int position, long arg3) {
 
         Log.d(TAG, "fsdf " + position + adapter.getPlayable(position).getSongPath());
-
+        if (!adapter.getPlayable(position).isOffline() && !NetworkUtils.isInternetAvailable(getActivity())) {
+            Toast.makeText(getActivity(),R.string.device_offline,Toast.LENGTH_SHORT).show();
+            return;
+        }
         uiController.setList(adapter);
         uiController.setSongpos(position);
 

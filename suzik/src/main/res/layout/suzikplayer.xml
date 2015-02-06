@@ -76,7 +76,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="25dp"
                 android:layout_toLeftOf="@+id/playpause"
-                android:alpha="0.80"
+                android:alpha="0.60"
                 android:src="@drawable/previous" />
 
             <ImageView
@@ -85,7 +85,7 @@
                 android:layout_height="100dp"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="2dp"
-                android:alpha="0.80"
+                android:alpha="0.60"
                 android:clickable="true"
                 android:src="@drawable/play" />
 
@@ -96,7 +96,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="25dp"
                 android:layout_toRightOf="@+id/playpause"
-                android:alpha="0.80"
+                android:alpha="0.60"
                 android:src="@drawable/next" />
         </RelativeLayout>
 
@@ -109,9 +109,10 @@
 
             <ImageView
                 android:id="@+id/repeat"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentLeft="true"
+                android:alpha="0.60"
 
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="30dp"
@@ -119,10 +120,10 @@
 
             <ImageView
                 android:id="@+id/shuffle"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
-
+                android:alpha="0.60"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="30dp"
                 android:src="@drawable/shuffle" />

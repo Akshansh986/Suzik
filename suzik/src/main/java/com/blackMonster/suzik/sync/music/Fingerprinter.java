@@ -1,12 +1,5 @@
 package com.blackMonster.suzik.sync.music;
 
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
-import static com.blackMonster.suzik.util.LogUtils.LOGE;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-
 import android.content.Context;
 
 import com.blackMonster.suzik.sync.music.AndroidMusicHelper.AndroidData;
@@ -14,6 +7,13 @@ import com.gracenote.mmid.MobileSDK.GNConfig;
 import com.gracenote.mmid.MobileSDK.GNFingerprintResult;
 import com.gracenote.mmid.MobileSDK.GNFingerprintResultReady;
 import com.gracenote.mmid.MobileSDK.GNOperations;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.LOGE;
 
 class Fingerprinter{
 	private static final String TAG = "Fingerprinter";
@@ -26,7 +26,7 @@ class Fingerprinter{
 	
 	Fingerprinter(Context context,List<AndroidData> songList){
 		this.songList = songList;
-		config = GNConfig.init("7112704-2CF3D8F828D42A95CE718E9553591494",
+		config = GNConfig.init("10478592-BC1E5E37EBDB2E638E51BB99416BB6EE",
 				context.getApplicationContext());
 	}
 
