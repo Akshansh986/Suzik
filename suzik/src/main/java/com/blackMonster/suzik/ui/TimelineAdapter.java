@@ -157,7 +157,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
     private void handleAlbumart(final TimelineItem item,final ViewHolder viewHolder) {
         if (NetworkUtils.isValidUrl(item.getOnlineAlbumArtUrl())) {
-            imageLoader.displayImage("sdfdsf", viewHolder.albumArtView, options, new ImageLoadingListener() {
+            imageLoader.displayImage(item.getOnlineAlbumArtUrl(), viewHolder.albumArtView, options, new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
                     viewHolder.progressBar.setVisibility(View.VISIBLE);
