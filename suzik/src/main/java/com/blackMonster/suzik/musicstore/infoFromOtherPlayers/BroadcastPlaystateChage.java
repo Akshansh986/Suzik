@@ -89,8 +89,7 @@ public class BroadcastPlaystateChage extends MusicBroadcastManager {
 
 				UserActivityManager.add(
 						new UserActivity(song,null, PlayingSong.getSong(context)
-								.getId(), UserActivity.ACTION_OUT_APP_PLAYED,
-								PlayingSong.getSong(context).isStreaming(),
+								.getId(),UserActivity.getOutappPlayAction(PlayingSong.getSong(context).isStreaming()),
 								System.currentTimeMillis()), context);
 
 			} else

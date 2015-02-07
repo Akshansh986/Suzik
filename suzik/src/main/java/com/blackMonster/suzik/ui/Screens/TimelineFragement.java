@@ -122,6 +122,10 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
             @Override
             public void onResponse(JSONObject response) {
                 Log.d(TAG, "Response: " + response.toString());
+                if (getActivity() == null) {
+                    LOGD(TAG,"on response : activity no longer visible...returning");
+                    return;
+                }
                 swipeLayout.setRefreshing(false);
 
                 if (response != null) {
@@ -153,8 +157,12 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (getActivity() == null) {
+                    LOGD(TAG,"on error : activity no longer visible...returning");
+                    return;
+                }
                 swipeLayout.setRefreshing(false);
-                Toast.makeText(getActivity().getBaseContext(), "Unable to load timeline", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getBaseContext(), "Unable to load timeline ", Toast.LENGTH_LONG).show();
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 Log.d(TAG, "Error: " + error.getMessage());
 

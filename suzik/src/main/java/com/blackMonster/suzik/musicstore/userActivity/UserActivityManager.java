@@ -15,7 +15,7 @@ public class UserActivityManager {
 	
 	public static void add(UserActivity activity, Context context) {
 		LOGD(TAG,"add");
-        if (!activity.isOnlineSong() )
+        if (!activity.isOnlinePlayedSong() )
         {
             Long serverId = MusicSyncManager.getServerId(activity.songId(),context);
             if (serverId == null) {

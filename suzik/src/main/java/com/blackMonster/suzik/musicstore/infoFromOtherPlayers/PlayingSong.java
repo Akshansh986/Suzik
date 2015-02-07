@@ -101,7 +101,7 @@ public class PlayingSong {
 				PlayingSong.getSong(context).getArtist(), PlayingSong
 						.getSong(context).getAlbum(), PlayingSong
 						.getSong(context).getDuration());
-		UserActivityManager.add(new UserActivity(song,null, PlayingSong.getSong(context).getId(), UserActivity.ACTION_OUT_APP_PLAYED, PlayingSong.getSong(context).isStreaming(), System.currentTimeMillis()), context);
+		UserActivityManager.add(new UserActivity(song,null, PlayingSong.getSong(context).getId(), UserActivity.getOutappPlayAction(PlayingSong.getSong(context).isStreaming()), System.currentTimeMillis()), context);
 		PlayingSong.reset(context);
 
 	}

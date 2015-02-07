@@ -25,6 +25,8 @@ import static com.blackMonster.suzik.util.LogUtils.LOGI;
 public class AddedSongsResponseHandler extends Syncer {
     private static final String TAG = "AddedSongsResponseHandler";
 
+    private static final int BATCH_SIZE = 60;
+
     @Override
     public boolean onPerformSync() throws Exception {
 
@@ -46,14 +48,13 @@ public class AddedSongsResponseHandler extends Syncer {
         int n = queueSongs.size();
         if (n==0) return true;
 
-        int batchSize = 100;
-        LOGD(TAG, "batch size : " + batchSize);
+        LOGD(TAG, "batch size : " + BATCH_SIZE);
         int last;
 
         boolean anySongProcessed = false;
 
-        for (int i = 0; i < n; i += batchSize) {
-            last = i + batchSize;
+        for (int i = 0; i < n; i += BATCH_SIZE) {
+            last = i + BATCH_SIZE;
             if (last > n) last = n;
             anySongProcessed = processBatch(i, last) || anySongProcessed;
 
@@ -109,7 +110,7 @@ public class AddedSongsResponseHandler extends Syncer {
                 QueueAddedSongs.remove(currQd.getId(), this);
 
                 if (MainPrefs.isFirstTimeMusicSyncDone(this)) {
-                    UserActivityManager.add(new UserActivity(currQd.getSong(), null, id, UserActivity.ACTION_OUT_APP_DOWNLOAD, UserActivity.STREAMING_FALSE, System.currentTimeMillis()), this);
+                    UserActivityManager.add(new UserActivity(currQd.getSong(), null, id, UserActivity.ACTION_OUT_APP_DOWNLOAD, System.currentTimeMillis()), this);
                 }
 
             }
@@ -141,9 +142,10 @@ public class AddedSongsResponseHandler extends Syncer {
     }
 
     public static long getRemainingTimeMs(Context context) {
-//        return QueueAddedSongs.getRowCount(context)
-//                * AppConfig.TIME_PROCESSING_NEW_SONG_SERVER_MS;
-        return AppConfig.MINUTE_IN_MILLISEC;
+
+        int batchSize = SongsSyncer.getBatchSize(QueueAddedSongs.getRowCount(context));
+        return batchSize
+                * AppConfig.TIME_PROCESSING_NEW_SONG_SERVER_MS;
     }
 
     @Override

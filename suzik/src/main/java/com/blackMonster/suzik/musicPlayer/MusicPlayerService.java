@@ -23,7 +23,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicstore.Timeline.Playable;
@@ -565,7 +564,7 @@ public class MusicPlayerService extends Service
         if (sendInAppPlay) {
             sendInAppPlay = false;
 
-            Toast.makeText(getApplicationContext(), "Inappbroadcastsent", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), "Inappbroadcastsent", Toast.LENGTH_LONG).show();
             Song song;
             long id;
 
@@ -584,12 +583,14 @@ public class MusicPlayerService extends Service
 
 
             UserActivityManager.add(new UserActivity(song, null, id,
-                    UserActivity.ACTION_IN_APP_PLAYED, UserActivity.streamingToInt(!CurrentSong.isOffline()),
+                    UserActivity.getInappPlayAction(CurrentSong.isOffline(),CurrentSong.isCached()),
                     System.currentTimeMillis()), this);
 
 
         }
     }
+
+
 
     private void sendbufferingcompletebroadcast() {
         // TODO Auto-generated method stub

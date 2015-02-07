@@ -94,7 +94,7 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
             if (ftime == 0)
                 message = "Syncing music with servers";
             else
-                message = "Syncing music with servers. Complete in  " + truncatedDouble + " minutes";
+                message = "Syncing music with servers. Will Complete in  " + truncatedDouble + " minutes from the time it started." ;
             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
         }
     }

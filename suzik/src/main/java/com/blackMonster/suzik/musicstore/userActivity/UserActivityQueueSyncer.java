@@ -1,21 +1,20 @@
 package com.blackMonster.suzik.musicstore.userActivity;
 
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
-import static com.blackMonster.suzik.util.LogUtils.LOGI;
+import android.util.Pair;
+
+import com.blackMonster.suzik.musicstore.module.UserActivity;
+import com.blackMonster.suzik.sync.Syncer;
+import com.blackMonster.suzik.sync.music.MusicSyncManager;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import org.json.JSONException;
-
-import android.util.Pair;
-
-import com.blackMonster.suzik.musicstore.MusicServerUtils;
-import com.blackMonster.suzik.musicstore.module.UserActivity;
-import com.blackMonster.suzik.sync.Syncer;
-import com.blackMonster.suzik.sync.music.MusicSyncManager;
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.LOGI;
 
 public class UserActivityQueueSyncer extends Syncer {
 	private static final String TAG = "UserActivityQueueSyncer";
@@ -62,7 +61,7 @@ public class UserActivityQueueSyncer extends Syncer {
 
 		for (UserActivity ua : userActivity) {
 
-			if (!ua.isOnlineSong()) {
+			if (!ua.isOnlinePlayedSong()) {
 				Long songId = ua.songId();
                 LOGD(TAG,"songid " + songId);
                 if (songId == null) {

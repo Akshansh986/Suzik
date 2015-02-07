@@ -157,6 +157,9 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
     private void handleAlbumart(final TimelineItem item,final ViewHolder viewHolder) {
         if (NetworkUtils.isValidUrl(item.getOnlineAlbumArtUrl())) {
+
+
+
             imageLoader.displayImage(item.getOnlineAlbumArtUrl(), viewHolder.albumArtView, options, new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
@@ -205,7 +208,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
             likeButton.setVisibility(View.INVISIBLE);
             return;
         }
-
+        likeButton.setVisibility(View.VISIBLE);
 
         int likeIconResource;
 
@@ -224,10 +227,12 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
                 LOGD(TAG, "buttondownload");
                 if (NetworkUtils.isInternetAvailable(context)) {
                     if (item.isCached()) {
+                        likeButton.setVisibility(View.VISIBLE);
                         likeButton.setImageResource(R.drawable.whiteheart);
                         onDelete(item);
 
                     } else {
+                        likeButton.setVisibility(View.VISIBLE);
                         likeButton.setImageResource(R.drawable.redheart);
                         OnDownload(item);
                     }
@@ -360,7 +365,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
                 long localId = insertInAppSongTable(item, songLocation, albumartLocation);
                 updateUi(item);
 
-                UserActivityManager.add(new UserActivity(item.getSong(), null, localId, UserActivity.ACTION_IN_APP_DOWNLOAD, 0, System.currentTimeMillis()), context);
+                UserActivityManager.add(new UserActivity(item.getSong(), null, localId, UserActivity.ACTION_IN_APP_DOWNLOAD, System.currentTimeMillis()), context);
                 try {
                     InappSongServerHelper.addToServer(item.getServerId(), "dummy fp ");
                 } catch (JSONException e) {
