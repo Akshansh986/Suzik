@@ -16,7 +16,7 @@ public class UserActivity {
     private static final String ACTION_OUT_APP_DOWNLOAD_STRING = "outAppDownload";
     private static final String ACTION_IN_APP_PLAYED_CACHED_STRING = "inAppPlayCached";
     private static final String ACTION_IN_APP_PLAYED_LOCAL_STRING = "inAppPlayLocal";
-    private static final String ACTION_IN_APP_PLAYED_ONLINE_STRING = "inAppPlayTimeline";
+    private static final String ACTION_IN_APP_PLAYED_ONLINE_STRING = "inAppPlayOnline";
     private static final String ACTION_OUT_APP_PLAYED_LOCAL_STRING = "outAppPlayLocal";
     private static final String ACTION_OUT_APP_PLAYED_ONLINE_STRING = "outAppPlayOnline";
 

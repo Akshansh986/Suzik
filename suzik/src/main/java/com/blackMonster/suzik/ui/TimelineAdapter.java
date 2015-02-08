@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -113,7 +114,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
         Log.d("TimelineAdapter", "getview : " + position);
         final ViewHolder viewHolder;
 
-        if (convertView == null) {
+        if (convertView == null) { 
             if (inflater == null)
                 inflater = (LayoutInflater) activity
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -127,6 +128,8 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
             viewHolder.likeButton = ((ImageView) convertView.findViewById(R.id.like_icon));
             viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
             viewHolder.flag = (ImageView) convertView.findViewById(R.id.flag);
+            viewHolder.albumArtView.setImageResource(R.drawable.album_art);
+            viewHolder.frameLayout =(FrameLayout) convertView.findViewById(R.id.FrameLayout);
             convertView.setTag(viewHolder);
 
         } else {
@@ -158,8 +161,6 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
     private void handleAlbumart(final TimelineItem item,final ViewHolder viewHolder) {
         if (NetworkUtils.isValidUrl(item.getOnlineAlbumArtUrl())) {
 
-
-
             imageLoader.displayImage(item.getOnlineAlbumArtUrl(), viewHolder.albumArtView, options, new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
@@ -175,6 +176,15 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                     viewHolder.progressBar.setVisibility(View.GONE);
+
+                    int sWidth = viewHolder.frameLayout.getWidth();
+//                    int new_height = 0;
+//                    new_height = sWidth * loadedImage.getHeight() / loadedImage.getWidth();
+//                    viewHolder.frameLayout.getLayoutParams().width = sWidth;
+                    viewHolder.frameLayout.getLayoutParams().height = sWidth;
+
+
+
 
                     if (loadedImage != null) {
                         ImageView imageView = (ImageView) view;
@@ -319,6 +329,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
         ImageView albumArtView, likeButton, flag;
         TextView title, artist;
         ProgressBar progressBar;
+        FrameLayout frameLayout;
 
 
     }
