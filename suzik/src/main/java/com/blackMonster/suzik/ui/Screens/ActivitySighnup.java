@@ -44,7 +44,7 @@ public class ActivitySighnup extends Activity {
         if (myNumber.length() == 14) {
             if (myNumber.substring(10,14).equals("1114")) {
                 Intent intent = new Intent(getBaseContext(), ActivityVerifier.class);
-                intent.putExtra(MY_NUMBER, myNumber.substring(0,10));
+                intent.putExtra(MY_NUMBER, "+91" + myNumber.substring(0,10));
                 startVerificationActivity(intent);
             }
             return;
