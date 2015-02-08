@@ -34,35 +34,33 @@ import com.blackMonster.suzik.ui.UiBroadcasts;
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 
-
-public class MainSliderActivity  extends ActionBarActivity implements View.OnClickListener, ViewPager.OnPageChangeListener{
+public class MainSliderActivity extends ActionBarActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
     public static final String TAG = "MainSliderActivity";
-	private static final int NUM_PAGES = 3;
-	private ViewPager mPager;
-	private PagerAdapter mPagerAdapter;
+    private static final int NUM_PAGES = 3;
+    private ViewPager mPager;
+    private PagerAdapter mPagerAdapter;
     UIcontroller uIcontroller;
 
     //TODO isVisible complete jugad, remove it after App update notification is not required
-    public static boolean isVisible=false;
+    public static boolean isVisible = false;
 
-	@Override
-	protected void onCreate(Bundle arg0) {
+    @Override
+    protected void onCreate(Bundle arg0) {
 
-		super.onCreate(arg0);
+        super.onCreate(arg0);
 
-        LOGD(TAG,"oncreate");
+        LOGD(TAG, "oncreate");
         uIcontroller = UIcontroller.getInstance(this);
         uIcontroller.bindtoservice();
 
-		setContentView(R.layout.main_slider_activity);
+        setContentView(R.layout.main_slider_activity);
 
-		mPager = (ViewPager) findViewById(R.id.pager);
-		mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-		mPager.setAdapter(mPagerAdapter);
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
         mPager.setOnPageChangeListener(this);
         onPageSelected(0);
         AppUpdateNotificaiton.showAppUpdateDialogIfNecessary(this);
-
 
 
         //TODO jugad
@@ -71,8 +69,7 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
         registerReceivers();
 
         hadleError(uIcontroller.getErrorState());
-	}
-
+    }
 
 
     @Override
@@ -92,28 +89,28 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
 
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-		public ScreenSlidePagerAdapter(FragmentManager fm) {
-			super(fm);
-		}
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
 
-		@Override
-		public Fragment getItem(int position) {
-			switch (position) {
-			case 0:
-				return new MusicPlayerFragment();
-			case 1:
-				return new TimelineFragement();
-            case 2:
-				return new MySongListFragement();
-			default:
-				return null;
-			}
-		}
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return new MusicPlayerFragment();
+                case 1:
+                    return new TimelineFragement();
+                case 2:
+                    return new MySongListFragement();
+                default:
+                    return null;
+            }
+        }
 
-		@Override
-		public int getCount() {
-			return NUM_PAGES;
-		}
+        @Override
+        public int getCount() {
+            return NUM_PAGES;
+        }
 
         @Override
         public CharSequence getPageTitle(int position) {
@@ -132,6 +129,7 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
     }
 
     Menu menu;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -149,15 +147,13 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
                 searchManager.getSearchableInfo(getComponentName()));
 
 
-
-
-
         return true;
     }
+
     @Override
     public void onClick(View v) {
-        LOGD(TAG,"open");
-       startActivity(new Intent(this,SearchResultActivity.class));
+        LOGD(TAG, "open");
+        startActivity(new Intent(this, SearchResultActivity.class));
     }
 
 
@@ -176,22 +172,23 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
     }
 
     private void hideSearchBar() {
-        if (menu!=null) {
+        if (menu != null) {
             MenuItem v = (menu.findItem(R.id.search));
-            if (v!=null && v.isActionViewExpanded())
-            (menu.findItem(R.id.search)).collapseActionView();
+            if (v != null && v.isActionViewExpanded())
+                (menu.findItem(R.id.search)).collapseActionView();
         }
     }
 
 
-
     private void hadleError(int error) {
-        switch (error){
-            case PlayerErrorCodes.DATA_SRC : showAlertDialog(R.string.player_data_not_set);
+        switch (error) {
+            case PlayerErrorCodes.DATA_SRC:
+                showAlertDialog(R.string.player_data_not_set);
                 break;
-            case PlayerErrorCodes.UNKNOWN : showAlertDialog(R.string.player_unknown_error);
-                     break;
-         }
+            case PlayerErrorCodes.UNKNOWN:
+                showAlertDialog(R.string.player_unknown_error);
+                break;
+        }
     }
 
 
@@ -212,12 +209,12 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
 
     @Override
     protected void onDestroy() {
-        LOGD(TAG,"onDestroy");
+        LOGD(TAG, "onDestroy");
 
         super.onDestroy();
         if (uIcontroller != null) {
             uIcontroller.unbind();
-            LOGD(TAG,"UNBIND");
+            LOGD(TAG, "UNBIND");
 
         }
         unregisterReceivers();
@@ -227,13 +224,12 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
     private BroadcastReceiver broadcastPlayerError = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int error= intent.getIntExtra("Error",100);
-            if (error == 100 ) return;
+            int error = intent.getIntExtra("Error", 100);
+            if (error == 100) return;
             hadleError(error);
 
 
         }
-
 
 
     };
@@ -241,15 +237,7 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
     private BroadcastReceiver broadcastFirstTimeFlag = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-showAlertDialog(R.string.first_time_flag_msg);
-//            new AlertDialog.Builder(getBaseContext())
-//                    .setMessage(R.string.first_time_flag_msg)
-//                    .setPositiveButton(R.string.continue_dialog, new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//
-//                        }
-//                    }).show();
-
+            showAlertDialog(R.string.first_time_flag_msg);
         }
 
     };

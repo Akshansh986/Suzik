@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Suzik</string>
+    <string name="app_name">Suzik β</string>
     <string name="action_settings">Settings</string>
     <string name="loading">loading...</string>
     <string name="emptpy_timeline">Oops! seems like you don\'t have any friend on suzik.</string>
@@ -22,6 +22,6 @@
     <string name="verification_sms">Your one time verification code is : </string>
     <string name="first_time_syncing_fingerprint_not_complete">Syncing music with servers</string>
     <string name="syncing_wait_message">"Syncing music with servers. Will Complete in  "</string>
-    <string name="first_time_flag_msg">Flag flag flag</string>
+    <string name="first_time_flag_msg">Press flag to indicate incorrect songs and help us improve Timeline.</string>
 
 </resources>
