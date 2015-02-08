@@ -3,7 +3,6 @@ package com.blackMonster.suzik.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +74,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
     public TimelineAdapter(Activity activity, List<TimelineItem> timelineItems, Context context) {
         this.activity = activity;
         this.timelineItems = timelineItems;
-        this.context = context;
+        this.context = context.getApplicationContext();
         worker = new WorkerThread();
         worker.start();
         options = new DisplayImageOptions.Builder()
@@ -139,10 +138,10 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
         final TimelineItem item = timelineItems.get(position);
 
-        handleSongPlaying(position,viewHolder,convertView);
+        handleSongPlaying(position, viewHolder, convertView);
         handleFlag(item, viewHolder.flag);
         handleLikeButton(item, viewHolder.likeButton);
-        handleAlbumart(item,viewHolder);
+        handleAlbumart(item, viewHolder);
 
         String title, artist;
         title = item.getSong().getTitle();
@@ -274,7 +273,11 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
             @Override
             public void onClick(View v) {
                 LOGD(TAG, "buttonflag");
-
+                if (!MainPrefs.isFlagFirstClicked(context)) {
+                    MainPrefs.setFlagFirstClick(context);
+                    UiBroadcasts.broadcastFirstTimeFlag(context);
+                    return;
+                }
                 if (flag.isLocalBadSong() || flag.isServerBadSong())
                     return;
 
@@ -290,6 +293,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
 
             }
+
 
             private void sendFlagtoServer(final long serverId) {
                 new Thread(new Runnable() {
@@ -344,14 +348,14 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
             viewHolder.artist.setTextColor(context.getResources().getColor(R.color.timeline_text));
 
             playingView = convertView;
-            LOGD(TAG,"#########################################################");
+            LOGD(TAG, "#########################################################");
             if (uiconroller.isBuffering()) {
                 isBuffring=true;
                 animateView();
             } else {
                 isBuffring=false;
                 stopAnimation();
-            }            LOGD(TAG,"#########################################################");
+            }            LOGD(TAG, "#########################################################");
 
         } else {
             viewHolder.title.setTextColor(context.getResources().getColor(R.color.white));

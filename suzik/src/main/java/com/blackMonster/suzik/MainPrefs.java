@@ -11,6 +11,7 @@ public class MainPrefs {
     private static final String TIMELINE_CACHE = "timelineCache";
     private static final String FIRST_TIME_MUSIC_POST_SERVER_SYNC = "firstPostMusicSync";
     private static final String ADDEDSONGS_RESPONSE_HANDLER_INIT_TIME = "addedsongsResponseHandlerInitTime";
+    private static final String FLAG_FIRST_CLICK = "flagFirstClick";
 
 
     private static SharedPreferences prefs=null;
@@ -71,6 +72,16 @@ public class MainPrefs {
 		initPrefInstance(context);
 		return prefs.getBoolean(FIRST_TIME_MUSIC_SYNC, false);
 	}
+
+    public static void setFlagFirstClick(Context context) {
+        initPrefInstance(context);
+        prefs.edit().putBoolean(FLAG_FIRST_CLICK, true).commit();
+    }
+
+    public static boolean isFlagFirstClicked(Context context) {
+        initPrefInstance(context);
+        return prefs.getBoolean(FLAG_FIRST_CLICK, false);
+    }
 	
 	
 	public static void setLoginDone(Context context) {

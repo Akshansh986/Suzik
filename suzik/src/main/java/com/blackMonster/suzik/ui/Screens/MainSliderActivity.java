@@ -29,6 +29,7 @@ import com.blackMonster.suzik.musicPlayer.MusicPlayerService;
 import com.blackMonster.suzik.musicPlayer.PlayerErrorCodes;
 import com.blackMonster.suzik.musicPlayer.UIcontroller;
 import com.blackMonster.suzik.ui.AppUpdateNotificaiton;
+import com.blackMonster.suzik.ui.UiBroadcasts;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
@@ -72,10 +73,7 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
         hadleError(uIcontroller.getErrorState());
 	}
 
-    private void registerReceivers() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastPlayerError, new IntentFilter(MusicPlayerService.broadcastError));
 
-    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -186,19 +184,6 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
     }
 
 
-    private BroadcastReceiver broadcastPlayerError = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int error= intent.getIntExtra("Error",100);
-            if (error == 100 ) return;
-            hadleError(error);
-
-
-        }
-
-
-
-    };
 
     private void hadleError(int error) {
         switch (error){
@@ -238,8 +223,46 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
         unregisterReceivers();
     }
 
+
+    private BroadcastReceiver broadcastPlayerError = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int error= intent.getIntExtra("Error",100);
+            if (error == 100 ) return;
+            hadleError(error);
+
+
+        }
+
+
+
+    };
+
+    private BroadcastReceiver broadcastFirstTimeFlag = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+showAlertDialog(R.string.first_time_flag_msg);
+//            new AlertDialog.Builder(getBaseContext())
+//                    .setMessage(R.string.first_time_flag_msg)
+//                    .setPositiveButton(R.string.continue_dialog, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//
+//                        }
+//                    }).show();
+
+        }
+
+    };
+
+    private void registerReceivers() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastPlayerError, new IntentFilter(MusicPlayerService.broadcastError));
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastFirstTimeFlag, new IntentFilter(UiBroadcasts.FIRST_TIME_FLAG));
+
+    }
+
     private void unregisterReceivers() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastPlayerError);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastFirstTimeFlag);
 
 
     }

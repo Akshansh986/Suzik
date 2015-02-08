@@ -8,22 +8,19 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
-import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.ui.Screens.MainSliderActivity;
 import com.blackMonster.suzik.util.NetworkUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import static com.blackMonster.suzik.util.LogUtils.LOGE;
 
 /**
@@ -45,7 +42,7 @@ public class AppUpdateNotificaiton {
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.d(TAG, "Response: " + response.toString());
+                LOGD(TAG, "Response: " + response.toString());
 
                 if (response != null) {
 
@@ -69,8 +66,8 @@ public class AppUpdateNotificaiton {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-                Log.d(TAG, "Error: " + error.getMessage());
+//                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                LOGD(TAG, "Error: " + error.getMessage());
 
             }
         });
