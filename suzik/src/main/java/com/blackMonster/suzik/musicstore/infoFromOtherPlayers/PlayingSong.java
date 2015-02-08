@@ -1,32 +1,35 @@
 package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
 
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.LOGE;
+import static com.blackMonster.suzik.util.LogUtils.LOGI;
+
 public class PlayingSong {
 	private static final String TAG = "PlayingSong";
-	private static final double VIRTUALLY_COMPLETED_LOWER_LIMIT = .1; // 60%
+	private static final double VIRTUALLY_COMPLETED_LOWER_LIMIT = .6; // 60%
 	private static final double VIRTYALLY_COMPLETED_UPPER_LIMIT = 2; // 200%
 
 	public static boolean set(BroadcastSong song, long pastPlayed,
 			long startTS, Context context) {
-		Log.i(TAG, "set");
+		LOGI(TAG, "set");
 		if (isInTimeNSameSong(song, context)) {
-			Log.e(TAG, "Unable to write");
+			LOGE(TAG, "Unable to write");
 			return false;
 		} else {
 			PlayingSongPrefs.setAll(song, pastPlayed, startTS, context);
-			Log.d(TAG, "written");
+			LOGD(TAG, "written");
 			return true;
 		}
 	}
 
 	private static boolean isInTimeNSameSong(BroadcastSong song, Context context) {
-		Log.i(TAG, "getWriteLock");
+		LOGI(TAG, "getWriteLock");
 
 		if (!isPlaying(context))
 			return false;
@@ -34,7 +37,7 @@ public class PlayingSong {
 				.getStartTS(context)) <= 500;
 		boolean sameSong = song.equals(PlayingSongPrefs.getSong(context));
 
-		Log.d(TAG, "intime " + inTime + "samesong" + sameSong);
+		LOGD(TAG, "intime " + inTime + "samesong" + sameSong);
 		if (inTime && sameSong)
 			return true;
 		else
@@ -42,23 +45,23 @@ public class PlayingSong {
 	}
 
 	public static void reset(Context context) {
-		Log.i(TAG, "reset");
+		LOGI(TAG, "reset");
 		PlayingSongPrefs.setAll(
 				new BroadcastSong(-1, "NA", "NA", "NA", -1, -1), -1, -1,
 				context);
 	}
 
 	public static boolean isCompleted(Context context) {
-		Log.i(TAG, "iscompleted");
+		LOGI(TAG, "iscompleted");
 		if (!isPlaying(context))
 			return false;
 		long tElapsed = System.currentTimeMillis()
 				- PlayingSongPrefs.getStartTS(context)
 				+ PlayingSongPrefs.getPastPlayed(context);
 
-		Log.d(TAG,
-				"telapsed " + tElapsed + " duration "
-						+ PlayingSongPrefs.getDuration(context));
+		LOGD(TAG,
+                "telapsed " + tElapsed + " duration "
+                        + PlayingSongPrefs.getDuration(context));
 		if (tElapsed > PlayingSongPrefs.getDuration(context) - 3000
 				&& tElapsed < PlayingSongPrefs.getDuration(context) + 3000)
 			return true;
@@ -67,7 +70,7 @@ public class PlayingSong {
 	}
 
 	public static boolean isVirtuallyCompleted(Context context) {
-		Log.i(TAG, "isvirtuallycompleted");
+		LOGI(TAG, "isvirtuallycompleted");
 		if (!isPlaying(context))
 			return false;
 
@@ -77,7 +80,7 @@ public class PlayingSong {
 
 		long duration = PlayingSongPrefs.getDuration(context);
 
-		Log.d(TAG, "telapsed" + tElapsed + " duration " + duration);
+		LOGD(TAG, "telapsed" + tElapsed + " duration " + duration);
 		if (tElapsed > VIRTUALLY_COMPLETED_LOWER_LIMIT * duration
 				&& tElapsed < VIRTYALLY_COMPLETED_UPPER_LIMIT * duration)
 			return true;
@@ -86,7 +89,7 @@ public class PlayingSong {
 	}
 
 	public static boolean isPlaying(Context context) {
-		Log.i(TAG, "isplaying");
+		LOGI(TAG, "isplaying");
 		if (PlayingSongPrefs.getId(context) == -1)
 			return false;
 		else
@@ -94,20 +97,20 @@ public class PlayingSong {
 	}
 
 	public static void moveToCompleted(long completedTS, Context context) {
-		Log.i(TAG, "movetocompleted");
+		LOGI(TAG, "movetocompleted");
 		TableCompletedSongs.insert(PlayingSong.getSong(context), completedTS,
 				context);
 		Song song = new Song(PlayingSong.getSong(context).getTitle(),
 				PlayingSong.getSong(context).getArtist(), PlayingSong
 						.getSong(context).getAlbum(), PlayingSong
 						.getSong(context).getDuration());
-		UserActivityManager.add(new UserActivity(song,null, PlayingSong.getSong(context).getId(), UserActivity.ACTION_OUT_APP_PLAYED, PlayingSong.getSong(context).isStreaming(), System.currentTimeMillis()), context);
+		UserActivityManager.add(new UserActivity(song,null, PlayingSong.getSong(context).getId(), UserActivity.getOutappPlayAction(PlayingSong.getSong(context).isStreaming()), System.currentTimeMillis()), context);
 		PlayingSong.reset(context);
 
 	}
 
 	public static BroadcastSong getSong(Context context) {
-		Log.i(TAG, "getsong");
+		LOGI(TAG, "getsong");
 		return new BroadcastSong(PlayingSongPrefs.getId(context),
 				PlayingSongPrefs.getTrack(context),
 				PlayingSongPrefs.getArtist(context),

@@ -2,17 +2,11 @@
 package com.blackMonster.suzik.ui;
 
 import android.app.Activity;
-
 import android.content.Intent;
-
 import android.os.Bundle;
 
-
-
 import com.blackMonster.suzik.MainPrefs;
-
-import com.blackMonster.suzik.ui.Screens.ActivitySignup;
-
+import com.blackMonster.suzik.ui.Screens.ActivitySighnup;
 import com.blackMonster.suzik.ui.Screens.MainSliderActivity;
 
 
@@ -39,7 +33,7 @@ public class DeciderActivity extends Activity {
 
 		} else {
 
-			startActivity(new Intent(this,ActivitySignup.class));
+			startActivity(new Intent(this,ActivitySighnup.class));
 
 		}
 

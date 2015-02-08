@@ -3,7 +3,6 @@ package com.blackMonster.suzik;
 import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -15,12 +14,14 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+
 import io.fabric.sdk.android.Fabric;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 public class AppController extends Application {
 
 	// Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-
 	private static final String TWITTER_KEY = "kEANkzBZuR2Znl6ljkTwajOVl";
 
 	private static final String TWITTER_SECRET = "7x5vnbj5KFWVWSlfs4sZGEUMmJKixQUXeltSTmZO9yVZ95YE3j";
@@ -34,10 +35,13 @@ public class AppController extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		final TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-		Log.d(TAG, "oncreate");
-	    	Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
+        final TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+	    Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
 		Crashlytics.setUserIdentifier(MainPrefs.getMyNo(this));
+
+		LOGD(TAG, "oncreate");
+
+
 		mInstance = this;
         initImageLoader(getApplicationContext());
 	}
@@ -93,4 +97,6 @@ public class AppController extends Application {
 			mRequestQueue.cancelAll(tag);
 		}
 	}
+
+
 }

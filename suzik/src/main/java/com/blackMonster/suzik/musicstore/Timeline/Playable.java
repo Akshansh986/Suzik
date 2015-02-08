@@ -27,4 +27,11 @@ public interface Playable {
 //    }
 
     public String getSongPath();
+
+
+    /**
+     * If original playable has error in playing, alternate playable can be requested.
+     * @return Playable or null
+     */
+    public Playable getAlternatePlayable();
 }

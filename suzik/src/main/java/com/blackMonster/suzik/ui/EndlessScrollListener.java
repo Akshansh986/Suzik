@@ -1,8 +1,9 @@
 package com.blackMonster.suzik.ui;
 
-import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 public abstract class EndlessScrollListener implements OnScrollListener {
     // The minimum amount of items to have below your current scroll position
@@ -37,7 +38,7 @@ public abstract class EndlessScrollListener implements OnScrollListener {
     public void onScroll(AbsListView view,int firstVisibleItem,int visibleItemCount,int totalItemCount) 
         {
     	
-    		Log.d("EndlessScroll", "firstVisItem : " + firstVisibleItem + " visibleItemCount : " + visibleItemCount +  " totalItemCount : " + totalItemCount + " previousTotalItemCDOunt : " + previousTotalItemCount )  ;
+    		LOGD("EndlessScroll", "firstVisItem : " + firstVisibleItem + " visibleItemCount : " + visibleItemCount + " totalItemCount : " + totalItemCount + " previousTotalItemCDOunt : " + previousTotalItemCount)  ;
         // If the total item count is zero and the previous isn't, assume the
         // list is invalidated and should be reset back to initial state
         if (totalItemCount < previousTotalItemCount) {

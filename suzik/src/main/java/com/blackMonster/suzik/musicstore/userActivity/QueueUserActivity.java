@@ -1,10 +1,5 @@
 package com.blackMonster.suzik.musicstore.userActivity;
 
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -14,13 +9,17 @@ import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+
 public class QueueUserActivity {
 
 	private static final String TAG = "TableUserActivityQueue";
 	private static final String C_ID = "id";
 	private static final String C_SONG_ID = "songId";
 	private static final String C_ACTION = "action";
-	private static final String C_STREAMING = "STREAMING";
 	private static final String C_COMPLETED_TS = "COMPLETED_TS";
 	
 	private static final String C_TITLE = "title";
@@ -34,8 +33,8 @@ public class QueueUserActivity {
 	public static void createTable(SQLiteDatabase db) {
 		String sql = String
 				.format("create table %s"
-						+ "(%s INTEGER PRIMARY KEY AUTOINCREMENT,%s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s text, %s text, %s text, %s INTEGER)",
-						TABLE, C_ID, C_SONG_ID, C_ACTION, C_STREAMING,
+						+ "(%s INTEGER PRIMARY KEY AUTOINCREMENT,%s INTEGER, %s INTEGER, %s INTEGER, %s text, %s text, %s text, %s INTEGER)",
+						TABLE, C_ID, C_SONG_ID, C_ACTION,
 						C_COMPLETED_TS, C_TITLE, C_ARTIST, C_ALBUM, C_DURATION);
 		db.execSQL(sql);
 	}
@@ -60,8 +59,7 @@ public class QueueUserActivity {
 				allActivity.add(new UserActivity(song, cursor.getLong(cursor
 						.getColumnIndex(C_ID)), cursor.getLong(cursor
 						.getColumnIndex(C_SONG_ID)), cursor.getInt(cursor
-						.getColumnIndex(C_ACTION)), cursor.getInt(cursor
-						.getColumnIndex(C_STREAMING)), cursor.getLong(cursor
+						.getColumnIndex(C_ACTION)), cursor.getLong(cursor
 						.getColumnIndex(C_COMPLETED_TS))));
 				cursor.moveToNext();
 			}
@@ -90,7 +88,6 @@ public class QueueUserActivity {
 
 		values.put(C_SONG_ID, data.songId());
 		values.put(C_ACTION, data.action());
-		values.put(C_STREAMING, data.getStreaming());
 		values.put(C_COMPLETED_TS, data.completedTS());
 		
 		values.put(C_TITLE,data.song().getTitle());

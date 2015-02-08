@@ -42,7 +42,7 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile files('libs/GN_Music_SDK.jar')
     compile files('libs/volley.jar')
-    compile('com.crashlytics.sdk.android:crashlytics:2.2.0@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.2.1@aar') {
         transitive = true;
     }
     compile('com.twitter.sdk.android:twitter:1.1.1@aar') {

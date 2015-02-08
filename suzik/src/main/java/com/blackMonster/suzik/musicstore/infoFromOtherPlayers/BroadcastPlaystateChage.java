@@ -2,19 +2,20 @@ package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
 
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.LOGI;
+
 public class BroadcastPlaystateChage extends MusicBroadcastManager {
 	private static final String TAG = "BroadcastPlaystateChage";
 
 	@Override
-	public void run(Context context) {
-		Log.d(TAG, "run");
+	public void runIt(Context context) {
+		LOGD(TAG, "runIt");
 		if (isPlaying())
 			handlePlay(context);
 		else
@@ -48,7 +49,7 @@ public class BroadcastPlaystateChage extends MusicBroadcastManager {
 	}
 
 	private void handlePlay(Context context) {
-		Log.i(TAG, "handleplay");
+		LOGI(TAG, "handleplay");
 		if (PlayingSong.isVirtuallyCompleted(context))
 			PlayingSong.moveToCompleted(System.currentTimeMillis(), context);
 
@@ -57,9 +58,9 @@ public class BroadcastPlaystateChage extends MusicBroadcastManager {
 		long pastPlayed;
 		if (tps != null) {
 			pastPlayed = tps.getPastPlayed();
-			Log.d(TAG, "pastplayed" + pastPlayed);
+			LOGD(TAG, "pastplayed" + pastPlayed);
 			TablePausedSongs.remove(getSong(), context);
-			Log.d(TAG, "pastplayed" + pastPlayed);
+			LOGD(TAG, "pastplayed" + pastPlayed);
 		} else
 			pastPlayed = 0;
 
@@ -70,7 +71,7 @@ public class BroadcastPlaystateChage extends MusicBroadcastManager {
 	}
 
 	private void handlePause(Context context) {
-		Log.i(TAG, "handlepause");
+		LOGI(TAG, "handlepause");
 
 		long pastPlayed = System.currentTimeMillis()
 				- PlayingSong.getStartTs(context)
@@ -88,8 +89,7 @@ public class BroadcastPlaystateChage extends MusicBroadcastManager {
 
 				UserActivityManager.add(
 						new UserActivity(song,null, PlayingSong.getSong(context)
-								.getId(), UserActivity.ACTION_OUT_APP_PLAYED,
-								PlayingSong.getSong(context).isStreaming(),
+								.getId(),UserActivity.getOutappPlayAction(PlayingSong.getSong(context).isStreaming()),
 								System.currentTimeMillis()), context);
 
 			} else

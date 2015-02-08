@@ -1,18 +1,18 @@
 package com.blackMonster.suzik.musicstore.userActivity;
 
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import android.util.Pair;
 
-import java.util.HashMap;
-import java.util.List;
+import com.blackMonster.suzik.musicstore.module.UserActivity;
+import com.blackMonster.suzik.util.ServerUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Pair;
+import java.util.HashMap;
+import java.util.List;
 
-import com.blackMonster.suzik.musicstore.module.UserActivity;
-import com.blackMonster.suzik.util.ServerUtils;
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 class JsonHelper {
 	private static final String TAG = "userActivity.JsonHelper";
@@ -22,7 +22,6 @@ class JsonHelper {
 
 		private static final String P_POST_ID = "postId";
 		private static final String P_SERVER_ID = "songId";
-		private static final String P_STREAMING = "streaming";
 		private static final String P_ACTION = "action";
 		private static final String P_COMPLETED_TS = "ts";
 
@@ -58,7 +57,6 @@ class JsonHelper {
 			obj.put(P_POST_ID, activity.first.id());
 			obj.put(P_SERVER_ID, activity.second);
 			obj.put(P_ACTION, activity.first.getActionString());
-			obj.put(P_STREAMING, activity.first.getStreaming());
 			obj.put(P_COMPLETED_TS, activity.first.completedTS());
 			return obj;
 		}
