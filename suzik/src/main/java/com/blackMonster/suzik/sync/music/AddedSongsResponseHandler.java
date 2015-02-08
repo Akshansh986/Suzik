@@ -136,6 +136,7 @@ public class AddedSongsResponseHandler extends Syncer {
     }
 
     static void futureCall(Context context) {
+        MainPrefs.setAddedsongsResponseHandlerInitTime(System.currentTimeMillis(),context);
         long time = getRemainingTimeMs(context);
         Syncer.callFuture(AddedSongsResponseHandler.class, time, context);
 

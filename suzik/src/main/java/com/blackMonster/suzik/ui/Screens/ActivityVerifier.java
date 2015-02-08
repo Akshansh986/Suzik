@@ -1,7 +1,5 @@
 package com.blackMonster.suzik.ui.Screens;
 
-import static com.blackMonster.suzik.util.LogUtils.LOGD;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -10,10 +8,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blackMonster.suzik.DbHelper;
@@ -25,12 +23,10 @@ import com.blackMonster.suzik.sync.music.InitMusicDb;
 import com.blackMonster.suzik.sync.music.SongsSyncer;
 import com.blackMonster.suzik.util.NetworkUtils;
 import com.blackMonster.suzik.util.UiUtils;
-import com.digits.sdk.android.AuthCallback;
-import com.digits.sdk.android.DigitsAuthButton;
-import com.digits.sdk.android.DigitsException;
-import com.digits.sdk.android.DigitsSession;
 
-public class ActivitySignup extends Activity {
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+
+public class ActivityVerifier extends Activity {
     private static final String TAG = "ActivitySignup";
     private static final int RUNNING = 1;
     private static final int STOPPED = 0;
@@ -49,55 +45,42 @@ public class ActivitySignup extends Activity {
         dialog = null;
     }
 
+    String verificationCode;
+    String myNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LOGD(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        myNumber = getIntent().getStringExtra(ActivitySighnup.MY_NUMBER);
+        verificationCode = getIntent().getStringExtra(ActivitySighnup.VERIFICATION_CODE);
+        setContentView(R.layout.activity_verifier);
         resetGlobals();
         registerReceivers();
 
-//        DigitsAuthButton digitsButton = (DigitsAuthButton) findViewById(R.id.auth_button);
-//        digitsButton.setCallback(new AuthCallback() {
-//            @Override
-//            public void success(DigitsSession session, String phoneNumber) {
-//
-//                LOGD(TAG, "Sucess " + phoneNumber);
-//                onSuccessfulRegistration(phoneNumber);
-//
-//            }
-//
-//            @Override
-//            public void failure(DigitsException exception) {
-//                LOGD(TAG, "failure");
-//                Toast.makeText(getBaseContext(), "Registration failed!",
-//                        Toast.LENGTH_LONG).show();
-//            }
-//        });
-
+        if (verificationCode == null) onSuccessfulRegistration(myNumber);
     }
 
     public void buttonSubmit(View v) {
-        String myNumber;
+        String vc;
         LOGD(TAG, "buttonSubmit");
 
-        myNumber = ((EditText) findViewById(R.id.signup_number))
+        vc = ((EditText) findViewById(R.id.verification_code))
                 .getEditableText().toString().trim();
-        if (myNumber.length() != 10) return;
-
+        if (vc.equals(verificationCode)) {
+            onSuccessfulRegistration(myNumber);
+            ((TextView) findViewById(R.id.errorText)).setVisibility(View.INVISIBLE);
+        } else {
+            ((TextView) findViewById(R.id.errorText)).setVisibility(View.VISIBLE);
+        }
         hideKeyboard();
-        myNumber = "+91" + myNumber;
-
-        onSuccessfulRegistration(myNumber);
-
-
     }
 
 
     private void onSuccessfulRegistration(String number) {
 
         if (!NetworkUtils.isInternetAvailable(this)) {
-            Toast.makeText(this,R.string.device_offline,Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.device_offline, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -114,7 +97,6 @@ public class ActivitySignup extends Activity {
                 putExtra(Syncer.SHOULD_RETRY, false));
         status[1] = RUNNING;
     }
-
 
 
     private BroadcastReceiver broadcastInitMusicDbResult = new BroadcastReceiver() {
@@ -164,7 +146,7 @@ public class ActivitySignup extends Activity {
                 finish();
 
             } else {
-                Toast.makeText(getBaseContext(),R.string.loggingIn_error,
+                Toast.makeText(getBaseContext(), R.string.loggingIn_error,
                         Toast.LENGTH_LONG).show();
                 resetGlobals();
                 clearDatabaseAndPrefs();
@@ -180,12 +162,10 @@ public class ActivitySignup extends Activity {
     }
 
 
-
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceivers();
     }
-
 
 
     private void hideKeyboard() {

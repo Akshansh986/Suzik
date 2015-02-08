@@ -34,14 +34,14 @@
             android:id="@+id/signup_button_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/signup_number"
+            android:layout_below="@+id/verification_code"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
             android:onClick="buttonSubmit"
             android:text="Submit" />
 
         <EditText
-            android:id="@+id/signup_number"
+            android:id="@+id/verification_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -56,8 +56,8 @@
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/signup_number"
-            android:layout_alignBottom="@+id/signup_number"
+            android:layout_alignBaseline="@+id/verification_code"
+            android:layout_alignBottom="@+id/verification_code"
             android:layout_alignLeft="@+id/signup_button_submit"
             android:text="+91"
             android:textAppearance="?android:attr/textAppearanceMedium" />

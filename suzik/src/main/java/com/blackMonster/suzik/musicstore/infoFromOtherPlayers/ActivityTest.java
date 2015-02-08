@@ -12,7 +12,7 @@ public class ActivityTest extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_signup);
+		setContentView(R.layout.activity_verifier);
 		Log.d("ACtivitytest", "oncreate");
 		DbHelper.getInstance(this);
 		//SendMyMusic.send(this);

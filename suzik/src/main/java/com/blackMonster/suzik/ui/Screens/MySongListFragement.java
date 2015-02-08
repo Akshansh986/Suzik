@@ -85,16 +85,18 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
     void showTryAgainMessageIfNecessary() {
 
         if (!MainPrefs.isFirstTimeMusicSyncDone(getActivity())) {
-            long time = AddedSongsResponseHandler.getRemainingTimeMs(getActivity());
-            double ftime = time / (double)AppConfig.MINUTE_IN_MILLISEC;
+            long completeTime = AddedSongsResponseHandler.getRemainingTimeMs(getActivity()) + MainPrefs.getAddedSongsResponseHandlerInitTime(getActivity());
+            long remaining = completeTime - System.currentTimeMillis();
+
+            double ftime = remaining / (double)AppConfig.MINUTE_IN_MILLISEC;
             String message;
 
             Double truncatedDouble=new BigDecimal(ftime ).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
-            if (ftime == 0)
-                message = "Syncing music with servers";
+            if (ftime <= 0)
+                message = getString(R.string.first_time_syncing_fingerprint_not_complete);
             else
-                message = "Syncing music with servers. Will Complete in  " + truncatedDouble + " minutes from the time it started." ;
+                message = getString(R.string.syncing_wait_message) + " " + truncatedDouble;
             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
         }
     }

@@ -16,7 +16,11 @@
     <string name="title_player">Player</string>
     <string name="player_data_not_set">File can\'t be played</string>
     <string name="player_unknown_error">Unknown error</string>
-
-
+    <string name="sms_send">Suzik will send a one time SMS to verify your number. SMS charges may apply.</string>
+    <string name="continue_dialog">continue</string>
+    <string name="failed_sms_verification">SMS verification failed, retry..</string>
+    <string name="verification_sms">Your one time verification code is : </string>
+    <string name="first_time_syncing_fingerprint_not_complete">Syncing music with servers</string>
+    <string name="syncing_wait_message">"Syncing music with servers. Will Complete in  "</string>
 
 </resources>

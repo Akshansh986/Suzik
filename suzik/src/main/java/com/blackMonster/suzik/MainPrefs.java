@@ -10,6 +10,7 @@ public class MainPrefs {
 	private static final String LOGIN_DONE = "loginDone";
     private static final String TIMELINE_CACHE = "timelineCache";
     private static final String FIRST_TIME_MUSIC_POST_SERVER_SYNC = "firstPostMusicSync";
+    private static final String ADDEDSONGS_RESPONSE_HANDLER_INIT_TIME = "addedsongsResponseHandlerInitTime";
 
 
     private static SharedPreferences prefs=null;
@@ -55,7 +56,12 @@ public class MainPrefs {
 		initPrefInstance(context);
 		prefs.edit().putString(MY_NO, number).commit();
 	}
-	
+
+    public static void setAddedsongsResponseHandlerInitTime(long time,Context context) {
+        initPrefInstance(context);
+        prefs.edit().putLong(ADDEDSONGS_RESPONSE_HANDLER_INIT_TIME, time).commit();
+    }
+
 	public static void setFirstTimeMusicSyncDone(Context context) {
 		initPrefInstance(context);
 		prefs.edit().putBoolean(FIRST_TIME_MUSIC_SYNC, true).commit();
@@ -82,6 +88,11 @@ public class MainPrefs {
 		initPrefInstance(context);
 		return prefs.getString(MY_NO, "123");
 	}
+
+    public static long getAddedSongsResponseHandlerInitTime(Context context) {
+        initPrefInstance(context);
+        return prefs.getLong(ADDEDSONGS_RESPONSE_HANDLER_INIT_TIME, 0);
+    }
 
     public static void setTimelineCache(String data, Context context){
         initPrefInstance(context);

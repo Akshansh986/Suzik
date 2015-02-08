@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    >
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView"
+        android:scaleType="centerCrop"
+        android:src="@drawable/photo"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="25dp"
+        android:id="@+id/RelativeLayout1">
+             <TextView
+            android:id="@+id/act_songs_list_song_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="42dp"
+            android:textSize="35sp"
+            android:text="Social Music"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <Button
+            android:id="@+id/signup_button_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="buttonSubmit"
+            android:text="Login"
+            android:layout_below="@+id/errorText"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:id="@+id/verification_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/act_songs_list_song_name"
+            android:layout_marginTop="39dp"
+            android:layout_toRightOf="@+id/textView1"
+            android:ems="10"
+            android:hint="Enter verification code"
+            android:inputType="phone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            style="@style/AudioFileInfoOverlayText"
+            android:text="@string/failed_sms_verification"
+            android:visibility="invisible"
+            android:textColor="@android:color/holo_red_light"
+            android:id="@+id/errorText"
+            android:layout_below="@+id/verification_code"
+            android:layout_centerHorizontal="true" />
+
+        TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/signup_number"
+            android:layout_alignBottom="@+id/signup_number"
+            android:layout_alignLeft="@+id/signup_button_submit"
+            android:text="+91"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+
+        <!--<ProgressBar-->
+        <!--style="?android:attr/progressBarStyleLarge"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/progressBar2"-->
+        <!--android:progressDrawable="@drawable/progress_bar_color"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_centerHorizontal="true" />-->
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

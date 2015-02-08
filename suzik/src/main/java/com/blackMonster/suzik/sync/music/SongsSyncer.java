@@ -116,6 +116,7 @@ public class SongsSyncer extends Syncer {
 
 
     public static  int getBatchSize(int totalSongs) {
+        if (totalSongs ==0 )return 0;
         int batchSize = (int) Math.ceil( (double) totalSongs / PREFERRED_NO_BATCH );
 
         if (batchSize < MIN_BATCH_SIZE)  batchSize = MIN_BATCH_SIZE;
