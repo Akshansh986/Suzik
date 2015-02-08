@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,6 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
@@ -121,7 +119,7 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.d(TAG, "Response: " + response.toString());
+                LOGD(TAG, "Response: " + response.toString());
                 if (getActivity() == null) {
                     LOGD(TAG,"on response : activity no longer visible...returning");
                     return;
@@ -163,8 +161,8 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
                 }
                 swipeLayout.setRefreshing(false);
                 Toast.makeText(getActivity().getBaseContext(), "Unable to load timeline ", Toast.LENGTH_LONG).show();
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-                Log.d(TAG, "Error: " + error.getMessage());
+                //VolleyLog.d(TAG, "Error: " + error.getMessage());
+                LOGD(TAG, "Error: " + error.getMessage());
 
             }
         });
@@ -185,7 +183,7 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
     @Override
     public void onItemClick(AdapterView<?> arg0, View view, final int position, long arg3) {
 
-        Log.d(TAG, "fsdf " + position + adapter.getPlayable(position).getSongPath());
+        LOGD(TAG, "fsdf " + position + adapter.getPlayable(position).getSongPath());
         if (!adapter.getPlayable(position).isOffline() && !NetworkUtils.isInternetAvailable(getActivity())) {
             Toast.makeText(getActivity(),R.string.device_offline,Toast.LENGTH_SHORT).show();
             return;
@@ -270,7 +268,7 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
     private BroadcastReceiver broadcastUiDataUpdate = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG,"uiUpdate called");
+            LOGD(TAG, "uiUpdate called");
             adapter.notifyDataSetChanged();
 
         }
@@ -278,7 +276,7 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
     private BroadcastReceiver broadcastBufferingPlayerRecieve = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG,"broadcastBufferingPlayerRecieve");
+            LOGD(TAG, "broadcastBufferingPlayerRecieve");
             if (isBuffering(intent)) {
                 adapter.isBuffring =true;
                 adapter.animateView();

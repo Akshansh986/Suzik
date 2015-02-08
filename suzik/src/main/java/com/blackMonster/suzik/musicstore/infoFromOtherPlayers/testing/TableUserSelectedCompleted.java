@@ -4,10 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.BroadcastSong;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 public class TableUserSelectedCompleted {
 	public static final String TABLE = "USER_SELECTED_COMPLETED";
@@ -31,7 +32,7 @@ public class TableUserSelectedCompleted {
 	}
 
 	public static void insert(BroadcastSong song,long completedTS, Context context) {
-		Log.d(TABLE, "insert");
+		LOGD(TABLE, "insert");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
 		ContentValues values = new ContentValues();

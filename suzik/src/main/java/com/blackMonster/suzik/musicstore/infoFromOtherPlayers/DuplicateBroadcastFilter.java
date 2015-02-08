@@ -3,7 +3,7 @@ package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.util.Log;
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 public class DuplicateBroadcastFilter {
 
@@ -24,11 +24,11 @@ public class DuplicateBroadcastFilter {
 	}
 
 	boolean isDuplicate(BroadcastSong currSong, String currAction, boolean currPlaying, long currTime) {
-		Log.d("DuplicateBroadcastfilter", "isDuplicate");
+		LOGD("DuplicateBroadcastfilter", "isDuplicate");
 		boolean result = false, found = false;
 
 		for (BroadcastInfo broadcast : broadcastList) {
-			Log.d("DuplicateBroadcastfilter", broadcast.action + "  " + broadcast.song.getTitle() + "  " + broadcast.playing);
+			LOGD("DuplicateBroadcastfilter", broadcast.action + "  " + broadcast.song.getTitle() + "  " + broadcast.playing);
 			if (broadcast.action.equals(currAction)) {
 
 				if (broadcast.song.equals(currSong)

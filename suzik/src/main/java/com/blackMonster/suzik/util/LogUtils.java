@@ -1,15 +1,15 @@
 package com.blackMonster.suzik.util;
 
+import android.util.Log;
+
+import com.blackMonster.suzik.AppConfig;
+import com.crashlytics.android.Crashlytics;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
-
-import android.util.Log;
-
-import com.blackMonster.suzik.AppConfig;
-import com.crashlytics.android.Crashlytics;
 
 public class LogUtils {
 
@@ -18,26 +18,32 @@ public class LogUtils {
 			Log.d(tag, message);
 			log(tag, message);
 		}
-		// Crashlytics.log(Log.DEBUG, tag, message);
 		Crashlytics.log("D/" + tag + " " + message);
 	}
 
-	public static void LOGV(final String tag, String message) {
-		Log.v(tag, message);
-	}
 
-	public static void LOGI(final String tag, String message) {
-		Log.i(tag, message);
-	}
+	public static void LOGI(final String tag, String message)
+    {
+        if (AppConfig.DEBUG) {
+            Log.i(tag, message);
+            log(tag, message);
+        }
+        Crashlytics.log("I/" + tag + " " + message);	}
 
 	public static void LOGW(final String tag, String message) {
-		Log.w(tag, message);
+        if (AppConfig.DEBUG) {
+            Log.w(tag, message);
+            log(tag, message);
+        }
+        Crashlytics.log("W/" + tag + " " + message);
 	}
 
 	public static void LOGE(final String tag, String message) {
-		Log.e(tag, message);
-		log(tag, message);
-		// Crashlytics.log(Log.ERROR, tag, message);
+        if (AppConfig.DEBUG) {
+            Log.e(tag, message);
+            log(tag, message);
+        }
+        Crashlytics.log("E/" + tag + " " + message);
 
 	}
 
@@ -58,7 +64,6 @@ public class LogUtils {
 			String mydate = java.text.DateFormat.getDateTimeInstance().format(
 					Calendar.getInstance().getTime());
 			buf.append(mydate + "     " + TAG + " --->  " + text);
-			// Log.d(TAG, text);
 			buf.newLine();
 			buf.close();
 		} catch (IOException e) {

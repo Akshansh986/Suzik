@@ -20,7 +20,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.util.Pair;
 import android.widget.RemoteViews;
 
@@ -33,6 +32,7 @@ import com.blackMonster.suzik.sync.music.MusicSyncManager;
 import com.blackMonster.suzik.ui.Screens.MainSliderActivity;
 import com.blackMonster.suzik.util.NetworkUtils;
 
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import static com.blackMonster.suzik.util.LogUtils.LOGE;
 
 public class MusicPlayerService extends Service
@@ -113,7 +113,7 @@ public class MusicPlayerService extends Service
     };
 
     private void setuphandler() {
-        Log.d(TAG, "setuphandler");
+        LOGD(TAG, "setuphandler");
 
         handler.removeCallbacks(sendUpdatestoui);
         handler.postDelayed(sendUpdatestoui, 500);
@@ -136,7 +136,7 @@ public class MusicPlayerService extends Service
         @Override
         public void onReceive(Context arg0, Intent arg1) {
             // TODO Auto-generated method stub
-            Log.d(TAG, "onReceive");
+            LOGD(TAG, "onReceive");
 
         }
     };
@@ -146,7 +146,7 @@ public class MusicPlayerService extends Service
         @Override
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
-            Log.d(TAG, "broadcastReceiver_seekbaruiupdate:onReceive");
+            LOGD(TAG, "broadcastReceiver_seekbaruiupdate:onReceive");
             updateseekpos(intent);
         }
     };
@@ -167,7 +167,7 @@ public class MusicPlayerService extends Service
 
 
     public void initMusicPlayer() {
-        Log.d(TAG, "service: intialize music player ");
+        LOGD(TAG, "service: intialize music player ");
         //set player properties
         player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -208,8 +208,8 @@ public class MusicPlayerService extends Service
                 }
                 CurrentSong = playable;
                 if (CurrentSong != null)
-                    Log.d(TAG, "ab update hoga%%%%%%%%%%%" + CurrentSong.getSong().getAlbum() + CurrentSong.getSong().getTitle() + "%%%%%%%%%%%%");
-                Log.d(TAG, "^^^^^^^^^^^^^^^^^^" + CurrentSong);
+                    LOGD(TAG, "ab update hoga%%%%%%%%%%%" + CurrentSong.getSong().getAlbum() + CurrentSong.getSong().getTitle() + "%%%%%%%%%%%%");
+                LOGD(TAG, "^^^^^^^^^^^^^^^^^^" + CurrentSong);
                 if (playable.isOffline() == false) {
                     isInternetAvailable = NetworkUtils.isInternetAvailable(getApplicationContext());
                 }
@@ -220,17 +220,18 @@ public class MusicPlayerService extends Service
                         player.setDataSource(playable.getSongPath());
                         mediaplayerstate = initialized;
                         fullfillintent();
-                        Log.d(TAG, "Musicplayerservice: song set == " + playable.getSongPath());
-                        Log.d(TAG, "Musicplayerservice: player resource set");
+                        LOGD(TAG, "Musicplayerservice: song set == " + playable.getSongPath());
+                        LOGD(TAG, "Musicplayerservice: player resource set");
 
                     } catch (Exception e) {
-                        Log.e("MUSIC SERVICE", "Error setting data source", e);
+                        LOGE("MUSIC SERVICE", "Error setting data source");
                         onErrorState = PlayerErrorCodes.DATA_SRC;
                         sendOnErrorStateBroadcast(onErrorState);
                     }
-                    Log.d(TAG, "Musicplayerservice: songs set complete ");
+                    LOGD(TAG, "Musicplayerservice: songs set complete ");
                 } else {
-                    Log.d(TAG, "Error setting data source ");
+                    LOGD(TAG, "Error setting data source ");
+
 
 
                 }
@@ -261,7 +262,7 @@ public class MusicPlayerService extends Service
                     mediaplayerstate = preparing;
                     fullfillintent();
                 } else {
-                    Log.d(TAG, "Error prepareAsync ");
+                    LOGD(TAG, "Error prepareAsync ");
                 }
 
 
@@ -298,11 +299,11 @@ public class MusicPlayerService extends Service
     public boolean onInfo(MediaPlayer mp, int what, int extra) {
         // TODO Auto-generated method stub
         if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-            Log.d(TAG, "service buffering");
+            LOGD(TAG, "service buffering");
             sendbufferingbroadcast();
 
         } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-            Log.d(TAG, "service buffering");
+            LOGD(TAG, "service buffering");
             sendbufferingcompletebroadcast();
             return true;
         }
@@ -324,7 +325,7 @@ public class MusicPlayerService extends Service
     @Override
     public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
         // TODO Auto-generated method stub
-        Log.d(TAG, "service: On error" + "\n" + arg1 + "\n" + arg2);
+        LOGD(TAG, "service: On error" + "\n" + arg1 + "\n" + arg2);
         onErrorState = PlayerErrorCodes.UNKNOWN;
         sendOnErrorStateBroadcast(onErrorState);
         return true;
@@ -337,14 +338,14 @@ public class MusicPlayerService extends Service
 
             {
                 player.seekTo(posn);
-                Log.d(TAG, "seek complete");
+                LOGD(TAG, "seek complete");
 
                 mediaplayerstate = prepared;
                 setseekintent = 0;
                 fullfillintent();
             } else {
                 setseekintent = posn;
-                Log.d(TAG, "setseekintent" + setseekintent);
+                LOGD(TAG, "setseekintent" + setseekintent);
             }
         }
     }
@@ -373,8 +374,8 @@ public class MusicPlayerService extends Service
                 handler.removeCallbacks(sendUpdatestoui);
 
             } else {
-                Log.d(TAG, "intent pause");
-                Log.d(TAG, "mediaplayerstate==  " + mediaplayerstate);
+                LOGD(TAG, "intent pause");
+                LOGD(TAG, "mediaplayerstate==  " + mediaplayerstate);
                 setplaypauseintent = 2;
             }
 
@@ -396,8 +397,8 @@ public class MusicPlayerService extends Service
                 setuphandler();
 
             } else {
-                Log.d(TAG, "intent play");
-                Log.d(TAG, "mediaplayerstate==  " + mediaplayerstate);
+                LOGD(TAG, "intent play");
+                LOGD(TAG, "mediaplayerstate==  " + mediaplayerstate);
 
                 setplaypauseintent = 1;
             }
@@ -410,7 +411,7 @@ public class MusicPlayerService extends Service
     @Override
     public IBinder onBind(Intent intent) {
         // TODO Auto-generated method stub
-        Log.d(TAG, "onbind");
+        LOGD(TAG, "onbind");
 
         return musicBind;
     }
@@ -424,7 +425,7 @@ public class MusicPlayerService extends Service
         worker.doRunnable(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "oncreate");
+                LOGD(TAG, "oncreate");
                 if (player == null) {
                     player = new MediaPlayer();
                     mediaplayerstate = idle;
@@ -453,7 +454,7 @@ public class MusicPlayerService extends Service
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "ondestroy");
+        LOGD(TAG, "ondestroy");
         stopForeground(true);
 
         if (mediaplayerstate == stopped || mediaplayerstate == prepared || mediaplayerstate == started || mediaplayerstate == paused || mediaplayerstate == playbackcomplete) {
@@ -478,7 +479,7 @@ public class MusicPlayerService extends Service
     public void onRebind(Intent intent) {
         // TODO Auto-generated method stub
         super.onRebind(intent);
-        Log.d(TAG, "onrebind");
+        LOGD(TAG, "onrebind");
 
         setuphandler();
         if (!isseekbarupdateuiregistered) {
@@ -494,7 +495,7 @@ public class MusicPlayerService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // TODO Auto-generated method stub
-        Log.d(TAG, "onStartCommand");
+        LOGD(TAG, "onStartCommand");
 
 
         super.onStartCommand(intent, flags, startId);
@@ -504,7 +505,7 @@ public class MusicPlayerService extends Service
     @Override
     public boolean onUnbind(Intent intent) {
         // TODO Auto-generated method stub
-        Log.d(TAG, "onunbind");
+        LOGD(TAG, "onunbind");
         handler.removeCallbacks(sendUpdatestoui);
         if (isseekbarupdateuiregistered) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver_seekbaruiupdate);
@@ -527,7 +528,7 @@ public class MusicPlayerService extends Service
     //buffering complete functions
     private void sendbufferingbroadcast() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "buffering broadcast start");
+        LOGD(TAG, "buffering broadcast start");
         isBufferingState = true;
 
         Intent_bufferplayerintent.putExtra("buffering", "1");
@@ -547,10 +548,10 @@ public class MusicPlayerService extends Service
         mediapos = player.getCurrentPosition();
         mediamax = player.getDuration();
         if ((mediapos * 1.0) >= (mediamax * 0.6)) {
-//            Log.d(TAG, "sendInAppPlayBroadcast");
+//            LOGD(TAG, "sendInAppPlayBroadcast");
             sendInAppPlay = true;
         } else {
-//            Log.d(TAG, "dontsendInAppPlayBroadcast");
+//            LOGD(TAG, "dontsendInAppPlayBroadcast");
 
         }
         Intent_Musicplayer_seekIntent.putExtra("counter", String.valueOf(mediapos));
@@ -594,7 +595,7 @@ public class MusicPlayerService extends Service
 
     private void sendbufferingcompletebroadcast() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "buffering broadcast complete");
+        LOGD(TAG, "buffering broadcast complete");
         isBufferingState = false;
 
         Intent_bufferplayerintent.putExtra("buffering", "0");
@@ -606,7 +607,7 @@ public class MusicPlayerService extends Service
         // TODO Auto-generated method stub
         Intent_completionplayerintent.putExtra("complete", "1");
         LocalBroadcastManager.getInstance(this).sendBroadcast(Intent_completionplayerintent);
-        Log.d(TAG, "song  complete broadcast");
+        LOGD(TAG, "song  complete broadcast");
 
     }
 
@@ -641,14 +642,14 @@ public class MusicPlayerService extends Service
 
         {
             if (isplaying()) {
-                Log.d(TAG, "isPlaying ################");
+                LOGD(TAG, "isPlaying ################");
                 playerstatus = new Status(CurrentSong, player.getCurrentPosition(), player.getDuration(), isplaying(), isBufferingState);
-                Log.d(TAG, "@@@" + CurrentSong.getSong().getAlbum() + CurrentSong.getSong().getTitle() + "@@@");
+                LOGD(TAG, "@@@" + CurrentSong.getSong().getAlbum() + CurrentSong.getSong().getTitle() + "@@@");
             } else {
-                Log.d(TAG, "isnotPlaying ################");
+                LOGD(TAG, "isnotPlaying ################");
                 if (CurrentSong != null) {
                     playerstatus = new Status(CurrentSong, 0, (int) CurrentSong.getSong().getDuration(), isplaying(), isBufferingState);
-                    Log.d(TAG, "@@@" + CurrentSong.getSong().getAlbum() + CurrentSong.getSong().getTitle() + "@@@");
+                    LOGD(TAG, "@@@" + CurrentSong.getSong().getAlbum() + CurrentSong.getSong().getTitle() + "@@@");
                 }
             }
         }

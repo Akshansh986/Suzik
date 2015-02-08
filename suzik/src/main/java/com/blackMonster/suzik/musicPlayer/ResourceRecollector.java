@@ -1,13 +1,14 @@
 package com.blackMonster.suzik.musicPlayer;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
 import com.blackMonster.suzik.ui.FileDownloader;
 import com.blackMonster.suzik.ui.UiBroadcasts;
 import com.blackMonster.suzik.util.NetworkUtils;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 /**
  * Created by akshanshsingh on 25/01/15.
@@ -22,7 +23,7 @@ public class ResourceRecollector {
         new Thread() {
 
             public void run() {
-                Log.d(TAG, "saving albumart");
+                LOGD(TAG, "saving albumart");
                 String albumartLocation = FileDownloader.getLocationFromFilename(FileDownloader.getNewAlbumArtName(), context);
                 FileDownloader.saveImageToDisk(albumartUrl, albumartLocation);
                 InAapSongTable.updateAlbumArtLocation(id, albumartLocation, context);
@@ -39,7 +40,7 @@ public class ResourceRecollector {
         new Thread() {
 
             public void run() {
-                Log.d(TAG, "saving song");
+                LOGD(TAG, "saving song");
                 String songFileName = FileDownloader.getNewSongFileName();
                 String songLocation = FileDownloader.getLocationFromFilename(songFileName, context);
 

@@ -25,7 +25,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static DbHelper getInstance(Context cont) {
 		if (dInstance == null) {
 			dInstance = new DbHelper(cont.getApplicationContext());
-			// Log.d(TAG, "getWritebledataase");
+			// LOGD(TAG, "getWritebledataase");
 			dInstance.getWritableDatabase();
 		}
 		return dInstance;
@@ -33,9 +33,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	public DbHelper(Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
-		// Log.d(TAG, "constructor start");
-		// Log.d(TAG, "DbHelper");
-		// Log.d(TAG, "constructor end");
+		// LOGD(TAG, "constructor start");
+		// LOGD(TAG, "DbHelper");
+		// LOGD(TAG, "constructor end");
 
 	}
 

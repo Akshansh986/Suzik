@@ -163,7 +163,7 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
     private BroadcastReceiver broadcastPlayerDataUpdate = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "uiUpdate called");
+            LOGD(TAG, "uiUpdate called");
             adapter.notifyDataSetChanged();
 //            adapter.updatePlayingOnSongChange(listView);
         }

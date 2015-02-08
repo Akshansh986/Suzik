@@ -18,7 +18,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -47,7 +46,7 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
 
 		super.onCreate(arg0);
 
-        Log.d(TAG,"oncreate");
+        LOGD(TAG,"oncreate");
         uIcontroller = UIcontroller.getInstance(this);
         uIcontroller.bindtoservice();
 
@@ -214,12 +213,12 @@ public class MainSliderActivity  extends ActionBarActivity implements View.OnCli
 
     @Override
     protected void onDestroy() {
-        Log.d(TAG,"onDestroy");
+        LOGD(TAG,"onDestroy");
 
         super.onDestroy();
         if (uIcontroller != null) {
             uIcontroller.unbind();
-            Log.d(TAG,"UNBIND");
+            LOGD(TAG,"UNBIND");
 
         }
         unregisterReceivers();

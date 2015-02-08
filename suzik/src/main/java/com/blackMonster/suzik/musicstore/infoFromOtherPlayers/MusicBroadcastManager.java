@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 
 import com.blackMonster.suzik.MainPrefs;
@@ -13,6 +12,10 @@ import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 import com.blackMonster.suzik.sync.music.MusicSyncManager;
 import com.crashlytics.android.Crashlytics;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.LOGE;
+import static com.blackMonster.suzik.util.LogUtils.LOGI;
 
 public abstract class MusicBroadcastManager extends BroadcastReceiver {
     private static final String TAG = "MusicBroadcastManager";
@@ -38,7 +41,7 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
             public void run() {
                 if (!MainPrefs.isLoginDone(context)) return;
                 String action = intent.getAction();
-                Log.e(TAG,
+                LOGE(TAG,
                         action + "  " + "started  "
                                 + intent.getBooleanExtra(P_PLAYING, false));
 
@@ -54,7 +57,7 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
                     e.printStackTrace();
                     Crashlytics.logException(e);
                 }
-                Log.e(TAG, action + "  " + "completed");
+                LOGE(TAG, action + "  " + "completed");
 
             }
         }).start();
@@ -65,7 +68,7 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
 
     public void fixBroadcastParameters(Intent intent, Context context)
             throws ExceptionUnknownBroadcast {
-        Log.i(TAG, "fixBroadcastParameters");
+        LOGI(TAG, "fixBroadcastParameters");
         BroadcastMediaStoreChanged.printBundle(intent.getExtras(), TAG);
 
         track = intent.getStringExtra(P_TRACK);
@@ -90,7 +93,7 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
         // if (track == null || artist == null)
         // throw new ExceptionUnknownBroadcast();
 
-        Log.d(TAG, track + "   " + artist);
+        LOGD(TAG, track + "   " + artist);
         Pair<Long, Song> song = MusicSyncManager.getSong(tempSong, context);
 
         if (song == null) {
@@ -101,12 +104,12 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
             // exception.
             duration = getFromBundle(bundle, P_DURATION);
             streaming = UserActivity.STREAMING_TRUE;
-            Log.d(TAG, "song not found in database");
+            LOGD(TAG, "song not found in database");
         } else {
             id = song.first;
             duration = song.second.getDuration();
             streaming = UserActivity.STREAMING_FALSE;
-            Log.d(TAG, "song found in database");
+            LOGD(TAG, "song found in database");
 
         }
 

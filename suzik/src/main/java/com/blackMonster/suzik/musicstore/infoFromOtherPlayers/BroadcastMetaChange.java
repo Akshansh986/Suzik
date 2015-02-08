@@ -1,14 +1,16 @@
 package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 
 import android.content.Context;
-import android.util.Log;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.LOGI;
 
 public class BroadcastMetaChange extends MusicBroadcastManager {
 	private static final String TAG = "BroadcastMetaChange";
 
 	@Override
 	public void runIt(Context context) {
-		Log.d(TAG, "runIt");
+		LOGD(TAG, "runIt");
 		if (isPlaying()) {
 			if (PlayingSong.isVirtuallyCompleted(context))
 				PlayingSong
@@ -20,12 +22,12 @@ public class BroadcastMetaChange extends MusicBroadcastManager {
 	}
 
 	private void setMetaChangePrefs(Context context) {
-		Log.i(TAG, "setplayingsong");
+		LOGI(TAG, "setplayingsong");
 		MetaChangePrefs.setAll(getSong(), context);		
 	}
 
 	private void setPlayingSong(Context context) {
-		Log.i(TAG, "setplayingsong");
+		LOGI(TAG, "setplayingsong");
 		PlayingSong.set(getSong(), 0, System.currentTimeMillis(), context);
 	}
 

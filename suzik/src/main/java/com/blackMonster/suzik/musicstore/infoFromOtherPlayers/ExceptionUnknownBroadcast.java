@@ -1,6 +1,6 @@
 package com.blackMonster.suzik.musicstore.infoFromOtherPlayers;
 
-import android.util.Log;
+import static com.blackMonster.suzik.util.LogUtils.LOGE;
 
 public class ExceptionUnknownBroadcast extends Exception {
 	
@@ -11,7 +11,7 @@ public class ExceptionUnknownBroadcast extends Exception {
 
 	@Override
 	public void printStackTrace() {
-		 Log.e("UnknownBroadcast", "UnknownBroadcast");
+		 LOGE("UnknownBroadcast", "UnknownBroadcast");
 		 super.printStackTrace();
 	}
 }

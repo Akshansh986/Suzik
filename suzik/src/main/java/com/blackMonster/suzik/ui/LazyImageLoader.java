@@ -43,7 +43,7 @@ public class LazyImageLoader {
         initBMP();
         Resources r = context.getResources();
         size= (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, r.getDimension(R.dimen.album_art_thumbnail_size), r.getDisplayMetrics());
-        Log.d("df", " = " + size);
+        LOGD("df", " = " + size);
 
         defaultImage = decodeSampledBitmapFromResource(context.getResources(), R.drawable.album_art, size, size);
     }
@@ -226,9 +226,9 @@ public class LazyImageLoader {
 //                                f.delete();
 //                            }
 //                        } catch (FileNotFoundException e) {
-//                            Log.e(TAG, "error creating file", e);
+//                            LOGE(TAG, "error creating file", e);
 //                        } catch (IOException e) {
-//                            Log.e(TAG, "error creating file", e);
+//                            LOGE(TAG, "error creating file", e);
 //                        }
 //                    }
 //                } else {

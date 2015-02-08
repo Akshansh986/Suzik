@@ -3,13 +3,10 @@ package com.blackMonster.suzik;
 import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.blackMonster.suzik.ui.FileDownloader;
-import com.blackMonster.suzik.util.NetworkUtils;
 import com.crashlytics.android.Crashlytics;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -19,6 +16,8 @@ import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
 import io.fabric.sdk.android.Fabric;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 public class AppController extends Application {
 
@@ -36,13 +35,13 @@ public class AppController extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
-
-
         final TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-		Log.d(TAG, "oncreate");
-	    	Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
+	    Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
 		Crashlytics.setUserIdentifier(MainPrefs.getMyNo(this));
+
+		LOGD(TAG, "oncreate");
+
+
 		mInstance = this;
         initImageLoader(getApplicationContext());
 	}
