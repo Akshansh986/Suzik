@@ -1,7 +1,6 @@
 package com.blackMonster.suzik.sync.music;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
@@ -89,7 +88,7 @@ class ServerHelper {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.d(TAG, "Response: " + response.toString());
+						LOGD(TAG, "Response: " + response.toString());
 											
 					}
 				}, new Response.ErrorListener() {
@@ -97,7 +96,7 @@ class ServerHelper {
 					@Override
 					public void onErrorResponse(VolleyError error) {
 						VolleyLog.d(TAG, "Error: " + error.getMessage());
-						Log.d(TAG, "Error: " + error.getMessage());
+						LOGD(TAG, "Error: " + error.getMessage());
 
 					}
 				});

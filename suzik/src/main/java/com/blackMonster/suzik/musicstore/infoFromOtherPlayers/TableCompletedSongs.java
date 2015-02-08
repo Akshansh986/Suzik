@@ -4,12 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import android.util.Pair;
 
 import com.blackMonster.suzik.DbHelper;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.util.DbUtils;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 public class TableCompletedSongs {
 	public static final String TABLE = "completedSongs";
@@ -33,7 +34,7 @@ public class TableCompletedSongs {
 
 	public static void insert(BroadcastSong song, long completedTS,
 			Context context) {
-		Log.d(TABLE, "insert");
+		LOGD(TABLE, "insert");
 		SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
 		ContentValues values = new ContentValues();

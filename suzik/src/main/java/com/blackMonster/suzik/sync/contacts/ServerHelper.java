@@ -1,20 +1,20 @@
 package com.blackMonster.suzik.sync.contacts;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.concurrent.ExecutionException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.util.Log;
-
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
 import com.blackMonster.suzik.sync.contacts.model.Contact;
 import com.blackMonster.suzik.sync.contacts.model.ContactChanges;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.concurrent.ExecutionException;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 class ServerHelper {
 
@@ -46,7 +46,7 @@ class ServerHelper {
 		AppController.getInstance().addToRequestQueue(request);
 
 		JSONObject response = future.get();
-		Log.d("ServerHelper", "update response : " + response.toString());
+		LOGD("ServerHelper", "update response : " + response.toString());
 		return JsonHelper.UpdateContacts.parseResponse(response);
 
 	}

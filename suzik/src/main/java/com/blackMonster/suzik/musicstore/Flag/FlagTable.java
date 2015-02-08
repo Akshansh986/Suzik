@@ -4,9 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.blackMonster.suzik.DbHelper;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 /**
  * Created by akshanshsingh on 28/01/15.
@@ -26,7 +27,7 @@ public class FlagTable {
 
     public static void insert(long serverId,
                               Context context) {
-        Log.d(TABLE, "insert");
+        LOGD(TABLE, "insert");
         SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
 
         ContentValues values = new ContentValues();

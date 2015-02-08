@@ -59,7 +59,7 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
         this.androidCurosr = androidC;
         this.inappCursor = inappCursor;
         setCount();
-        Log.d(TAG,"update cursors " + inappCount + " " + androidCount);
+        LOGD(TAG,"update cursors " + inappCount + " " + androidCount);
         notifyDataSetChanged();
     }
 
@@ -176,7 +176,7 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
 
     @Override
     public Playable getPlayable(int position) {
-    Log.d(TAG,"getPlayable  " + position);
+    LOGD(TAG,"getPlayable  " + position);
         String title, artist, album, albumartPath, songPath, songUrl, albumartUrl;
         int pos;
         long duration,id,serverId;

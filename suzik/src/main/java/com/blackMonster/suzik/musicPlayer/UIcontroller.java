@@ -13,7 +13,6 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.blackMonster.suzik.musicstore.Timeline.Playable;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
@@ -34,7 +33,7 @@ public class UIcontroller {
     Runnable mHandlerTask = new Runnable() {
         @Override
         public void run() {
-            Log.d(TAG, "Runnable setsong");
+            LOGD(TAG, "Runnable setsong");
 
             Playable playable = getPlayableAndRecollectSongIfNecessary();
 
@@ -115,7 +114,7 @@ public class UIcontroller {
     public static UIcontroller getInstance(Context context)
 
     {
-        Log.d(TAG, "getInstance");
+        LOGD(TAG, "getInstance");
 
         if (instance == null) {
             instance = new UIcontroller(context.getApplicationContext());
@@ -128,7 +127,7 @@ public class UIcontroller {
     private UIcontroller(Context context) {
         // TODO Auto-generated constructor stub
 
-        Log.d(TAG, "UIcontroller constuctor");
+        LOGD(TAG, "UIcontroller constuctor");
         this.context = context;
 
         Intent_uidataupdate = new Intent(brodcast_uidataupdate);
@@ -148,17 +147,17 @@ public class UIcontroller {
 
 
     public void bindtoservice() {
-        Log.d(TAG, "bindtoservice");
+        LOGD(TAG, "bindtoservice");
 
         if (playIntent == null) {
-            Log.d(TAG, "play intent == null");
+            LOGD(TAG, "play intent == null");
 
             playIntent = new Intent(context, MusicPlayerService.class);
             boolean bool = context.bindService(playIntent, musicConnection, context.BIND_AUTO_CREATE);
             ComponentName bool1 = context.startService(playIntent);
-            // Log.d(TAG,"bindtoservice  "+bool+"  "+bool1+"#########");
+            // LOGD(TAG,"bindtoservice  "+bool+"  "+bool1+"#########");
         } else {
-            Log.d(TAG, "play intent != null");
+            LOGD(TAG, "play intent != null");
             context.bindService(playIntent, musicConnection, context.BIND_AUTO_CREATE);
 
 
@@ -172,7 +171,7 @@ public class UIcontroller {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(TAG, "service connected ");
+            LOGD(TAG, "service connected ");
 
             MusicPlayerService.MusicBinder binder = (MusicPlayerService.MusicBinder) service;
             //get service
@@ -180,7 +179,7 @@ public class UIcontroller {
             //pass list
 
 
-            //Log.d("Suzikplayer","returned waiting to play");
+            //LOGD("Suzikplayer","returned waiting to play");
 
             musicBound = true;
 
@@ -189,7 +188,7 @@ public class UIcontroller {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d(TAG, "service disconnected ");
+            LOGD(TAG, "service disconnected ");
 
             musicBound = false;
         }
@@ -199,17 +198,17 @@ public class UIcontroller {
         @Override
         public void onReceive(Context arg0, Intent intent) {
             // TODO Auto-generated method stub
-            Log.d(TAG, "Broadcastreciever_headsetreciever :onReceive ");
+            LOGD(TAG, "Broadcastreciever_headsetreciever :onReceive ");
             int state = intent.getIntExtra("state", 100);
             if (state != 100) {
                 switch (state) {
                     case 1:
-                        Log.d(TAG, "headphone connected ");
+                        LOGD(TAG, "headphone connected ");
 
                         break;
 
                     case 0:
-                        Log.d(TAG, "headphone disconnected ");
+                        LOGD(TAG, "headphone disconnected ");
                         if (isplaying()) {
                             pauseSong();
                             senduibtnsetbroadcast();
@@ -228,7 +227,7 @@ public class UIcontroller {
         @Override
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
-            Log.d(TAG, "broadcastreciever_songcomplete :onReceive ");
+            LOGD(TAG, "broadcastreciever_songcomplete :onReceive ");
 
 
             if (repeat == 1) {
@@ -271,7 +270,7 @@ public class UIcontroller {
         } else
             albumartPath = playable.getAlbumArtPath();
 
-        Log.d(TAG, "albumart path " + albumartPath);
+        LOGD(TAG, "albumart path " + albumartPath);
 
         Intent_uidataupdate.putExtra("songTitleLabel", playable.getSong().getTitle());
         Intent_uidataupdate.putExtra("songAlbumName", playable.getSong().getAlbum());
@@ -281,7 +280,7 @@ public class UIcontroller {
 
 
         LocalBroadcastManager.getInstance(context).sendBroadcast(Intent_uidataupdate);
-        Log.d(TAG, "uidataupdatebroadcast\n" + Intent_uidataupdate.toString());
+        LOGD(TAG, "uidataupdatebroadcast\n" + Intent_uidataupdate.toString());
     }
 
 
@@ -295,21 +294,21 @@ public class UIcontroller {
 
 
         LocalBroadcastManager.getInstance(context).sendBroadcast(Intent_uibtnupdate);
-        Log.d(TAG, "uibtnupdatebroadcast\n" + Intent_uibtnupdate.toString());
+        LOGD(TAG, "uibtnupdatebroadcast\n" + Intent_uibtnupdate.toString());
     }
 
 
     private void resetui() {
         // TODO Auto-generated method stub
         LocalBroadcastManager.getInstance(context).sendBroadcast(Intent_resetui);
-        Log.d(TAG, "resetuibroadcast");
+        LOGD(TAG, "resetuibroadcast");
 
 
     }
 
     private void setaudiodocus() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "setaudiodocus");
+        LOGD(TAG, "setaudiodocus");
 
         am = (AudioManager) context.getSystemService(context.AUDIO_SERVICE);
 
@@ -317,7 +316,7 @@ public class UIcontroller {
 
             public void onAudioFocusChange(int focusChange) {
                 if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-                    Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
+                    LOGD(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
                     isfocuslost = true;
                     if (isplaying()) {
                         {
@@ -337,7 +336,7 @@ public class UIcontroller {
 
 
                 } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                    Log.d(TAG, "AUDIOFOCUS_GAIN");
+                    LOGD(TAG, "AUDIOFOCUS_GAIN");
                     isfocuslost = false;
                     if (isphonestatechange) {
                         isphonestatechange = false;
@@ -347,7 +346,7 @@ public class UIcontroller {
                     }
 
                 } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                    Log.d(TAG, "AUDIOFOCUS_LOSS");
+                    LOGD(TAG, "AUDIOFOCUS_LOSS");
                     isfocuslost = true;
                     if (isplaying()) {
                         {
@@ -380,7 +379,7 @@ public class UIcontroller {
 
     private void requestfocus() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "requestfocus");
+        LOGD(TAG, "requestfocus");
 
         int result = am.requestAudioFocus(afChangeListener,
                 // Use the music stream.
@@ -388,7 +387,7 @@ public class UIcontroller {
                 // Request permanent focus.
                 AudioManager.AUDIOFOCUS_GAIN);
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            Log.d(TAG, "Audio focus gained");
+            LOGD(TAG, "Audio focus gained");
             isfocuslost = false;
         }
 
@@ -397,26 +396,26 @@ public class UIcontroller {
 
     public void setList(Playlist playlist) {
         // TODO Auto-generated method stub
-        Log.d(TAG, "setlist");
+        LOGD(TAG, "setlist");
         songs = playlist;
 
     }
 
     public Playlist getList() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "getlist");
+        LOGD(TAG, "getlist");
         return songs;
     }
 
     public void setSongpos(int songIndex) {
-        Log.d(TAG, "setsongpos");
+        LOGD(TAG, "setsongpos");
         songpos = songIndex;
         setSong();
     }
 
     private void setSong() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "setsong");
+        LOGD(TAG, "setsong");
         resetui();
 
      //   musicSrv.syncCurrentSong(songs.getPlayable(songpos));
@@ -437,7 +436,7 @@ public class UIcontroller {
 
     public void playSong() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "play");
+        LOGD(TAG, "play");
         if (isfocuslost) {
             requestfocus();
 
@@ -447,14 +446,14 @@ public class UIcontroller {
 
     public void pauseSong() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "pause");
+        LOGD(TAG, "pause");
 
         musicSrv.pausePlayer();
     }
 
     public void nextSong() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "next song");
+        LOGD(TAG, "next song");
         if (songs != null) {
 
 
@@ -477,7 +476,7 @@ public class UIcontroller {
 
     public void prevSong() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "prevsong");
+        LOGD(TAG, "prevsong");
         if (songs != null) {
 
 
@@ -501,7 +500,7 @@ public class UIcontroller {
 
     public void stopSong() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "stopSong");
+        LOGD(TAG, "stopSong");
 
         musicSrv.stopPlayer();
 
@@ -509,7 +508,7 @@ public class UIcontroller {
 
     public void shuffleSong() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "shuffleSong");
+        LOGD(TAG, "shuffleSong");
 
         Random r = new Random();
         songpos = r.nextInt(songs.getSongCount());
@@ -518,21 +517,21 @@ public class UIcontroller {
 
     public void setrepeatStatus(int value) {
         // TODO Auto-generated method stub
-        Log.d(TAG, "setrepeatStatus");
+        LOGD(TAG, "setrepeatStatus");
 
         repeat = value;
     }
 
     public void setshuffleStatus(boolean value) {
         // TODO Auto-generated method stub
-        Log.d(TAG, "setshuffleStatus");
+        LOGD(TAG, "setshuffleStatus");
 
         shuffle = value;
     }
 
     public void seek(int progress) {
         // TODO Auto-generated method stub
-        Log.d(TAG, "seek");
+        LOGD(TAG, "seek");
 
         if (musicSrv != null) {
             musicSrv.seek(progress);
@@ -545,7 +544,7 @@ public class UIcontroller {
 
     public void unbind() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "unbind");
+        LOGD(TAG, "unbind");
 
         if (musicConnection != null) {
             {if(musicBound) {
@@ -558,7 +557,7 @@ public class UIcontroller {
 
     public boolean isplaying() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "isplaying");
+        LOGD(TAG, "isplaying");
 
         if (musicSrv != null) {
             return musicSrv.isplaying();
@@ -580,7 +579,7 @@ public class UIcontroller {
 
     public void loadcurrentplayerstatus() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "loadcurrentplayerstatus");
+        LOGD(TAG, "loadcurrentplayerstatus");
 
         if (musicSrv != null) {
             if (songs != null)
@@ -602,7 +601,7 @@ public class UIcontroller {
 
 
                     LocalBroadcastManager.getInstance(context).sendBroadcast(Intent_playercurrentstatus);
-                    Log.d(TAG, "playercurrentstatus\n" + Intent_playercurrentstatus.toString());
+                    LOGD(TAG, "playercurrentstatus\n" + Intent_playercurrentstatus.toString());
 
                 }
             }
@@ -613,7 +612,7 @@ public class UIcontroller {
 
     public void loadsavedplayerstatus() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "loadsavedplayerstatus");
+        LOGD(TAG, "loadsavedplayerstatus");
 
         if (songs == null) {
             Intent_playersavedstatus.putExtra("songTitleLabel", songs.getPlayable(songpos).getSong().getTitle());
@@ -641,14 +640,14 @@ public class UIcontroller {
 
 
         LocalBroadcastManager.getInstance(context).sendBroadcast(Intent_playersavedstatus);
-        Log.d(TAG, "playersavedstatus\n" + Intent_playersavedstatus.toString());
+        LOGD(TAG, "playersavedstatus\n" + Intent_playersavedstatus.toString());
 
 
     }
 
     public void stophandler() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "stophandler");
+        LOGD(TAG, "stophandler");
 
         if (musicSrv != null) {
             musicSrv.stophandler();
@@ -658,7 +657,7 @@ public class UIcontroller {
 
     public void starthandler() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "starthandler");
+        LOGD(TAG, "starthandler");
 
         if (musicSrv != null) {
             musicSrv.starthandler();

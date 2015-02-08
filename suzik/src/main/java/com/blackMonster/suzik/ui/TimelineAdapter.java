@@ -111,7 +111,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Log.d("TimelineAdapter", "getview : " + position);
+        LOGD("TimelineAdapter", "getview : " + position);
         final ViewHolder viewHolder;
 
         if (convertView == null) { 
@@ -344,14 +344,14 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
             viewHolder.artist.setTextColor(context.getResources().getColor(R.color.timeline_text));
 
             playingView = convertView;
-            Log.d(TAG,"#########################################################");
+            LOGD(TAG,"#########################################################");
             if (uiconroller.isBuffering()) {
                 isBuffring=true;
                 animateView();
             } else {
                 isBuffring=false;
                 stopAnimation();
-            }            Log.d(TAG,"#########################################################");
+            }            LOGD(TAG,"#########################################################");
 
         } else {
             viewHolder.title.setTextColor(context.getResources().getColor(R.color.white));
@@ -444,7 +444,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
 
     public void animateView() {
 //        if (true) return;
-        Log.d(TAG, "setanimation");
+        LOGD(TAG, "setanimation");
         if (playingView == null) return;
 
         startBufferingAinmation();
@@ -480,7 +480,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
             @Override
             public void onAnimationStart(Animation animation) {
                 // TODO Auto-generated method stub
-            //    Log.d(TAG, "onAnimationStart");
+            //    LOGD(TAG, "onAnimationStart");
 
 
             }
@@ -488,7 +488,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
             @Override
             public void onAnimationRepeat(Animation animation) {
 //                // TODO Auto-generated method stub
-//                Log.d(TAG, "onAnimationRepeat");
+//                LOGD(TAG, "onAnimationRepeat");
 //                if (!isbuffering) {
 //
 //                    animationHandler.removeCallbacks(animationRunnable);
@@ -498,7 +498,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
             @Override
             public void onAnimationEnd(Animation animation) {
                 // TODO Auto-generated method stub
-          //      Log.d(TAG, "onAnimationEnd");
+          //      LOGD(TAG, "onAnimationEnd");
 
                 if (isBuffring) view.startAnimation(animation);
             }
