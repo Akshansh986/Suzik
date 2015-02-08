@@ -547,10 +547,10 @@ public class MusicPlayerService extends Service
         mediapos = player.getCurrentPosition();
         mediamax = player.getDuration();
         if ((mediapos * 1.0) >= (mediamax * 0.6)) {
-            Log.d(TAG, "sendInAppPlayBroadcast");
+//            Log.d(TAG, "sendInAppPlayBroadcast");
             sendInAppPlay = true;
         } else {
-            Log.d(TAG, "dontsendInAppPlayBroadcast");
+//            Log.d(TAG, "dontsendInAppPlayBroadcast");
 
         }
         Intent_Musicplayer_seekIntent.putExtra("counter", String.valueOf(mediapos));

@@ -143,7 +143,6 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
         handleFlag(item, viewHolder.flag);
         handleLikeButton(item, viewHolder.likeButton);
         handleAlbumart(item,viewHolder);
-        viewHolder.progressBar.setVisibility(View.GONE);
 
         String title, artist;
         title = item.getSong().getTitle();
@@ -159,6 +158,8 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
     }
 
     private void handleAlbumart(final TimelineItem item,final ViewHolder viewHolder) {
+        viewHolder.progressBar.setVisibility(View.GONE);
+
         if (NetworkUtils.isValidUrl(item.getOnlineAlbumArtUrl())) {
 
             imageLoader.displayImage(item.getOnlineAlbumArtUrl(), viewHolder.albumArtView, options, new ImageLoadingListener() {
@@ -177,11 +178,11 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                     viewHolder.progressBar.setVisibility(View.GONE);
 
-                    int sWidth = viewHolder.frameLayout.getWidth();
-//                    int new_height = 0;
-//                    new_height = sWidth * loadedImage.getHeight() / loadedImage.getWidth();
-//                    viewHolder.frameLayout.getLayoutParams().width = sWidth;
-                    viewHolder.frameLayout.getLayoutParams().height = sWidth;
+//                    int sWidth = viewHolder.frameLayout.getWidth();
+////                    int new_height = 0;
+////                    new_height = sWidth * loadedImage.getHeight() / loadedImage.getWidth();
+////                    viewHolder.frameLayout.getLayoutParams().width = sWidth;
+//                    viewHolder.frameLayout.getLayoutParams().height = sWidth;
 
 
 

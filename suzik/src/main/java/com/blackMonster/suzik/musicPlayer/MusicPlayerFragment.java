@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,6 +36,8 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 
 public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeListener {
@@ -75,7 +76,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         @Override
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
-            Log.d(TAG, "broadcastreciever_playercurrentstatus:onReceive");
+            LOGD(TAG, "broadcastreciever_playercurrentstatus:onReceive");
 
             setcurrentstatus(intent);
 
@@ -86,7 +87,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
     private void setcurrentstatus(Intent intent) {
         // TODO Auto-generated method stub
-        Log.d(TAG, "broadcastreciever_playercurrentstatus:setcurrentstatus");
+        LOGD(TAG, "broadcastreciever_playercurrentstatus:setcurrentstatus");
 
         String SongTitleLabel = intent.getStringExtra("songTitleLabel");
         String SongAlbumName = intent.getStringExtra("songAlbumName");
@@ -98,7 +99,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         int duration = intent.getIntExtra("duration", 100);
         Boolean shuffle = intent.getBooleanExtra("shuffle", false);
         int repeat = intent.getIntExtra("repeat", 100);
-        Log.d(TAG, SongTitleLabel + SongArtistName + SongArtistName + Albumart);
+        LOGD(TAG, SongTitleLabel + SongArtistName + SongArtistName + Albumart);
 
         songTitleLabel.setText(SongTitleLabel);
         songAlbumName.setText(SongAlbumName);
@@ -108,18 +109,18 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         songProgressBar.setProgress(currentpos);
         if (!islbuffering) {
             isbuffering = false;
-            Log.d(TAG, "Animationstopeed");
+            LOGD(TAG, "Animationstopeed");
             animationHandler.removeCallbacks(animationRunnable);
             if (isplaying) {
                 btnPlay.setImageResource(R.drawable.pause);
                 btnPlay.setTag("pause");
-                Log.d(TAG, "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                LOGD(TAG, "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
 
             } else {
                 btnPlay.setImageResource(R.drawable.play);
                 btnPlay.setTag("play");
-                Log.d(TAG, "****************************");
+                LOGD(TAG, "****************************");
 
             }
         } else {
@@ -127,9 +128,9 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
             animationHandler.removeCallbacks(animationRunnable);
             isbuffering = true;
-            Log.d(TAG, "Animationstarted");
+            LOGD(TAG, "Animationstarted");
             animationHandler.postDelayed(animationRunnable, 0);
-            Log.d(TAG, "^^^^^^^^BUFFERING TRUE^^^^^^^^^^^^^^^^^^^");
+            LOGD(TAG, "^^^^^^^^BUFFERING TRUE^^^^^^^^^^^^^^^^^^^");
 
             btnPlay.setImageResource(R.drawable.pause);
             btnPlay.setTag("pause");
@@ -166,8 +167,10 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     }
 
 
+
+
     private void setAlbumart(String uri) {
-        Log.d(TAG,"albumart path " + uri);
+        LOGD(TAG, "albumart path " + uri);
 
         ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
         ImageLoader.getInstance().displayImage(Utils.formatStringForUIL(uri), albumart, options, animateFirstListener);
@@ -178,7 +181,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         @Override
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
-            //	Log.d(TAG,"broadcastreciever_seekrecieve:onReceive");
+            //	LOGD(TAG,"broadcastreciever_seekrecieve:onReceive");
 
             autoupdateuiseekbar(intent);
 
@@ -188,11 +191,11 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
     private void autoupdateuiseekbar(Intent intent) {
         // TODO Auto-generated method stub
-        //	Log.d(TAG,"broadcastreciever_seekrecieve:autoupdateuiseekbar");
+        //	LOGD(TAG,"broadcastreciever_seekrecieve:autoupdateuiseekbar");
 
         String counter = intent.getStringExtra("counter");
         String mediamax = intent.getStringExtra("mediamax");
-   //     Log.d(TAG, "Current Postiton:" + counter + "Max Duration" + mediamax);
+   //     LOGD(TAG, "Current Postiton:" + counter + "Max Duration" + mediamax);
         int seekprogress = Integer.parseInt(counter);
         seekmax = Integer.parseInt(mediamax);
         songProgressBar.setMax(seekmax);
@@ -206,7 +209,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         @Override
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
-            Log.d(TAG, "broadcastreciever_uibtnupdate:onReceive");
+            LOGD(TAG, "broadcastreciever_uibtnupdate:onReceive");
 
             Boolean isplaying = intent.getBooleanExtra("isplaying", false);
             Boolean shuffle = intent.getBooleanExtra("shuffle", false);
@@ -256,7 +259,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "broadcastreciever_uidataupdate:onReceive");
+            LOGD(TAG, "broadcastreciever_uidataupdate:onReceive");
             uidataupdate(intent);
 
 
@@ -265,14 +268,14 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
     private void uidataupdate(Intent intent) {
         // TODO Auto-generated method stub
-        Log.d(TAG, "broadcastreciever_uidataupdate:uidataupdate");
+        LOGD(TAG, "broadcastreciever_uidataupdate:uidataupdate");
         String SongTitleLabel = intent.getStringExtra("songTitleLabel");
         String SongAlbumName = intent.getStringExtra("songAlbumName");
         String SongArtistName = intent.getStringExtra("songArtistName");
         String Albumart = intent.getStringExtra("albumart");
         int duration = (int) intent.getLongExtra("songduration", 0);
 
-        Log.d(TAG, SongTitleLabel + SongArtistName + SongArtistName + Albumart + duration);
+        LOGD(TAG, SongTitleLabel + SongArtistName + SongArtistName + Albumart + duration);
 
         songTitleLabel.setText(SongTitleLabel);
         songAlbumName.setText(SongAlbumName);
@@ -287,26 +290,26 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "broadcastreciever_bufferingplayerrecieve:onReceive");
+            LOGD(TAG, "broadcastreciever_bufferingplayerrecieve:onReceive");
             showpd(intent);
         }
     };
 
 
     private void showpd(Intent bufferintent) {
-        Log.d(TAG, "broadcastreciever_bufferingplayerrecieve:showpd");
+        LOGD(TAG, "broadcastreciever_bufferingplayerrecieve:showpd");
 
         String buffval = bufferintent.getStringExtra("buffering");
         int bval = Integer.parseInt(buffval);
         switch (bval) {
             case 1:
                 isbuffering = true;
-                Log.d(TAG, "Animationstarted");
+                LOGD(TAG, "Animationstarted");
                 animationHandler.postDelayed(animationRunnable, 0);
                 break;
             case 0:
                 isbuffering = false;
-                Log.d(TAG, "Animationstopeed");
+                LOGD(TAG, "Animationstopeed");
                 animationHandler.removeCallbacks(animationRunnable);
                 break;
 
@@ -318,7 +321,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "broadcastreciever_resetui:onReceive");
+            LOGD(TAG, "broadcastreciever_resetui:onReceive");
 
             songTitleLabel.setText("");
             songAlbumName.setText("");
@@ -337,7 +340,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
+        LOGD(TAG, "onCreateView");
 
 
         super.onCreateView(inflater, container, savedInstanceState);
@@ -370,7 +373,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     @Override
     public void onPause() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "onPause");
+        LOGD(TAG, "onPause");
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(broadcastreciever_resetui);
                LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(broadcastreciever_playercurrentstatus);
                 LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(broadcastreciever_uidataupdate);
@@ -378,11 +381,11 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
                 LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(broadcastreciever_bufferingplayerrecieve);
                 LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(broadcastreciever_seekrecieve);
 
-            Log.d(TAG, "onPause:unregister broadcast");
+            LOGD(TAG, "onPause:unregister broadcast");
 
             if (uicontroller != null) {
 
-                Log.d(TAG, "onPause:stophandler");
+                LOGD(TAG, "onPause:stophandler");
 
                 uicontroller.stophandler();
             }
@@ -394,7 +397,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     @Override
     public void onResume() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "onResume");
+        LOGD(TAG, "onResume");
                 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastreciever_resetui, new IntentFilter(UIcontroller.brodcast_resetui));
                 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastreciever_playercurrentstatus, new IntentFilter(UIcontroller.brodcast_playercurrentstatus));
                 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastreciever_uidataupdate, new IntentFilter(UIcontroller.brodcast_uidataupdate));
@@ -402,21 +405,21 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
                 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastreciever_bufferingplayerrecieve, new IntentFilter(MusicPlayerService.brodcast_bufferingplayer));
                 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastreciever_seekrecieve, new IntentFilter(MusicPlayerService.broadcast_playerseek));
 
-            Log.d(TAG, "onResume:registerbroadcast");
+            LOGD(TAG, "onResume:registerbroadcast");
 
             if (uicontroller != null) {
                 if (uicontroller.isplaying()) {
-                    Log.d(TAG, "loadcurrentplayerstatus");
+                    LOGD(TAG, "loadcurrentplayerstatus");
 
                     uicontroller.loadcurrentplayerstatus();
                 } else {
-                    Log.d(TAG, "loadcurrentplayerstatus");
+                    LOGD(TAG, "loadcurrentplayerstatus");
                     uicontroller.loadcurrentplayerstatus();
 
                     //uicontroller.loadsavedplayerstatus();
                 }
 
-                Log.d(TAG, "onResume:starthandler");
+                LOGD(TAG, "onResume:starthandler");
 
                 uicontroller.starthandler();
 
@@ -428,7 +431,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
-        Log.d(TAG, "onDestroy");
+        LOGD(TAG, "onDestroy");
 
         super.onDestroy();
     }
@@ -451,7 +454,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
 
     private void setupui(View rootView) {
-        Log.d(TAG, "setupui");
+        LOGD(TAG, "setupui");
 
         btnPlay = (ImageView) rootView.findViewById(R.id.playpause);
         btnNext = (ImageView) rootView.findViewById(R.id.next);
@@ -473,12 +476,12 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
     private void setuplistener() {
 
-        Log.d(TAG, "setuplisteners");
+        LOGD(TAG, "setuplisteners");
 
         btnPlay.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick:btnPlay/Pause");
+                LOGD(TAG, "onClick:btnPlay/Pause");
                 ImageView t = (ImageView) v;
                 if (uicontroller.getList() != null) {
 
@@ -508,7 +511,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick:btnNext");
+                LOGD(TAG, "onClick:btnNext");
 
                 if (uicontroller.getList() != null) {
                     if (isbuffering) {
@@ -526,7 +529,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick:btnPrevious");
+                LOGD(TAG, "onClick:btnPrevious");
 
                 if (uicontroller.getList() != null) {
                     if (isbuffering) {
@@ -545,7 +548,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick:btnShuffle");
+                LOGD(TAG, "onClick:btnShuffle");
 
                 // TODO Auto-generated method stub
                 ImageView t = (ImageView) v;
@@ -575,12 +578,12 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick:btnShuffle");
+                LOGD(TAG, "onClick:btnShuffle");
 
                 // TODO Auto-generated method stub
                 ImageView t = (ImageView) v;
                 if (uicontroller.getList() != null) {
-                    if (t.getTag() == "0") {                    //Log.d(TAG,"playtopause");
+                    if (t.getTag() == "0") {                    //LOGD(TAG,"playtopause");
 
                         t.setTag("1");
                         t.setImageResource(R.drawable.repeat1);
@@ -618,7 +621,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     }
 
     private void setanimation() {
-        Log.d(TAG, "setanimation");
+        LOGD(TAG, "setanimation");
 
         fadeIn = new AlphaAnimation((float) 0.2, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
@@ -639,7 +642,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             @Override
             public void onAnimationStart(Animation animation) {
                 // TODO Auto-generated method stub
-             //   Log.d(TAG, "onAnimationStart");
+             //   LOGD(TAG, "onAnimationStart");
                 if(!isbuffering) {
 
                     animationHandler.removeCallbacks(animationRunnable);
@@ -650,14 +653,14 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             @Override
             public void onAnimationRepeat(Animation animation) {
                 // TODO Auto-generated method stub
-                Log.d(TAG, "onAnimationRepeat");
+                LOGD(TAG, "onAnimationRepeat");
 
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 // TODO Auto-generated method stub
-             //   Log.d(TAG, "onAnimationEnd");
+             //   LOGD(TAG, "onAnimationEnd");
                 if (isbuffering) {
                     animationHandler.removeCallbacks(animationRunnable);
 
