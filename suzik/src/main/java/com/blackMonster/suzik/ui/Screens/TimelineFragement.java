@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.blackMonster.suzik.AppConfig;
 import com.blackMonster.suzik.AppController;
@@ -162,7 +161,7 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
                 }
                 swipeLayout.setRefreshing(false);
                 Toast.makeText(getActivity().getBaseContext(), "Unable to load timeline ", Toast.LENGTH_LONG).show();
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                //VolleyLog.d(TAG, "Error: " + error.getMessage());
                 LOGD(TAG, "Error: " + error.getMessage());
 
             }
@@ -269,7 +268,7 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
     private BroadcastReceiver broadcastUiDataUpdate = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            LOGD(TAG,"uiUpdate called");
+            LOGD(TAG, "uiUpdate called");
             adapter.notifyDataSetChanged();
 
         }
@@ -277,7 +276,7 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
     private BroadcastReceiver broadcastBufferingPlayerRecieve = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            LOGD(TAG,"broadcastBufferingPlayerRecieve");
+            LOGD(TAG, "broadcastBufferingPlayerRecieve");
             if (isBuffering(intent)) {
                 adapter.isBuffring =true;
                 adapter.animateView();

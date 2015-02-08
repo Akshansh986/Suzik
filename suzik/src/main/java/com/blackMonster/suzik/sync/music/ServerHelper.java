@@ -5,7 +5,6 @@ import android.content.Context;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.blackMonster.suzik.AppConfig;
@@ -95,7 +94,7 @@ class ServerHelper {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						VolleyLog.d(TAG, "Error: " + error.getMessage());
+//						VolleyLog.d(TAG, "Error: " + error.getMessage());
 						LOGD(TAG, "Error: " + error.getMessage());
 
 					}

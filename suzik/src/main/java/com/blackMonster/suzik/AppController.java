@@ -35,13 +35,13 @@ public class AppController extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
-
-
         final TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-		LOGD(TAG, "oncreate");
-	    	Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
+	    Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
 		Crashlytics.setUserIdentifier(MainPrefs.getMyNo(this));
+
+		LOGD(TAG, "oncreate");
+
+
 		mInstance = this;
         initImageLoader(getApplicationContext());
 	}

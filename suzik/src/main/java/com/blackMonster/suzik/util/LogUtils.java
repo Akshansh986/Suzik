@@ -18,7 +18,6 @@ public class LogUtils {
 			Log.d(tag, message);
 			log(tag, message);
 		}
-		// Crashlytics.log(Log.DEBUG, tag, message);
 		Crashlytics.log("D/" + tag + " " + message);
 	}
 
@@ -27,12 +26,14 @@ public class LogUtils {
     {
         if (AppConfig.DEBUG) {
             Log.i(tag, message);
+            log(tag, message);
         }
         Crashlytics.log("I/" + tag + " " + message);	}
 
 	public static void LOGW(final String tag, String message) {
         if (AppConfig.DEBUG) {
             Log.w(tag, message);
+            log(tag, message);
         }
         Crashlytics.log("W/" + tag + " " + message);
 	}
