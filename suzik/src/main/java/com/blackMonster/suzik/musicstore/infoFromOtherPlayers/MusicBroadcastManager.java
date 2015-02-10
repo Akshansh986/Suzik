@@ -120,7 +120,13 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
         Object value = bundle.get(key);
         if (value == null)
             throw new ExceptionUnknownBroadcast();
+        try {
         return Long.parseLong(value.toString());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            throw new ExceptionUnknownBroadcast();
+        }
+
     }
 
     public BroadcastSong getSong() {

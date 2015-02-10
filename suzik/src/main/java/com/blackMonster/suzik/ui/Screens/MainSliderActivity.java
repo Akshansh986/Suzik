@@ -194,7 +194,7 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
 
     private void showAlertDialog(int message) {
 
-
+        if (isFinishing()) return;
         new AlertDialog.Builder(this)
                 .setMessage(getResources().getString(message))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -237,7 +237,7 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
     private BroadcastReceiver broadcastFirstTimeFlag = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            showAlertDialog(R.string.first_time_flag_msg);
+                showAlertDialog(R.string.first_time_flag_msg);
         }
 
     };
