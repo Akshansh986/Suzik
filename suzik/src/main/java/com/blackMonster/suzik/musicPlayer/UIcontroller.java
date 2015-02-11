@@ -428,9 +428,10 @@ public class UIcontroller {
 
         }
         //delay100ms
-        mHandler.removeCallbacks(mHandlerTask);
-        mHandler.postDelayed(mHandlerTask,500);
-
+        if(musicSrv!=null) {
+            mHandler.removeCallbacks(mHandlerTask);
+            mHandler.postDelayed(mHandlerTask, 500);
+        }
 
     }
 
