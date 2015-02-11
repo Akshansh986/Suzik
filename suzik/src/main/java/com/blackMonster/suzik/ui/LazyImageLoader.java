@@ -278,7 +278,7 @@ public class LazyImageLoader {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if (imageViewReference ==null) return;
+            if (imageViewReference ==null || bitmap == null) return;
 
                 if (shouldDeffer) {
                     shouldDeffer = false;

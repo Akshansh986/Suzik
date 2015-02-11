@@ -60,7 +60,8 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
         mPager.setAdapter(mPagerAdapter);
         mPager.setOnPageChangeListener(this);
         onPageSelected(0);
-        AppUpdateNotificaiton.showAppUpdateDialogIfNecessary(this);
+        new AppUpdateNotificaiton().showAppUpdateDialogIfNecessary(this);
+//        AppUpdateNotificaiton.showAppUpdateDialogIfNecessary(this);
 
 
         //TODO jugad
