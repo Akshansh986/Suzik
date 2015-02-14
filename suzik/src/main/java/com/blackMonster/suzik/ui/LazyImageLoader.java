@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
-import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ImageView;
 
@@ -279,7 +278,7 @@ public class LazyImageLoader {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-
+            if (imageViewReference ==null || bitmap == null) return;
 
                 if (shouldDeffer) {
                     shouldDeffer = false;

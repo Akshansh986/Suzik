@@ -8,6 +8,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -44,10 +46,29 @@ public class AppController extends Application {
 
 		mInstance = this;
         initImageLoader(getApplicationContext());
+//        initGoogleAnalytics();
+        getTracker();
+
 	}
+    synchronized Tracker getTracker() {
 
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            Tracker t = analytics.newTracker(R.xml.global_tracker);
 
+      return t;
+    }
+    private void initGoogleAnalytics() {
 
+//        // Get tracker.
+//        Tracker t = ((AnalyticsSampleApp) getActivity().getApplication()).getTracker(
+//                TrackerName.APP_TRACKER);
+//
+//// Set screen name.
+//        t.setScreenName(getResources().getResourceName(R.xml.global_tracker));
+//
+//// Send a screen view.
+//        t.send(new HitBuilders.AppViewBuilder().build());
+    }
 
 
     public static void initImageLoader(Context context) {

@@ -4,7 +4,6 @@ package com.blackMonster.suzik.ui;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,7 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
     public MySongsAdapter(Cursor androidC, Cursor inappCursor, Context context) {
         this.androidCurosr = androidC;
         this.inappCursor = inappCursor;
-        this.context = context;
+        this.context = context.getApplicationContext();
         inflater = LayoutInflater.from(this.context);
 
         setCount();
