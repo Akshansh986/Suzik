@@ -422,7 +422,9 @@ public class UIcontroller {
      //   musicSrv.syncCurrentSong(songs.getPlayable(songpos));
         PlayerNotification.getInstance(context).updateNotification();
         senduidatasetbroadcast();
+        LOGD(TAG,"set song isplaying");
         if (isplaying()) {
+
             pauseSong();
         }
         if (isfocuslost) {
@@ -567,8 +569,9 @@ public class UIcontroller {
         LOGD(TAG, "isplaying");
 
         if (musicSrv != null) {
+            LOGD(TAG,"musicsrv not null");
             return musicSrv.isplaying();
-        }
+        } else LOGD(TAG,"musicsrv null");
         return false;
     }
     public boolean isBuffering() {
@@ -722,6 +725,11 @@ public class UIcontroller {
     }
 
     public void stopPlayer() {
+        am.abandonAudioFocus(afChangeListener);
+
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastreciever_songcomplete);
+        context.unregisterReceiver(Broadcastreciever_headsetreciever);
+
         if (musicSrv != null){
             musicSrv.killPlayer();
         }

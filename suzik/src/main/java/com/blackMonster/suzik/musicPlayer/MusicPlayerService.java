@@ -387,6 +387,7 @@ public class MusicPlayerService extends Service
        if (player!= null) player.release();
 
         isReleased=true;
+        mediaplayerstate = end;
 
        stopSelf();
     }
