@@ -340,16 +340,15 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
     }
 
 
-    UIcontroller uiconroller = UIcontroller.getInstance(context);
 
     private void handleSongPlaying(int position, ViewHolder viewHolder, View convertView) {
-        if (uiconroller.isSongPlaying(this, position)) {
+        if (UIcontroller.getInstance(context).isSongPlaying(this, position)) {
             viewHolder.title.setTextColor(context.getResources().getColor(R.color.timeline_text));
             viewHolder.artist.setTextColor(context.getResources().getColor(R.color.timeline_text));
 
             playingView = convertView;
             LOGD(TAG, "#########################################################");
-            if (uiconroller.isBuffering()) {
+            if (UIcontroller.getInstance(context).isBuffering()) {
                 isBuffring=true;
                 animateView();
             } else {

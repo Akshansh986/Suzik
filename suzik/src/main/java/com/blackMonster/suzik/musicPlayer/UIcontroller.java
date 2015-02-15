@@ -111,25 +111,25 @@ public class UIcontroller {
     private static UIcontroller instance = null;
 
 
-    public static UIcontroller getInstance(Context context)
+    public static synchronized UIcontroller getInstance(Context context)
 
     {
         LOGD(TAG, "getInstance");
 
         if (instance == null) {
+            LOGD(TAG, "Instance is null");
+
             instance = new UIcontroller(context.getApplicationContext());
-        }
+        } else LOGD(TAG,"Instance not null");
 
         return instance;
 
     }
-
     private UIcontroller(Context context) {
         // TODO Auto-generated constructor stub
 
         LOGD(TAG, "UIcontroller constuctor");
         this.context = context;
-
         Intent_uidataupdate = new Intent(brodcast_uidataupdate);
         Intent_uibtnupdate = new Intent(brodcast_uibtnupdate);
 
@@ -142,7 +142,7 @@ public class UIcontroller {
         context.registerReceiver(Broadcastreciever_headsetreciever, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
 
         setaudiodocus();
-
+        bindtoservice();
     }
 
 
@@ -284,7 +284,7 @@ public class UIcontroller {
     }
 
 
-    private void senduibtnsetbroadcast() {
+    public void senduibtnsetbroadcast() {
         // TODO Auto-generated method stub
 
 
@@ -298,7 +298,7 @@ public class UIcontroller {
     }
 
 
-    private void resetui() {
+    public void resetui() {
         // TODO Auto-generated method stub
         LocalBroadcastManager.getInstance(context).sendBroadcast(Intent_resetui);
         LOGD(TAG, "resetuibroadcast");
@@ -333,6 +333,7 @@ public class UIcontroller {
                             senduibtnsetbroadcast();
                         }
                     }
+
 
 
                 } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
@@ -419,8 +420,11 @@ public class UIcontroller {
         resetui();
 
      //   musicSrv.syncCurrentSong(songs.getPlayable(songpos));
+        PlayerNotification.getInstance(context).updateNotification();
         senduidatasetbroadcast();
+        LOGD(TAG,"set song isplaying");
         if (isplaying()) {
+
             pauseSong();
         }
         if (isfocuslost) {
@@ -442,18 +446,25 @@ public class UIcontroller {
             requestfocus();
 
         }
-        musicSrv.playplayer();
+        if(musicSrv!=null) {
+            if (musicSrv.isReleased) {
+                bindtoservice();
+                setSong();
+            } else {
+                musicSrv.playplayer();
+            }
+        }
     }
 
     public void pauseSong() {
         // TODO Auto-generated method stub
         LOGD(TAG, "pause");
-
-        musicSrv.pausePlayer();
+        if(musicSrv!=null) {
+            musicSrv.pausePlayer();
+        }
     }
 
     public void nextSong() {
-        // TODO Auto-generated method stub
         LOGD(TAG, "next song");
         if (songs != null) {
 
@@ -476,7 +487,6 @@ public class UIcontroller {
     }
 
     public void prevSong() {
-        // TODO Auto-generated method stub
         LOGD(TAG, "prevsong");
         if (songs != null) {
 
@@ -500,15 +510,16 @@ public class UIcontroller {
     }
 
     public void stopSong() {
-        // TODO Auto-generated method stub
         LOGD(TAG, "stopSong");
+        if(musicSrv!=null){
+            musicSrv.stopPlayer();
 
-        musicSrv.stopPlayer();
+        }
+
 
     }
 
     public void shuffleSong() {
-        // TODO Auto-generated method stub
         LOGD(TAG, "shuffleSong");
 
         Random r = new Random();
@@ -517,21 +528,18 @@ public class UIcontroller {
     }
 
     public void setrepeatStatus(int value) {
-        // TODO Auto-generated method stub
         LOGD(TAG, "setrepeatStatus");
 
         repeat = value;
     }
 
     public void setshuffleStatus(boolean value) {
-        // TODO Auto-generated method stub
         LOGD(TAG, "setshuffleStatus");
 
         shuffle = value;
     }
 
     public void seek(int progress) {
-        // TODO Auto-generated method stub
         LOGD(TAG, "seek");
 
         if (musicSrv != null) {
@@ -561,8 +569,9 @@ public class UIcontroller {
         LOGD(TAG, "isplaying");
 
         if (musicSrv != null) {
+            LOGD(TAG,"musicsrv not null");
             return musicSrv.isplaying();
-        }
+        } else LOGD(TAG,"musicsrv null");
         return false;
     }
     public boolean isBuffering() {
@@ -693,6 +702,40 @@ public class UIcontroller {
 
     public boolean isSongPlaying(Playlist playlist,int pos){
         return songpos==pos&&songs==playlist;
+    }
+
+    public boolean isOnlySongInList(){
+        if(songs!=null){
+            if(songs.getSongCount()==1){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        return false;
+    }
+    public Playable getCurrentSong(){
+
+        if(songs!=null){
+            return songs.getPlayable(songpos);
+        }
+        else
+            return null;
+    }
+
+    public void stopPlayer() {
+        am.abandonAudioFocus(afChangeListener);
+
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastreciever_songcomplete);
+        context.unregisterReceiver(Broadcastreciever_headsetreciever);
+
+        if (musicSrv != null){
+            musicSrv.killPlayer();
+        }
+        unbind();
+        instance=null;
+        LOGD(TAG,"stop player instance = null");
     }
 
 

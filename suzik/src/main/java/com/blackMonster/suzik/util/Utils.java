@@ -23,6 +23,8 @@ public class Utils {
         return s;
 
     }
+
+
     private static final Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
     public static Uri getAndroidAlumartUri(int albumId) {

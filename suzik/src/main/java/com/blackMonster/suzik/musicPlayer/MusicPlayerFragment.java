@@ -54,7 +54,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     private TextView songArtistName;
     private ImageView albumart;
     private SeekBar songProgressBar;
-    UIcontroller uicontroller;
+  //  UIcontroller uicontroller;
     private DisplayImageOptions options;
     private int seekmax;
 
@@ -351,7 +351,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         setupui(rootView);
         setanimation();
 
-        uicontroller = UIcontroller.getInstance(getActivity().getApplicationContext());
+      //  uicontroller = UIcontroller.getInstance(getActivity().getApplicationContext());
 
         return rootView;
 
@@ -383,12 +383,12 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
             LOGD(TAG, "onPause:unregister broadcast");
 
-            if (uicontroller != null) {
+         //   if (uicontroller != null) {
 
                 LOGD(TAG, "onPause:stophandler");
-
-                uicontroller.stophandler();
-            }
+           //     uicontroller.stophandler();
+        UIcontroller.getInstance(getActivity().getApplicationContext()).stophandler();
+         //   }
 
         super.onPause();
     }
@@ -397,6 +397,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     @Override
     public void onResume() {
         // TODO Auto-generated method stub
+       UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
         LOGD(TAG, "onResume");
                 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastreciever_resetui, new IntentFilter(UIcontroller.brodcast_resetui));
                 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastreciever_playercurrentstatus, new IntentFilter(UIcontroller.brodcast_playercurrentstatus));
@@ -449,7 +450,8 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        uicontroller.seek(seekBar.getProgress());
+        UIcontroller.getInstance(getActivity().getApplicationContext()).seek(seekBar.getProgress());
+      //  uicontroller.seek(seekBar.getProgress());
     }
 
 
@@ -475,12 +477,13 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     }
 
     private void setuplistener() {
-
         LOGD(TAG, "setuplisteners");
 
         btnPlay.setOnClickListener(new OnClickListener() {
+
             @Override
             public void onClick(View v) {
+                UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
                 LOGD(TAG, "onClick:btnPlay/Pause");
                 ImageView t = (ImageView) v;
                 if (uicontroller.getList() != null) {
@@ -511,6 +514,8 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
             @Override
             public void onClick(View v) {
+                UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
+
                 LOGD(TAG, "onClick:btnNext");
 
                 if (uicontroller.getList() != null) {
@@ -529,6 +534,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
             @Override
             public void onClick(View v) {
+                UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
                 LOGD(TAG, "onClick:btnPrevious");
 
                 if (uicontroller.getList() != null) {
@@ -548,6 +554,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
             @Override
             public void onClick(View v) {
+            UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
                 LOGD(TAG, "onClick:btnShuffle");
 
                 // TODO Auto-generated method stub
@@ -578,6 +585,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
             @Override
             public void onClick(View v) {
+            UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
                 LOGD(TAG, "onClick:btnShuffle");
 
                 // TODO Auto-generated method stub

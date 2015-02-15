@@ -37,10 +37,12 @@ public class AppController extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-        final TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-	    Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
-		Crashlytics.setUserIdentifier(MainPrefs.getMyNo(this));
 
+        if (!AppConfig.DEBUG) {
+            final TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+            Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
+            Crashlytics.setUserIdentifier(MainPrefs.getMyNo(this));
+        }
 		LOGD(TAG, "oncreate");
 
 

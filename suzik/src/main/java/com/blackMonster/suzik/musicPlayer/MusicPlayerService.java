@@ -1,7 +1,6 @@
 package com.blackMonster.suzik.musicPlayer;
 
 import android.app.Notification;
-import android.app.Notification.Builder;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -40,8 +39,6 @@ public class MusicPlayerService extends Service
 
     private static final String TAG = "Suzikplayer_service";
 
-    private Builder builder;
-    private Notification notification = null;
     private static final int NOTIFY_ID = 1;
 
     // resources for media player
@@ -49,6 +46,7 @@ public class MusicPlayerService extends Service
     private int setseekintent = 0;
     private int setstopintent = 0;
     private int setplaypauseintent = 0;
+
 
     final int idle = 0;
     final int initialized = 1;
@@ -65,6 +63,7 @@ public class MusicPlayerService extends Service
     private boolean isplay;
     private boolean isasyncplay;
     private boolean isInternetAvailable;
+    public boolean isReleased=false;
 
     private boolean sendInAppPlay = false;
     WorkerThread worker;
@@ -191,6 +190,8 @@ public class MusicPlayerService extends Service
                 player = null;
 
                 player = new MediaPlayer();
+                isReleased=false;
+
                 mediaplayerstate = idle;
                 fullfillintent();
 
@@ -248,13 +249,8 @@ public class MusicPlayerService extends Service
                 views.setTextViewText(R.id.notification_small_songtitle, songTitle);
                 views.setTextViewText(R.id.notifiacation_small_artist, songArtist);
 
-                builder = new Notification.Builder(getBaseContext());
-                builder.setSmallIcon(R.drawable.ic_launcher)
-                        .setContentIntent(pendInt)
-                        .setContent(views)
-                        .setOngoing(true);
-                notification = builder.getNotification();
-                startForeground(notification.FLAG_ONGOING_EVENT, notification);
+                Notification notification =  PlayerNotification.getInstance(getBaseContext()).buildNotification();
+                if (notification != null ) startForeground(PlayerNotification.mNotificationId,notification);
 
                 if (mediaplayerstate == initialized || mediaplayerstate == stopped) {
                     sendbufferingbroadcast();
@@ -372,6 +368,7 @@ public class MusicPlayerService extends Service
                 mediaplayerstate = paused;
                 fullfillintent();
                 handler.removeCallbacks(sendUpdatestoui);
+                PlayerNotification.getInstance(this).updateNotification();
 
             } else {
                 LOGD(TAG, "intent pause");
@@ -383,18 +380,28 @@ public class MusicPlayerService extends Service
 
     }
 
+    public void killPlayer() {
+//       stopPlayer();
+        handler.removeCallbacks(sendUpdatestoui);
+        stopForeground(true);
+        sendbufferingcompletebroadcast();
+       if (player!= null) player.release();
+
+        isReleased=true;
+        mediaplayerstate = end;
+
+       stopSelf();
+    }
+
     public void playplayer() {
         if (player != null) {
-            if (notification != null) {
-                startForeground(notification.FLAG_ONGOING_EVENT, notification);
-            }
-
 
             if (mediaplayerstate == prepared || mediaplayerstate == started || mediaplayerstate == paused || mediaplayerstate == playbackcomplete) {
                 player.start();
                 mediaplayerstate = started;
                 fullfillintent();
                 setuphandler();
+                PlayerNotification.getInstance(this).updateNotification();
 
             } else {
                 LOGD(TAG, "intent play");
@@ -428,6 +435,8 @@ public class MusicPlayerService extends Service
                 LOGD(TAG, "oncreate");
                 if (player == null) {
                     player = new MediaPlayer();
+                    isReleased=false;
+
                     mediaplayerstate = idle;
                     fullfillintent();
                 }
@@ -455,15 +464,7 @@ public class MusicPlayerService extends Service
     public void onDestroy() {
         // TODO Auto-generated method stub
         LOGD(TAG, "ondestroy");
-        stopForeground(true);
 
-        if (mediaplayerstate == stopped || mediaplayerstate == prepared || mediaplayerstate == started || mediaplayerstate == paused || mediaplayerstate == playbackcomplete) {
-            player.stop();
-            mediaplayerstate = stopped;
-        }
-
-        player.release();
-        mediaplayerstate = end;
 
         if (isseekbarupdateuiregistered) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver_seekbaruiupdate);
@@ -513,12 +514,7 @@ public class MusicPlayerService extends Service
             isseekbarupdateuiregistered = false;
 
         }
-        if (!isBufferingState) {
-            if (!isplaying()) {
-                stopForeground(true);
-            }
 
-        }
 
 
         return true;
@@ -626,6 +622,7 @@ public class MusicPlayerService extends Service
     }
 
     public boolean isBuffering() {
+        LOGD(TAG,"isbuffering  : "+ isBufferingState);
         return isBufferingState;
     }
 
@@ -757,5 +754,6 @@ public class MusicPlayerService extends Service
                 break;
         }
     }
+
 
 }
