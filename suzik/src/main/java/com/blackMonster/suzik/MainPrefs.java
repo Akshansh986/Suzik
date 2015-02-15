@@ -3,6 +3,9 @@ package com.blackMonster.suzik;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.blackMonster.suzik.musicstore.Timeline.Playable;
+import com.google.gson.Gson;
+
 public class MainPrefs {
 	public static final String PREFS_NAME = "MainPrefs";
 	public static final String MY_NO = "MY_NO";
@@ -16,7 +19,10 @@ public class MainPrefs {
 
     private static SharedPreferences prefs=null;
 
-	private static void initPrefInstance(Context context) {
+    private static final String LAST_PLAYED_SONG = "lastPlayedSong";
+
+
+    private static void initPrefInstance(Context context) {
 		if (prefs == null) prefs = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
 	}
 	
@@ -28,6 +34,23 @@ public class MainPrefs {
     public static void clearAll(Context context) {
         initPrefInstance(context);
         prefs.edit().clear().commit();
+    }
+
+    public static void storePlayable(Playable playable,Context context) {
+        initPrefInstance(context);
+        Gson gson = new Gson();
+        String json = gson.toJson(playable);
+        prefs.edit().putString(LAST_PLAYED_SONG, json).commit();
+    }
+
+    public static Playable getPlayable(Context context) {
+        initPrefInstance(context);
+        Gson gson = new Gson();
+        String json =  prefs.getString(LAST_PLAYED_SONG, "");
+        if (json.equals("")) return  null;
+
+        Playable obj = gson.fromJson(json, Playable.class);
+        return obj;
     }
 	
 	
