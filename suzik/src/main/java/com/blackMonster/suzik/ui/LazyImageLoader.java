@@ -94,7 +94,7 @@ public class LazyImageLoader {
         return inSampleSize;
     }
 
-    private static Bitmap getArtworkQuick(Context context, Uri uri, int w, int h) {
+    public static Bitmap getArtworkQuick(Context context, Uri uri, int w, int h) {
         // NOTE: There is in fact a 1 pixel frame in the ImageView used to
         // display this drawable. Take it into account now, so we don't have to
         // scale later.

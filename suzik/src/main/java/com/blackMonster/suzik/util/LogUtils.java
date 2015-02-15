@@ -17,8 +17,7 @@ public class LogUtils {
 		if (AppConfig.DEBUG) {
 			Log.d(tag, message);
 			log(tag, message);
-		}
-		Crashlytics.log("D/" + tag + " " + message);
+		} else 	Crashlytics.log("D/" + tag + " " + message);
 	}
 
 
@@ -27,23 +26,20 @@ public class LogUtils {
         if (AppConfig.DEBUG) {
             Log.i(tag, message);
             log(tag, message);
-        }
-        Crashlytics.log("I/" + tag + " " + message);	}
+        } else Crashlytics.log("I/" + tag + " " + message);	}
 
 	public static void LOGW(final String tag, String message) {
         if (AppConfig.DEBUG) {
             Log.w(tag, message);
             log(tag, message);
-        }
-        Crashlytics.log("W/" + tag + " " + message);
+        } else Crashlytics.log("W/" + tag + " " + message);
 	}
 
 	public static void LOGE(final String tag, String message) {
         if (AppConfig.DEBUG) {
             Log.e(tag, message);
             log(tag, message);
-        }
-        Crashlytics.log("E/" + tag + " " + message);
+        } else  Crashlytics.log("E/" + tag + " " + message);
 
 	}
 

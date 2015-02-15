@@ -151,6 +151,45 @@
 
 
 
+        <!-- Widget/Notification Now Playing Activity Broadcast Receiver -->
+
+        <receiver android:name=".musicPlayer.BroadcastReceivers.LaunchNowPlayingReceiver" >
+            <intent-filter>
+                <action android:name="com.suzik.musicPlayer.LAUNCH_NOW_PLAYING_ACTION" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Widget/Notification Play/Pause Broadcast Receiver -->
+
+        <receiver android:name=".musicPlayer.BroadcastReceivers.PlayPauseBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="com.suzik.musicPlayer.PLAY_PAUSE_ACTION" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Widget/Notification Previous Broadcast Receiver -->
+
+        <receiver android:name=".musicPlayer.BroadcastReceivers.PreviousBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="com.suzik.musicPlayer.PREVIOUS_ACTION" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Widget/Notification Next Broadcast Receiver -->
+
+        <receiver android:name=".musicPlayer.BroadcastReceivers.NextBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="com.suzik.musicPlayer.NEXT_ACTION" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Stop Service Broadcast Receiver -->
+
+        <receiver android:name=".musicPlayer.BroadcastReceivers.StopServiceBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="com.suzik.musicPlayer.STOP_SERVICE" />
+            </intent-filter>
+        </receiver>
 
 
 

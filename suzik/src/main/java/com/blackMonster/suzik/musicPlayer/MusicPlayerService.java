@@ -1,7 +1,5 @@
 package com.blackMonster.suzik.musicPlayer;
 
-import android.app.Notification;
-import android.app.Notification.Builder;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -40,8 +38,6 @@ public class MusicPlayerService extends Service
 
     private static final String TAG = "Suzikplayer_service";
 
-    private Builder builder;
-    private Notification notification = null;
     private static final int NOTIFY_ID = 1;
 
     // resources for media player
@@ -248,13 +244,8 @@ public class MusicPlayerService extends Service
                 views.setTextViewText(R.id.notification_small_songtitle, songTitle);
                 views.setTextViewText(R.id.notifiacation_small_artist, songArtist);
 
-                builder = new Notification.Builder(getBaseContext());
-                builder.setSmallIcon(R.drawable.ic_launcher)
-                        .setContentIntent(pendInt)
-                        .setContent(views)
-                        .setOngoing(true);
-                notification = builder.getNotification();
-                startForeground(notification.FLAG_ONGOING_EVENT, notification);
+
+                startForeground(PlayerNotification.mNotificationId, PlayerNotification.getInstance(getBaseContext()).buildNotification());
 
                 if (mediaplayerstate == initialized || mediaplayerstate == stopped) {
                     sendbufferingbroadcast();
@@ -372,6 +363,7 @@ public class MusicPlayerService extends Service
                 mediaplayerstate = paused;
                 fullfillintent();
                 handler.removeCallbacks(sendUpdatestoui);
+                PlayerNotification.getInstance(this).updateNotification();
 
             } else {
                 LOGD(TAG, "intent pause");
@@ -383,18 +375,22 @@ public class MusicPlayerService extends Service
 
     }
 
+    public void killPlayer() {
+//       stopPlayer();
+       stopForeground(true);
+       if (player!= null) player.release();
+       stopSelf();
+    }
+
     public void playplayer() {
         if (player != null) {
-            if (notification != null) {
-                startForeground(notification.FLAG_ONGOING_EVENT, notification);
-            }
-
 
             if (mediaplayerstate == prepared || mediaplayerstate == started || mediaplayerstate == paused || mediaplayerstate == playbackcomplete) {
                 player.start();
                 mediaplayerstate = started;
                 fullfillintent();
                 setuphandler();
+                PlayerNotification.getInstance(this).updateNotification();
 
             } else {
                 LOGD(TAG, "intent play");
@@ -757,5 +753,6 @@ public class MusicPlayerService extends Service
                 break;
         }
     }
+
 
 }

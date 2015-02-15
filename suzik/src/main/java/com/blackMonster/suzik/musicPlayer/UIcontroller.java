@@ -123,13 +123,11 @@ public class UIcontroller {
         return instance;
 
     }
-
     private UIcontroller(Context context) {
         // TODO Auto-generated constructor stub
 
         LOGD(TAG, "UIcontroller constuctor");
         this.context = context;
-
         Intent_uidataupdate = new Intent(brodcast_uidataupdate);
         Intent_uibtnupdate = new Intent(brodcast_uibtnupdate);
 
@@ -335,6 +333,7 @@ public class UIcontroller {
                     }
 
 
+
                 } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
                     LOGD(TAG, "AUDIOFOCUS_GAIN");
                     isfocuslost = false;
@@ -419,6 +418,7 @@ public class UIcontroller {
         resetui();
 
      //   musicSrv.syncCurrentSong(songs.getPlayable(songpos));
+        PlayerNotification.getInstance(context).updateNotification();
         senduidatasetbroadcast();
         if (isplaying()) {
             pauseSong();
@@ -693,6 +693,31 @@ public class UIcontroller {
 
     public boolean isSongPlaying(Playlist playlist,int pos){
         return songpos==pos&&songs==playlist;
+    }
+
+    public boolean isOnlySongInList(){
+        if(songs!=null){
+            if(songs.getSongCount()==1){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        return false;
+    }
+    public Playable getCurrentSong(){
+
+        if(songs!=null){
+            return songs.getPlayable(songpos);
+        }
+        else
+            return null;
+    }
+
+    public void stopPlayer() {
+        if (musicSrv != null)
+            musicSrv.killPlayer();
     }
 
 
