@@ -46,6 +46,7 @@ public class MusicPlayerService extends Service
     private int setstopintent = 0;
     private int setplaypauseintent = 0;
 
+
     final int idle = 0;
     final int initialized = 1;
     final int preparing = 2;
@@ -61,6 +62,7 @@ public class MusicPlayerService extends Service
     private boolean isplay;
     private boolean isasyncplay;
     private boolean isInternetAvailable;
+    public boolean isReleased=false;
 
     private boolean sendInAppPlay = false;
     WorkerThread worker;
@@ -187,6 +189,8 @@ public class MusicPlayerService extends Service
                 player = null;
 
                 player = new MediaPlayer();
+                isReleased=false;
+
                 mediaplayerstate = idle;
                 fullfillintent();
 
@@ -378,7 +382,9 @@ public class MusicPlayerService extends Service
     public void killPlayer() {
 //       stopPlayer();
        stopForeground(true);
+        sendbufferingcompletebroadcast();
        if (player!= null) player.release();
+        isReleased=true;
        stopSelf();
     }
 
@@ -424,6 +430,8 @@ public class MusicPlayerService extends Service
                 LOGD(TAG, "oncreate");
                 if (player == null) {
                     player = new MediaPlayer();
+                    isReleased=false;
+
                     mediaplayerstate = idle;
                     fullfillintent();
                 }
@@ -451,17 +459,7 @@ public class MusicPlayerService extends Service
     public void onDestroy() {
         // TODO Auto-generated method stub
         LOGD(TAG, "ondestroy");
-        stopForeground(true);
-
-        if (mediaplayerstate == stopped || mediaplayerstate == prepared || mediaplayerstate == started || mediaplayerstate == paused || mediaplayerstate == playbackcomplete) {
-            player.stop();
-            mediaplayerstate = stopped;
-        }
-
-        player.release();
-        mediaplayerstate = end;
-
-        if (isseekbarupdateuiregistered) {
+       if (isseekbarupdateuiregistered) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver_seekbaruiupdate);
 
             isseekbarupdateuiregistered = false;
@@ -509,12 +507,7 @@ public class MusicPlayerService extends Service
             isseekbarupdateuiregistered = false;
 
         }
-        if (!isBufferingState) {
-            if (!isplaying()) {
-                stopForeground(true);
-            }
 
-        }
 
 
         return true;

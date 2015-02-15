@@ -28,8 +28,12 @@ public class StopServiceBroadcastReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		
 		//Stop the service.
-        UIcontroller.getInstance(context).stopPlayer();
+      UIcontroller uIcontroller=  UIcontroller.getInstance(context);
+        uIcontroller.stopPlayer();
+
+        uIcontroller.senduibtnsetbroadcast();
         UiBroadcasts.broadcastMusicDataChanged(context);
+
 	}
 
 }

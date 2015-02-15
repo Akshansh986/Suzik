@@ -282,7 +282,7 @@ public class UIcontroller {
     }
 
 
-    private void senduibtnsetbroadcast() {
+    public void senduibtnsetbroadcast() {
         // TODO Auto-generated method stub
 
 
@@ -296,7 +296,7 @@ public class UIcontroller {
     }
 
 
-    private void resetui() {
+    public void resetui() {
         // TODO Auto-generated method stub
         LocalBroadcastManager.getInstance(context).sendBroadcast(Intent_resetui);
         LOGD(TAG, "resetuibroadcast");
@@ -442,18 +442,24 @@ public class UIcontroller {
             requestfocus();
 
         }
-        musicSrv.playplayer();
+        if(musicSrv!=null) {
+            if (musicSrv.isReleased) {
+                setSong();
+            } else {
+                musicSrv.playplayer();
+            }
+        }
     }
 
     public void pauseSong() {
         // TODO Auto-generated method stub
         LOGD(TAG, "pause");
-
-        musicSrv.pausePlayer();
+        if(musicSrv!=null) {
+            musicSrv.pausePlayer();
+        }
     }
 
     public void nextSong() {
-        // TODO Auto-generated method stub
         LOGD(TAG, "next song");
         if (songs != null) {
 
@@ -476,7 +482,6 @@ public class UIcontroller {
     }
 
     public void prevSong() {
-        // TODO Auto-generated method stub
         LOGD(TAG, "prevsong");
         if (songs != null) {
 
@@ -500,15 +505,16 @@ public class UIcontroller {
     }
 
     public void stopSong() {
-        // TODO Auto-generated method stub
         LOGD(TAG, "stopSong");
+        if(musicSrv!=null){
+            musicSrv.stopPlayer();
 
-        musicSrv.stopPlayer();
+        }
+
 
     }
 
     public void shuffleSong() {
-        // TODO Auto-generated method stub
         LOGD(TAG, "shuffleSong");
 
         Random r = new Random();
@@ -517,21 +523,18 @@ public class UIcontroller {
     }
 
     public void setrepeatStatus(int value) {
-        // TODO Auto-generated method stub
         LOGD(TAG, "setrepeatStatus");
 
         repeat = value;
     }
 
     public void setshuffleStatus(boolean value) {
-        // TODO Auto-generated method stub
         LOGD(TAG, "setshuffleStatus");
 
         shuffle = value;
     }
 
     public void seek(int progress) {
-        // TODO Auto-generated method stub
         LOGD(TAG, "seek");
 
         if (musicSrv != null) {
@@ -716,8 +719,10 @@ public class UIcontroller {
     }
 
     public void stopPlayer() {
-        if (musicSrv != null)
+        if (musicSrv != null){
             musicSrv.killPlayer();
+        }
+
     }
 
 

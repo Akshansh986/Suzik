@@ -27,9 +27,16 @@ public class PlayPauseBroadcastReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 
         UIcontroller uIcontroller =  UIcontroller.getInstance(context);
-        if (uIcontroller.isplaying()) uIcontroller.pauseSong();
-        else uIcontroller.playSong();
-		
+        if (uIcontroller.isplaying()){
+            uIcontroller.pauseSong();
+            uIcontroller.senduibtnsetbroadcast();
+        }
+        else {
+            uIcontroller.playSong();
+            uIcontroller.senduibtnsetbroadcast();
+        }
+
+
 	}
 
 }
