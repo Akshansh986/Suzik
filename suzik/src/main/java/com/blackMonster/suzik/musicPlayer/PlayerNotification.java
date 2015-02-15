@@ -78,7 +78,7 @@ public class PlayerNotification {
             notification = buildJBNotification(context);
         else
             notification = buildICSNotification(context);
-
+        if (notification == null) return;
         //Update the current notification.
         NotificationManager notifManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notifManager.notify(mNotificationId, notification);
@@ -94,6 +94,7 @@ public class PlayerNotification {
     private android.app.Notification buildJBNotification(Context mContext) {
         UIcontroller uIcontroller = UIcontroller.getInstance(mContext);
         Playable currentSong = uIcontroller.getCurrentSong();
+        if(currentSong == null) return null;
         mNotificationBuilder = new NotificationCompat.Builder(mContext);
         mNotificationBuilder.setOngoing(true);
         mNotificationBuilder.setAutoCancel(false);
@@ -217,6 +218,7 @@ public class PlayerNotification {
     private Notification buildICSNotification(Context mContext) {
         UIcontroller uIcontroller = UIcontroller.getInstance(mContext);
         Playable currentSong = uIcontroller.getCurrentSong();
+        if(currentSong == null) return null;
 
 
         mNotificationBuilder = new NotificationCompat.Builder(mContext);

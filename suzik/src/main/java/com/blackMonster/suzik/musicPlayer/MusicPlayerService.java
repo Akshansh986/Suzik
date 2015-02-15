@@ -1,5 +1,6 @@
 package com.blackMonster.suzik.musicPlayer;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -248,8 +249,8 @@ public class MusicPlayerService extends Service
                 views.setTextViewText(R.id.notification_small_songtitle, songTitle);
                 views.setTextViewText(R.id.notifiacation_small_artist, songArtist);
 
-
-                startForeground(PlayerNotification.mNotificationId, PlayerNotification.getInstance(getBaseContext()).buildNotification());
+                Notification notification =  PlayerNotification.getInstance(getBaseContext()).buildNotification();
+                if (notification != null ) startForeground(PlayerNotification.mNotificationId,notification);
 
                 if (mediaplayerstate == initialized || mediaplayerstate == stopped) {
                     sendbufferingbroadcast();
