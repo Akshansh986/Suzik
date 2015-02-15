@@ -384,7 +384,9 @@ public class MusicPlayerService extends Service
        stopForeground(true);
         sendbufferingcompletebroadcast();
        if (player!= null) player.release();
+
         isReleased=true;
+
        stopSelf();
     }
 

@@ -444,6 +444,7 @@ public class UIcontroller {
         }
         if(musicSrv!=null) {
             if (musicSrv.isReleased) {
+                bindtoservice();
                 setSong();
             } else {
                 musicSrv.playplayer();
@@ -721,6 +722,8 @@ public class UIcontroller {
     public void stopPlayer() {
         if (musicSrv != null){
             musicSrv.killPlayer();
+            instance=null;
+
         }
 
     }

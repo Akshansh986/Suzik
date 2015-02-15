@@ -34,6 +34,7 @@ public class PlayPauseBroadcastReceiver extends BroadcastReceiver {
         else {
             uIcontroller.playSong();
             uIcontroller.senduibtnsetbroadcast();
+
         }
 
 
