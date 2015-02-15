@@ -30,14 +30,18 @@ public class BroadcastPlaystateChage extends MusicBroadcastManager {
 		track = intent.getStringExtra(P_TRACK);
 		artist = intent.getStringExtra(P_ARTIST);
 
-		if (track == null || artist == null) {
+
+        Long tmpDuration = getDurationFromIntent(intent,false);
+
+
+		if (track == null || artist == null || tmpDuration == null) {
 			BroadcastSong song = MetaChangePrefs.getSong(context);
 			track = song.getTitle();
 			artist = song.getArtist();
 			album = song.getAlbum();
 			id = song.getId();
 			duration = song.getDuration();
-			playing = intent.getBooleanExtra(P_PLAYING, false);
+			playing = getPlaying(intent,false);
 			streaming = song.isStreaming();
 			LOGD(TAG,
 					"track or artist is null, using metaPrefs "
