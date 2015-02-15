@@ -19,13 +19,15 @@ import static com.blackMonster.suzik.util.LogUtils.LOGI;
 
 public abstract class MusicBroadcastManager extends BroadcastReceiver {
     private static final String TAG = "MusicBroadcastManager";
-    static final String P_TRACK = "track";
-    static final String P_ARTIST = "artist";
-    static final String P_ALBUM = "album";
+    final String P_TRACK = "track";
+    final String P_ARTIST = "artist";
+    final String P_ALBUM = "album";
 
-    static final String P_PLAYING = "playing";
-    static final String P_ID = "id";
-    static final String P_DURATION = "duration";
+    final String P_PLAYING = "playing";
+    final String P_PLAYING_2 = "isplaying";
+    final String P_ID = "id";
+    final String P_DURATION = "duration";
+    final String P_DURATION_2 = "trackLength";
 
     String track, artist, album;
     long id, duration;
@@ -41,11 +43,11 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
             public void run() {
                 if (!MainPrefs.isLoginDone(context)) return;
                 String action = intent.getAction();
-                LOGE(TAG,
-                        action + "  " + "started  "
-                                + intent.getBooleanExtra(P_PLAYING, false));
+
 
                 try {
+                    LOGE(TAG,
+                            action + "  " + "started  "  );
                     fixBroadcastParameters(intent, context);
                     if (!duplicateFilter.isDuplicate(getSong(), action, playing,
                             System.currentTimeMillis())) {
@@ -87,8 +89,10 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
         if (album != null && album.equals(""))
             album = "<unknown>";
 
-        duration = getFromBundle(intent.getExtras(), P_DURATION);
-        playing = intent.getBooleanExtra(P_PLAYING, false);
+        duration = getDurationFromIntent(intent,true);
+
+
+        playing = getPlaying(intent,true);
         Song tempSong = new Song(track, artist, album, duration);
         // if (track == null || artist == null)
         // throw new ExceptionUnknownBroadcast();
@@ -102,7 +106,7 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
             // getExtraLong because
             // getFromBundle can throw
             // exception.
-            duration = getFromBundle(bundle, P_DURATION);
+            duration = getDurationFromIntent(intent,true);
             streaming = UserActivity.STREAMING_TRUE;
             LOGD(TAG, "song not found in database");
         } else {
@@ -113,6 +117,41 @@ public abstract class MusicBroadcastManager extends BroadcastReceiver {
 
         }
 
+    }
+
+    Long getDurationFromIntent(Intent intent, boolean shouldThrowException) throws ExceptionUnknownBroadcast {
+        try {
+            Bundle bundle = intent.getExtras();
+            Object value = bundle.get(P_DURATION);
+            if (value != null) {
+                if (value.toString().equals("")) return Long.valueOf(0);
+                return Long.parseLong(value.toString());
+            }
+
+            value = bundle.get(P_DURATION_2);
+            if (value != null) {
+                if (value.toString().equals("")) return Long.valueOf(0);
+                return Long.parseLong(value.toString());
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            throw new ExceptionUnknownBroadcast();
+        }
+
+        if (shouldThrowException) throw  new ExceptionUnknownBroadcast();
+        return null;
+
+    }
+
+    boolean getPlaying(Intent intent, boolean shouldThrowException) throws ExceptionUnknownBroadcast {
+        if (intent.hasExtra(P_PLAYING))
+            return intent.getBooleanExtra(P_PLAYING,false);
+
+        if (intent.hasExtra(P_PLAYING_2))
+            return  intent.getBooleanExtra(P_PLAYING_2,false);
+
+        if (shouldThrowException) throw new ExceptionUnknownBroadcast();
+        return false;
     }
 
     private long getFromBundle(Bundle bundle, String key)
