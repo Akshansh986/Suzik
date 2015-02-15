@@ -25,7 +25,9 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.R;
+import com.blackMonster.suzik.musicstore.Timeline.Playable;
 import com.blackMonster.suzik.util.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -415,9 +417,15 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
                     uicontroller.loadcurrentplayerstatus();
                 } else {
                     LOGD(TAG, "loadcurrentplayerstatus");
-                    uicontroller.loadcurrentplayerstatus();
-
-                    //uicontroller.loadsavedplayerstatus();
+                //    uicontroller.loadcurrentplayerstatus();
+                    Playable playable=MainPrefs.getPlayable(getActivity().getApplicationContext());
+                  if(playable!=null) {
+                      uicontroller.loadsavedplayerstatus(playable);
+                  }
+                    else
+                  {
+                      uicontroller.loadcurrentplayerstatus();
+                  }
                 }
 
                 LOGD(TAG, "onResume:starthandler");
@@ -649,8 +657,8 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             @Override
             public void onAnimationStart(Animation animation) {
                 // TODO Auto-generated method stub
-             //   LOGD(TAG, "onAnimationStart");
-                if(!isbuffering) {
+                //   LOGD(TAG, "onAnimationStart");
+                if (!isbuffering) {
 
                     animationHandler.removeCallbacks(animationRunnable);
                 }
@@ -667,7 +675,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             @Override
             public void onAnimationEnd(Animation animation) {
                 // TODO Auto-generated method stub
-             //   LOGD(TAG, "onAnimationEnd");
+                //   LOGD(TAG, "onAnimationEnd");
                 if (isbuffering) {
                     animationHandler.removeCallbacks(animationRunnable);
 

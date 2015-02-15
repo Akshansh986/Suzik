@@ -64,6 +64,7 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
 //        AppUpdateNotificaiton.showAppUpdateDialogIfNecessary(this);
 
 
+
         //TODO jugad
         mPager.setCurrentItem(1);
         onPageSelected(1);

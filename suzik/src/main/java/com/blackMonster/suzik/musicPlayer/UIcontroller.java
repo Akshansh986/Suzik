@@ -14,6 +14,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
+import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.musicstore.Timeline.Playable;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
 import com.blackMonster.suzik.ui.FileDownloader;
@@ -615,11 +616,25 @@ public class UIcontroller {
 
     }
 
-    public void loadsavedplayerstatus() {
+    public void loadsavedplayerstatus(Playable playable) {
         // TODO Auto-generated method stub
         LOGD(TAG, "loadsavedplayerstatus");
 
-        if (songs == null) {
+        final Playable savedSong=playable;
+        Playlist playlist = new Playlist() {
+            @Override
+            public Playable getPlayable(int position) {
+                return savedSong;
+            }
+
+            @Override
+            public int getSongCount() {
+                return 1;
+            }
+        };
+        setList(playlist);
+
+       /* if (songs == null) {
             Intent_playersavedstatus.putExtra("songTitleLabel", songs.getPlayable(songpos).getSong().getTitle());
             Intent_playersavedstatus.putExtra("songAlbumName", songs.getPlayable(songpos).getSong().getAlbum());
             Intent_playersavedstatus.putExtra("songArtistName", songs.getPlayable(songpos).getSong().getArtist());
@@ -647,7 +662,7 @@ public class UIcontroller {
         LocalBroadcastManager.getInstance(context).sendBroadcast(Intent_playersavedstatus);
         LOGD(TAG, "playersavedstatus\n" + Intent_playersavedstatus.toString());
 
-
+*/
     }
 
     public void stophandler() {
@@ -721,9 +736,10 @@ public class UIcontroller {
 
     public void stopPlayer() {
         if (musicSrv != null){
+
             musicSrv.killPlayer();
             instance=null;
-
+            MainPrefs.storePlayable(songs.getPlayable(songpos),context.getApplicationContext());
         }
 
     }
