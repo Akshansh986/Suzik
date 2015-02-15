@@ -231,10 +231,9 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
         return getCount();
     }
 
-    UIcontroller uiconroller = UIcontroller.getInstance(context);
 
     private void handleSongPlaying(int position, View convertView) {
-        if (uiconroller.isSongPlaying(this, position)) {
+        if (UIcontroller.getInstance(context).isSongPlaying(this, position)) {
             ((TextView) convertView.findViewById(R.id.inapp_title)).setTextColor(context.getResources().getColor(R.color.timeline_text));
             ((TextView) convertView.findViewById(R.id.inapp_artist)).setTextColor(context.getResources().getColor(R.color.timeline_text));
         } else {

@@ -461,7 +461,10 @@ public class MusicPlayerService extends Service
     public void onDestroy() {
         // TODO Auto-generated method stub
         LOGD(TAG, "ondestroy");
-       if (isseekbarupdateuiregistered) {
+
+        handler.removeCallbacks(sendUpdatestoui);
+
+        if (isseekbarupdateuiregistered) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver_seekbaruiupdate);
 
             isseekbarupdateuiregistered = false;

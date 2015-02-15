@@ -39,7 +39,6 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
     ListView listView;
     MySongsAdapter adapter;
     Cursor androidCursor, inAppCursor;
-    UIcontroller uiController;
 
 
     @Override
@@ -56,7 +55,6 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
                 container, false);
 
 
-        uiController=UIcontroller.getInstance(getActivity());
         listView = (ListView) rootView.findViewById(R.id.list_view);
         loadData();
 
@@ -140,8 +138,8 @@ public class MySongListFragement extends Fragment implements OnItemClickListener
     public void onItemClick(AdapterView<?> arg0, View arg1, final int position, long arg3) {
 
         LOGD(TAG, " " + position);
-        uiController.setList(adapter);
-        uiController.setSongpos(position);
+        UIcontroller.getInstance(getActivity()).setList(adapter);
+        UIcontroller.getInstance(getActivity()).setSongpos(position);
 
 
     }

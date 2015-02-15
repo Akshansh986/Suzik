@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.blackMonster.suzik.musicPlayer.UIcontroller;
 import com.blackMonster.suzik.musicstore.Timeline.Playable;
 import com.blackMonster.suzik.ui.Playlist;
 
@@ -49,8 +50,8 @@ public class SearchResultFragment extends MySongListFragement {
             }
         };
 
-        uiController.setList(playlist);
-        uiController.setSongpos(0);
+        UIcontroller.getInstance(getActivity()).setList(playlist);
+        UIcontroller.getInstance(getActivity()).setSongpos(0);
 
     }
 

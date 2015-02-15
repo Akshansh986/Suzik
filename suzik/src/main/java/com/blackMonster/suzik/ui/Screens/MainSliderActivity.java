@@ -39,7 +39,6 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
     private static final int NUM_PAGES = 3;
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
-    UIcontroller uIcontroller;
 
     //TODO isVisible complete jugad, remove it after App update notification is not required
     public static boolean isVisible = false;
@@ -50,8 +49,6 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
         super.onCreate(arg0);
 
         LOGD(TAG, "oncreate");
-        uIcontroller = UIcontroller.getInstance(this);
-        uIcontroller.bindtoservice();
 
         setContentView(R.layout.main_slider_activity);
 
@@ -69,7 +66,7 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
         onPageSelected(1);
         registerReceivers();
 
-        hadleError(uIcontroller.getErrorState());
+        hadleError(UIcontroller.getInstance(this).getErrorState());
     }
 
 
@@ -213,11 +210,7 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
         LOGD(TAG, "onDestroy");
 
         super.onDestroy();
-        if (uIcontroller != null) {
-            uIcontroller.unbind();
-            LOGD(TAG, "UNBIND");
 
-        }
         unregisterReceivers();
     }
 

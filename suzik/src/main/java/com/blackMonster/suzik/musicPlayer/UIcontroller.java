@@ -111,7 +111,7 @@ public class UIcontroller {
     private static UIcontroller instance = null;
 
 
-    public static UIcontroller getInstance(Context context)
+    public static synchronized UIcontroller getInstance(Context context)
 
     {
         LOGD(TAG, "getInstance");
@@ -140,7 +140,7 @@ public class UIcontroller {
         context.registerReceiver(Broadcastreciever_headsetreciever, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
 
         setaudiodocus();
-
+        bindtoservice();
     }
 
 
@@ -722,10 +722,9 @@ public class UIcontroller {
     public void stopPlayer() {
         if (musicSrv != null){
             musicSrv.killPlayer();
-            instance=null;
-
         }
-
+//        unbind();
+        instance=null;
     }
 
 

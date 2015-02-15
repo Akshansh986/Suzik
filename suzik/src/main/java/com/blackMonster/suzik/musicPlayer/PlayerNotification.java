@@ -92,8 +92,8 @@ public class PlayerNotification {
 
     @SuppressLint("NewApi")
     private android.app.Notification buildJBNotification(Context mContext) {
-        Playable currentSong = UIcontroller.getInstance(mContext).getCurrentSong();
         UIcontroller uIcontroller = UIcontroller.getInstance(mContext);
+        Playable currentSong = uIcontroller.getCurrentSong();
         mNotificationBuilder = new NotificationCompat.Builder(mContext);
         mNotificationBuilder.setOngoing(true);
         mNotificationBuilder.setAutoCancel(false);
@@ -215,9 +215,9 @@ public class PlayerNotification {
 
 
     private Notification buildICSNotification(Context mContext) {
-        Playable currentSong = UIcontroller.getInstance(mContext).getCurrentSong();
-
         UIcontroller uIcontroller = UIcontroller.getInstance(mContext);
+        Playable currentSong = uIcontroller.getCurrentSong();
+
 
         mNotificationBuilder = new NotificationCompat.Builder(mContext);
         mNotificationBuilder.setOngoing(true);

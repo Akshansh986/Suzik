@@ -54,13 +54,11 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
     TimelineAdapter adapter;
     SwipeRefreshLayout swipeLayout;
 
-    UIcontroller uiController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         registerReceivers();
-        uiController = UIcontroller.getInstance(getActivity());
 
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.timeline_view,
@@ -188,8 +186,8 @@ public class TimelineFragement extends Fragment implements OnItemClickListener, 
             Toast.makeText(getActivity(),R.string.device_offline,Toast.LENGTH_SHORT).show();
             return;
         }
-        uiController.setList(adapter);
-        uiController.setSongpos(position);
+        UIcontroller.getInstance(getActivity()).setList(adapter);
+        UIcontroller.getInstance(getActivity()).setSongpos(position);
 
 
 //        ((CardView) view.findViewById(R.id.card_view)).setCardElevation(200);
