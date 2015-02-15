@@ -23,5 +23,6 @@
     <string name="first_time_syncing_fingerprint_not_complete">Syncing music with servers</string>
     <string name="syncing_wait_message">"Syncing music with servers. Will Complete in  "</string>
     <string name="first_time_flag_msg">Press flag to indicate incorrect songs and help us improve Timeline.</string>
+    <string name="timeline_filter">Filter Timeline</string>
 
 </resources>

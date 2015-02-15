@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
-class JsonHelper {
+class  JsonHelper {
 	private static final String TAG = "userActivity.JsonHelper";
 
 	static class UserActivityJson {
