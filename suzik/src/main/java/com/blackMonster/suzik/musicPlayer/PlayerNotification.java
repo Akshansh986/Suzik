@@ -127,7 +127,7 @@ public class PlayerNotification {
         PendingIntent stopServicePendingIntent = PendingIntent.getBroadcast(mContext.getApplicationContext(), 0, stopServiceIntent, 0);
 
         //Check if audio is playing and set the appropriate play/pause button.
-        if (uIcontroller.isplaying()) {
+        if (uIcontroller.isplaying() || uIcontroller.isBuffering()) {
             notificationView.setImageViewResource(R.id.notification_base_play, R.drawable.btn_playback_pause_light);
             expNotificationView.setImageViewResource(R.id.notification_expanded_base_play, R.drawable.btn_playback_pause_light);
         } else {
@@ -251,7 +251,7 @@ public class PlayerNotification {
         PendingIntent stopServicePendingIntent = PendingIntent.getBroadcast(mContext.getApplicationContext(), 0, stopServiceIntent, 0);
 
         //Check if audio is playing and set the appropriate play/pause button.
-        if (uIcontroller.isplaying()) {
+        if (uIcontroller.isplaying() || uIcontroller.isBuffering()) {
             notificationView.setImageViewResource(R.id.notification_base_play, R.drawable.btn_playback_pause_light);
         } else {
             notificationView.setImageViewResource(R.id.notification_base_play, R.drawable.btn_playback_play_light);

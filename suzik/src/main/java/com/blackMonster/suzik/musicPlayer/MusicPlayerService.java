@@ -621,6 +621,7 @@ public class MusicPlayerService extends Service
     }
 
     public boolean isBuffering() {
+        LOGD(TAG,"isbuffering  : "+ isBufferingState);
         return isBufferingState;
     }
 
