@@ -381,7 +381,8 @@ public class MusicPlayerService extends Service
 
     public void killPlayer() {
 //       stopPlayer();
-       stopForeground(true);
+        handler.removeCallbacks(sendUpdatestoui);
+        stopForeground(true);
         sendbufferingcompletebroadcast();
        if (player!= null) player.release();
 
@@ -462,7 +463,6 @@ public class MusicPlayerService extends Service
         // TODO Auto-generated method stub
         LOGD(TAG, "ondestroy");
 
-        handler.removeCallbacks(sendUpdatestoui);
 
         if (isseekbarupdateuiregistered) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver_seekbaruiupdate);

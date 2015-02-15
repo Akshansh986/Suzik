@@ -480,10 +480,10 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         LOGD(TAG, "setuplisteners");
 
         btnPlay.setOnClickListener(new OnClickListener() {
-            UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
 
             @Override
             public void onClick(View v) {
+                UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
                 LOGD(TAG, "onClick:btnPlay/Pause");
                 ImageView t = (ImageView) v;
                 if (uicontroller.getList() != null) {
@@ -511,10 +511,11 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         });
 
         btnNext.setOnClickListener(new OnClickListener() {
-            UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
 
             @Override
             public void onClick(View v) {
+                UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
+
                 LOGD(TAG, "onClick:btnNext");
 
                 if (uicontroller.getList() != null) {
@@ -530,10 +531,10 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             }
         });
         btnPrevious.setOnClickListener(new OnClickListener() {
-            UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
 
             @Override
             public void onClick(View v) {
+                UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
                 LOGD(TAG, "onClick:btnPrevious");
 
                 if (uicontroller.getList() != null) {
@@ -550,10 +551,10 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             }
         });
         btnShuffle.setOnClickListener(new OnClickListener() {
-            UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
 
             @Override
             public void onClick(View v) {
+            UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
                 LOGD(TAG, "onClick:btnShuffle");
 
                 // TODO Auto-generated method stub
@@ -581,10 +582,10 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             }
         });
         btnRepeat.setOnClickListener(new OnClickListener() {
-            UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
 
             @Override
             public void onClick(View v) {
+            UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
                 LOGD(TAG, "onClick:btnShuffle");
 
                 // TODO Auto-generated method stub

@@ -117,8 +117,10 @@ public class UIcontroller {
         LOGD(TAG, "getInstance");
 
         if (instance == null) {
+            LOGD(TAG, "Instance is null");
+
             instance = new UIcontroller(context.getApplicationContext());
-        }
+        } else LOGD(TAG,"Instance not null");
 
         return instance;
 
@@ -723,8 +725,9 @@ public class UIcontroller {
         if (musicSrv != null){
             musicSrv.killPlayer();
         }
-//        unbind();
+        unbind();
         instance=null;
+        LOGD(TAG,"stop player instance = null");
     }
 
 
