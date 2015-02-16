@@ -1,7 +1,7 @@
 package com.blackMonster.suzik;
 
 public class AppConfig {
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 	public static final String MAIN_URL = "http://suzik.elasticbeanstalk.com/music/reciver.php";
 	public static final String FLAG_URL = "http://suzik.elasticbeanstalk.com/music/songLink/flagSong.php";
 
