@@ -9,14 +9,17 @@ import android.util.Log;
 
 import com.blackMonster.suzik.musicstore.Flag.Flag;
 import com.blackMonster.suzik.musicstore.module.Song;
+import com.blackMonster.suzik.ui.ContactsFilterErrorTable;
 import com.blackMonster.suzik.ui.Screens.ContactsData;
 import com.blackMonster.suzik.util.ServerUtils;
+import com.blackMonster.suzik.util.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
@@ -93,8 +96,10 @@ public class JsonHelperTimeline {
         private static final String TAG_MY_NUMBER = "myNumber";
         private static final String TAG_FRIENDS = "friends";
         private static final String TAG_NUMBER = "number";
+        public static final String TAG_STATUS="status";
         private static final String TAG_FILTERFLAG = "filter_flag";
         private static final String TAG_CONTACTSLIST = "contactsList";
+        private static final String TAG_REPLYCONTACTSLIST = "contactList";
         private static final String TAG_ACTION = "action";
         private static final String TAG_MAKEWANTED = "makeWanted";
         private static final String TAG_MAKEUNWANTED = "makeUnwanted";
@@ -108,14 +113,27 @@ public class JsonHelperTimeline {
                 LOGD(TAG, root.toString());
                 return root;
             }
-            public static JSONObject filterFriendsOnApp(ContactsData data) throws JSONException {
+            public static JSONObject filterFriendsOnAppMakeWanted(ContactsData data) throws JSONException {
 
                 JSONObject root = new JSONObject();
                 root = ServerUtils.addEssentialParamToJson(root,P_MODULE);
                 JSONArray array= new JSONArray();
                 JSONObject subroot=new JSONObject();
-                subroot.put(TAG_NUMBER,data.getNumber());
+                subroot.put(TAG_NUMBER, Utils.formatPhoneNumberForJson(data.getNumber()));
                 subroot.put(TAG_ACTION,TAG_MAKEWANTED);
+                array.put(subroot);
+                root.put(TAG_CONTACTSLIST,array);
+                Log.d(TAG, root.toString());
+                return root;
+            }
+            public static JSONObject filterFriendsOnAppMakeUNWanted(ContactsData data) throws JSONException {
+
+                JSONObject root = new JSONObject();
+                root = ServerUtils.addEssentialParamToJson(root,P_MODULE);
+                JSONArray array= new JSONArray();
+                JSONObject subroot=new JSONObject();
+                subroot.put(TAG_NUMBER, Utils.formatPhoneNumberForJson(data.getNumber()));
+                subroot.put(TAG_ACTION,TAG_MAKEUNWANTED);
                 array.put(subroot);
                 root.put(TAG_CONTACTSLIST,array);
                 Log.d(TAG, root.toString());
@@ -123,6 +141,18 @@ public class JsonHelperTimeline {
             }
 
 
+            public static JSONObject filterFriendsOnApp(ContactsData data, String action) throws JSONException {
+                JSONObject root = new JSONObject();
+                root = ServerUtils.addEssentialParamToJson(root,P_MODULE);
+                JSONArray array= new JSONArray();
+                JSONObject subroot=new JSONObject();
+                subroot.put(TAG_NUMBER, Utils.formatPhoneNumberForJson(data.getNumber()));
+                subroot.put(TAG_ACTION,action);
+                array.put(subroot);
+                root.put(TAG_CONTACTSLIST,array);
+                Log.d(TAG, root.toString());
+                return root;
+            }
         }
         public static class JsonParsor{
             public static ArrayList<ContactsData> parseSendAllFriendsOnApp(JSONObject response, Context context) throws JSONException {
@@ -143,10 +173,23 @@ public class JsonHelperTimeline {
 
 
                    String name=getContactName(context,number);
-                    contactsFilterList.add(new ContactsData(number,name,filterflag));
+                    contactsFilterList.add(new ContactsData(number,name,filterflag,ContactsData.TYPE_DATA));
                   }
+                Collections.sort(contactsFilterList);
                return contactsFilterList;
 
+            }
+            public static void parseFilterStatus(JSONObject response, Context context) throws JSONException {
+                JSONArray feedArray = response.getJSONArray(TAG_REPLYCONTACTSLIST);
+                  for (int i = 0; i < feedArray.length(); i++) {
+                    JSONObject feedObj = (JSONObject) feedArray.get(i);
+                    String number= feedObj.getString(TAG_NUMBER);
+                    Boolean status=(feedObj.getInt(TAG_STATUS)==1)?true:false;
+
+                    if(status){
+                        ContactsFilterErrorTable.remove(number,context);
+                    }
+                  }
             }
 
             public static String getContactName(Context context, String phoneNumber) {
@@ -167,6 +210,7 @@ public class JsonHelperTimeline {
 
                 return contactName;
             }
+
 
         }
 

@@ -29,7 +29,7 @@ import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 
 public class TimelineFilterActivity extends Activity {
-
+    public static final int NOOFCONTACTS=3;
     private static final String TAG = "TimelineFilterActivity";
     ListView listView;
     MyContactsFilterAdapter adapter;
@@ -92,6 +92,7 @@ public class TimelineFilterActivity extends Activity {
                     try {
                         contactsFilterList=JsonHelperTimeline.FilterContacts.JsonParsor.parseSendAllFriendsOnApp(response,getApplicationContext());
                         setData(contactsFilterList);
+                        Log.d(TAG,response.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -118,10 +119,13 @@ public class TimelineFilterActivity extends Activity {
 
     }
     private void setData(ArrayList<ContactsData> contactsFilterList){
+
         MyContactsFilterAdapter myContactsFilterAdapter=new MyContactsFilterAdapter(contactsFilterList,getApplicationContext());
+
         listView.setAdapter(myContactsFilterAdapter);
+
         for(int i=0;i<contactsFilterList.size();i++)
-        Log.d(TAG,contactsFilterList.get(i).getContactName());
+        Log.d(TAG,contactsFilterList.get(i).getContactName()+contactsFilterList.get(i).getFilterStatus());
 
     }
 

@@ -12,13 +12,14 @@ import com.blackMonster.suzik.musicstore.infoFromOtherPlayers.testing.TableUserS
 import com.blackMonster.suzik.musicstore.userActivity.QueueUserActivity;
 import com.blackMonster.suzik.sync.contacts.SyncContactsCreateTable;
 import com.blackMonster.suzik.sync.music.SyncMusicCreateTable;
+import com.blackMonster.suzik.ui.ContactsFilterErrorTable;
 
 
 public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = "DbHelper";
 	public static final String DB_NAME = "suzik.db";
-	public static final int DB_VERSION = 1;
+	public static final int DB_VERSION = 2;
 
 	private static DbHelper dInstance = null;
 
@@ -52,11 +53,12 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 		SyncMusicCreateTable.createAll(db);
 		SyncContactsCreateTable.createAll(db);
-	}
+        ContactsFilterErrorTable.createTable(db);
+
+    }
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		
 
 	}
 
