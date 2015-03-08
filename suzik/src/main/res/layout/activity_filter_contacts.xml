@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     android:id="@+id/linear_layout">
 
-    <ListView
+    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/filtercontacts_list_view"
-        android:divider="@null"
-        android:layout_gravity="center_horizontal" />
+
+         />
 </LinearLayout>

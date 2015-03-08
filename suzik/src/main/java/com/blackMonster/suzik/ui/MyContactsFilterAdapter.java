@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blackMonster.suzik.R;
@@ -17,10 +15,12 @@ import com.blackMonster.suzik.ui.Screens.TimelineFilterActivity;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+
 /**
  * Created by home on 2/14/2015.
  */
-public class MyContactsFilterAdapter extends BaseAdapter  {
+public class MyContactsFilterAdapter extends BaseAdapter implements StickyListHeadersAdapter {
     private static final String TAG = "MyContactsFilterAdapter";
     public static int count;
     ArrayList<ContactsData> contactsFilterList;
@@ -31,7 +31,7 @@ public class MyContactsFilterAdapter extends BaseAdapter  {
 
     Context context;
     LayoutInflater inflater;
-
+    LayoutInflater headerInflater;
     public MyContactsFilterAdapter(ArrayList<ContactsData> contactsFilterList,Context context) {
         this.contactsFilterList=contactsFilterList;
         errorContactsFilterList= ContactsFilterErrorTable.getAllData(context);
@@ -60,6 +60,7 @@ public class MyContactsFilterAdapter extends BaseAdapter  {
         count=getFilterCount();
         this.context=context;
         inflater = LayoutInflater.from(context.getApplicationContext());
+        headerInflater=LayoutInflater.from(context.getApplicationContext());
         setLockOnData();
 
     }
@@ -117,42 +118,48 @@ public class MyContactsFilterAdapter extends BaseAdapter  {
     }
 
     @Override
+    public View getHeaderView(int position, View convertView, ViewGroup parent) {
+        HeaderViewHolder holder;
+        if (convertView == null) {
+            holder = new HeaderViewHolder();
+            convertView = inflater.inflate(R.layout.my_seperator, parent, false);
+            holder.text = (TextView) convertView.findViewById(R.id.headertext);
+            convertView.setTag(holder);
+        } else {
+            holder = (HeaderViewHolder) convertView.getTag();
+        }
+        //set header text as first char in name
+        String headerText =""+contactsFilterList.get(position).getContactName().subSequence(0,1).charAt(0);
+        holder.text.setText(headerText);
+        return convertView;
+    }
+
+    @Override
+    public long getHeaderId(int i) {
+        return contactsFilterList.get(i).getContactName().subSequence(0,1).charAt(0);
+    }
+
+    @Override
     public long getItemId(int position) {
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.my_contacts_filter_row, null);
+            holder = new ViewHolder();
+            convertView = inflater.inflate(R.layout.my_contacts_filter_row, parent, false);
+            holder.text = (TextView) convertView.findViewById(R.id.name);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        TextView textView=((TextView) convertView.findViewById(R.id.name));
-        textView.setText(contactsFilterList.get(position).getContactName());
-        CheckBox checkBox=(CheckBox)convertView.findViewById(R.id.status);
-        checkBox.setChecked(contactsFilterList.get(position).getFilterStatus());
-
-
-
-            if (contactsFilterList.get(position).isLocked()) {
-                textView.setTextColor(R.color.locked);
-                convertView.findViewById(R.id.contact_row).setBackgroundResource(R.color.lockedbg);
-                convertView.findViewById(R.id.lockicon).setVisibility(View.VISIBLE);
-                ((ImageView) convertView.findViewById(R.id.lockicon)).setImageResource(R.drawable.lockicon);
-                checkBox.setClickable(false);
-                convertView.setHasTransientState(true);
-
-            } else {
-                convertView.findViewById(R.id.lockicon).setVisibility(View.GONE);
-
-                if (convertView.hasTransientState()) {
-                    convertView.setHasTransientState(false);
-                }
-                checkBox.setOnClickListener(new MyClickListener(context, this, contactsFilterList.get(position)));
-            }
+        holder.text.setText(contactsFilterList.get(position).getContactName());
 
         return convertView;
-
     }
 
 
@@ -210,4 +217,13 @@ public class MyContactsFilterAdapter extends BaseAdapter  {
         contactsFilterList=newList;
 
     }
+    class HeaderViewHolder {
+        TextView text;
+    }
+
+    class ViewHolder {
+        TextView text;
+    }
+
+
 }

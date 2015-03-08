@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -25,13 +24,15 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 
 public class TimelineFilterActivity extends Activity {
     public static final int NOOFCONTACTS=3;
     private static final String TAG = "TimelineFilterActivity";
-    ListView listView;
+    StickyListHeadersListView listView;
     MyContactsFilterAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class TimelineFilterActivity extends Activity {
 
     private void intializeContactsFilter() {
         setContentView(R.layout.activity_filter_contacts);
-        listView=(ListView)findViewById(R.id.filtercontacts_list_view);
+        listView=(StickyListHeadersListView)findViewById(R.id.filtercontacts_list_view);
         try {
             loadData();
         } catch (JSONException e) {
@@ -123,7 +124,9 @@ public class TimelineFilterActivity extends Activity {
         MyContactsFilterAdapter myContactsFilterAdapter=new MyContactsFilterAdapter(contactsFilterList,getApplicationContext());
 
         listView.setAdapter(myContactsFilterAdapter);
-
+        listView.setDivider(null);
+        listView.setFastScrollEnabled(true);
+        listView.setFastScrollAlwaysVisible(true);
         for(int i=0;i<contactsFilterList.size();i++)
         Log.d(TAG,contactsFilterList.get(i).getContactName()+contactsFilterList.get(i).getFilterStatus());
 

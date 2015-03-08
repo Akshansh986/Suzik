@@ -28,7 +28,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:checked="false" />
-
+<!--
         <ImageView
             android:layout_width="match_parent"
             android:layout_marginRight="60dp"
@@ -36,8 +36,7 @@
             android:id="@+id/imageView3"
             android:background="#33009688"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
-
+            android:layout_centerHorizontal="true" />-->
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
