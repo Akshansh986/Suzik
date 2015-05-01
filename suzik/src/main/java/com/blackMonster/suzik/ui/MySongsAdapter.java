@@ -118,11 +118,10 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
             convertView = inflater.inflate(R.layout.my_songs_list_row, null);
         }
 
-        int dpos= position + rand;
-        if (dpos > getCount()) dpos = dpos - getCount();
 
 
-        Playable playable =  getPlayable(dpos);
+
+        Playable playable =  getPlayable(position);
 
         ((TextView) convertView.findViewById(R.id.inapp_title)).setText(playable.getSong().getTitle());
         ((TextView) convertView.findViewById(R.id.inapp_artist)).setText(playable.getSong().getArtist());
@@ -198,6 +197,10 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
     @Override
     public Playable getPlayable(int position) {
     LOGD(TAG,"getPlayable  " + position);
+
+        int dpos= position + rand;
+        if (dpos > getCount()) dpos = dpos - getCount();
+        position = dpos;
         String title, artist, album, albumartPath, songPath, songUrl, albumartUrl;
         int pos;
         long duration,id,serverId;
@@ -205,7 +208,6 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
         
         if (isAndroidSong(position)) {
             pos = getActualCursorPosition(position);
-            
             LOGD(TAG, "outapp " + position + "  " + pos);
             androidCurosr.moveToPosition(pos);
             LOGD(TAG, "done " + position + "  " + pos);
