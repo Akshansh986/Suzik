@@ -23,6 +23,51 @@
         android:layout_height="match_parent"
         tools:context="com.example.suzikmusicplayer.MainActivity">
 
+        <RelativeLayout
+            android:id="@+id/playerbuttonpannelsmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            >
+
+            <ImageView
+                android:id="@+id/previoussmall"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="25dp"
+                android:layout_toLeftOf="@+id/playpausesmall"
+                android:alpha="0.60"
+                android:src="@drawable/previous" />
+
+            <ImageView
+                android:id="@+id/playpausesmall"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="2dp"
+                android:alpha="0.60"
+                android:clickable="true"
+                android:src="@drawable/play" />
+
+            <ImageView
+                android:id="@+id/nextsmall"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="25dp"
+                android:layout_toRightOf="@+id/playpausesmall"
+                android:alpha="0.60"
+                android:src="@drawable/next" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView23"
+                android:layout_alignTop="@+id/previoussmall"
+                android:layout_toLeftOf="@+id/nextsmall"
+                android:layout_toStartOf="@+id/nextsmall" />
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/Infopanel"
@@ -98,6 +143,14 @@
                 android:layout_toRightOf="@+id/playpause"
                 android:alpha="0.60"
                 android:src="@drawable/next" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView2"
+                android:layout_alignTop="@+id/previous"
+                android:layout_toLeftOf="@+id/next"
+                android:layout_toStartOf="@+id/next" />
         </RelativeLayout>
 
         <RelativeLayout
