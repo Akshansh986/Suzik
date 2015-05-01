@@ -47,6 +47,9 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
     private ImageView btnPlay;
     private ImageView btnNext;
     private ImageView btnPrevious;
+    private ImageView btnPlays;
+    private ImageView btnNexts;
+    private ImageView btnPreviouss;
     private ImageView btnRepeat;
     private ImageView btnShuffle;
     private TextView songTitleLabel;
@@ -114,12 +117,16 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             if (isplaying) {
                 btnPlay.setImageResource(R.drawable.pause);
                 btnPlay.setTag("pause");
+                btnPlays.setImageResource(R.drawable.pause);
+                btnPlays.setTag("pause");
                 LOGD(TAG, "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
 
             } else {
                 btnPlay.setImageResource(R.drawable.play);
                 btnPlay.setTag("play");
+                btnPlays.setImageResource(R.drawable.play);
+                btnPlays.setTag("play");
                 LOGD(TAG, "****************************");
 
             }
@@ -134,8 +141,11 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
             btnPlay.setImageResource(R.drawable.pause);
             btnPlay.setTag("pause");
+            btnPlays.setImageResource(R.drawable.pause);
+            btnPlays.setTag("pause");
 
         }
+
 
         if (shuffle) {
             btnShuffle.setImageResource(R.drawable.shuffleon);
@@ -217,10 +227,14 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             if (isplaying) {
                 btnPlay.setImageResource(R.drawable.pause);
                 btnPlay.setTag("pause");
+                btnPlays.setImageResource(R.drawable.pause);
+                btnPlays.setTag("pause");
 
             } else {
                 btnPlay.setImageResource(R.drawable.play);
                 btnPlay.setTag("play");
+                btnPlays.setImageResource(R.drawable.play);
+                btnPlays.setTag("play");
 
 
             }
@@ -330,6 +344,8 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
             songProgressBar.setProgress(0);
             btnPlay.setTag("pause");
             btnPlay.setImageResource(R.drawable.pause);
+            btnPlays.setTag("pause");
+            btnPlays.setImageResource(R.drawable.pause);
 
         }
     };
@@ -459,8 +475,11 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         LOGD(TAG, "setupui");
 
         btnPlay = (ImageView) rootView.findViewById(R.id.playpause);
+        btnPlays = (ImageView) rootView.findViewById(R.id.playpausesmall);
         btnNext = (ImageView) rootView.findViewById(R.id.next);
+        btnNexts = (ImageView) rootView.findViewById(R.id.nextsmall);
         btnPrevious = (ImageView) rootView.findViewById(R.id.previous);
+        btnPreviouss = (ImageView) rootView.findViewById(R.id.previoussmall);
         btnRepeat = (ImageView) rootView.findViewById(R.id.repeat);
         btnShuffle = (ImageView) rootView.findViewById(R.id.shuffle);
         songProgressBar = (SeekBar) rootView.findViewById(R.id.seekbar);
@@ -471,44 +490,57 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
 
         //settags
         btnPlay.setTag("play");
+        btnPlays.setTag("play");
         btnShuffle.setTag("shuffleoff");
         btnRepeat.setTag("0");
         setuplistener();
     }
 
+
+    class PlayClick implements
+            OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
+            LOGD(TAG, "onClick:btnPlay/Pause");
+            ImageView t = (ImageView) v;
+            if (uicontroller.getList() != null) {
+
+                if (t.getTag() == "play") {
+
+                    btnPlay.setTag("pause");
+                    btnPlays.setTag("pause");
+                    btnPlay.setImageResource(R.drawable.pause);
+                    btnPlays.setImageResource(R.drawable.pause);
+                    uicontroller.playSong();
+
+                } else if (t.getTag() == "pause") {
+                    btnPlay.setTag("play");
+                    btnPlays.setTag("play");
+                    btnPlay.setImageResource(R.drawable.play);
+                    btnPlays.setImageResource(R.drawable.play);
+                    uicontroller.pauseSong();
+
+                }
+
+            } else {
+
+                Toast.makeText(getActivity(), "List not set", Toast.LENGTH_SHORT).show();
+
+
+            }
+
+        }
+    }
+
+
+
     private void setuplistener() {
         LOGD(TAG, "setuplisteners");
 
-        btnPlay.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
-                LOGD(TAG, "onClick:btnPlay/Pause");
-                ImageView t = (ImageView) v;
-                if (uicontroller.getList() != null) {
-
-                    if (t.getTag() == "play") {
-
-                        t.setTag("pause");
-                        t.setImageResource(R.drawable.pause);
-                        uicontroller.playSong();
-
-                    } else if (t.getTag() == "pause") {
-                        t.setTag("play");
-                        t.setImageResource(R.drawable.play);
-                        uicontroller.pauseSong();
-
-                    }
-
-                } else {
-
-                    Toast.makeText(getActivity(), "List not set", Toast.LENGTH_SHORT).show();
-
-
-                }
-            }
-        });
+        btnPlay.setOnClickListener(new PlayClick());
+        btnPlays.setOnClickListener(new PlayClick());
 
         btnNext.setOnClickListener(new OnClickListener() {
 
@@ -530,7 +562,47 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
                 }
             }
         });
+        btnNexts.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
+
+                LOGD(TAG, "onClick:btnNext");
+
+                if (uicontroller.getList() != null) {
+                    if (isbuffering) {
+                        isbuffering = false;
+                        songProgressBar.clearAnimation();
+                    }
+                    uicontroller.nextSong();
+                } else {
+                    Toast.makeText(getActivity(), "List not set", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
         btnPrevious.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                UIcontroller uicontroller= UIcontroller.getInstance(getActivity().getApplicationContext());
+                LOGD(TAG, "onClick:btnPrevious");
+
+                if (uicontroller.getList() != null) {
+                    if (isbuffering) {
+                        isbuffering = false;
+                        songProgressBar.clearAnimation();
+                    }
+                    uicontroller.prevSong();
+
+                } else {
+                    Toast.makeText(getActivity(), "List not set", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+        btnPreviouss.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {

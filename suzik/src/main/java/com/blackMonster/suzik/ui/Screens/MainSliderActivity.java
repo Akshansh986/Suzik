@@ -18,27 +18,31 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.blackMonster.suzik.R;
-import com.blackMonster.suzik.musicPlayer.MusicPlayerFragment;
 import com.blackMonster.suzik.musicPlayer.MusicPlayerService;
 import com.blackMonster.suzik.musicPlayer.PlayerErrorCodes;
 import com.blackMonster.suzik.musicPlayer.UIcontroller;
 import com.blackMonster.suzik.ui.AppUpdateNotificaiton;
 import com.blackMonster.suzik.ui.UiBroadcasts;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 
-public class MainSliderActivity extends ActionBarActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class MainSliderActivity extends ActionBarActivity implements View.OnClickListener, ViewPager.OnPageChangeListener, SlidingUpPanelLayout.PanelSlideListener {
     public static final String TAG = "MainSliderActivity";
-    private static final int NUM_PAGES = 4;
+    private static final int NUM_PAGES = 3;
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
+
+    private SlidingUpPanelLayout slidingUpPanelLayout;
+    private View panel;
 
     //TODO isVisible complete jugad, remove it after App update notification is not required
     public static boolean isVisible = false;
@@ -51,6 +55,11 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
         LOGD(TAG, "oncreate");
 
         setContentView(R.layout.main_slider_activity);
+        slidingUpPanelLayout =( SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        slidingUpPanelLayout.setPanelSlideListener(this);
+
+
+        panel = findViewById(R.id.playerbuttonpannelsmall);
 
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
@@ -72,7 +81,6 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
     }
 
     @Override
@@ -82,6 +90,33 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
 
     @Override
     public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void onPanelSlide(View view, float v) {
+        Log.d("sdf",v+"");
+        panel.setAlpha(1-v);
+
+    }
+
+    @Override
+    public void onPanelCollapsed(View view) {
+
+    }
+
+    @Override
+    public void onPanelExpanded(View view) {
+//        panel.setVisibility(View.g);
+    }
+
+    @Override
+    public void onPanelAnchored(View view) {
+
+    }
+
+    @Override
+    public void onPanelHidden(View view) {
 
     }
 
@@ -95,13 +130,12 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new MusicPlayerFragment();
+                    return new FriendsListFragment();
                 case 1:
                     return new TimelineFragement();
                 case 2:
                     return new MySongListFragement();
-                case 3:
-                    return new FriendsListFragment();
+
                 default:
                     return null;
             }
@@ -116,13 +150,12 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return getResources().getString(R.string.title_player);
+                    return "My friends";
                 case 1:
                     return getResources().getString(R.string.title_timeline);
                 case 2:
                     return getResources().getString(R.string.title_allSongs);
-                case 3:
-                    return "My friends";
+
 
                 default:
                     return null;
