@@ -571,6 +571,7 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
                         uicontroller.setshuffleStatus(false);
 
                     }
+
                 } else {
                     Toast.makeText(getActivity(), "List not set", Toast.LENGTH_SHORT).show();
 
@@ -624,7 +625,6 @@ public class MusicPlayerFragment extends Fragment implements OnSeekBarChangeList
         });
         songProgressBar.setOnSeekBarChangeListener(this);
 
-        // TODO Auto-generated method stub
 
     }
 

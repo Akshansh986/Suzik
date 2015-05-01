@@ -36,7 +36,7 @@ import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 public class MainSliderActivity extends ActionBarActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
     public static final String TAG = "MainSliderActivity";
-    private static final int NUM_PAGES = 3;
+    private static final int NUM_PAGES = 4;
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
 
@@ -100,6 +100,8 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
                     return new TimelineFragement();
                 case 2:
                     return new MySongListFragement();
+                case 3:
+                    return new FriendsListFragment();
                 default:
                     return null;
             }
@@ -119,6 +121,8 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
                     return getResources().getString(R.string.title_timeline);
                 case 2:
                     return getResources().getString(R.string.title_allSongs);
+                case 3:
+                    return "My friends";
 
                 default:
                     return null;

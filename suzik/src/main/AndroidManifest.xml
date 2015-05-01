@@ -82,6 +82,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.Screens.FriendSongsActivity"/>
 
 
         <activity android:name="com.blackMonster.suzik.musicstore.infoFromOtherPlayers.ActivityTest"></activity>
