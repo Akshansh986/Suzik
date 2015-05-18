@@ -7,29 +7,49 @@ import com.blackMonster.suzik.musicstore.Flag.Flag;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
 
+import java.util.List;
+
 public class TimelineItem implements Playable{
     protected Song song;
     protected long id;
     protected String albumArtPath;
     protected String songPath;
+    protected List<String> friends;
 
     private InAapSongTable.InAppSongData inAppSongMirror=null;
 
     private Flag flag;
 
-    public TimelineItem(Song song, long id, String albumArtUrl, String songUrl,Flag flag, Context context) {
+    public TimelineItem(Song song, long id, String albumArtUrl, String songUrl,Flag flag, List<String> friends, Context context) {
         this.song = song;
         this.id = id;
         this.albumArtPath = albumArtUrl;
         this.songPath = songUrl;
         this.flag = flag;
+        this.friends = friends;
         setInappMirrorIfAvailable(context);
 	}
+
+    public String getFormattedFriends() {
+        String ans="";
+
+        for (String friend : friends) {
+            int firstSpace = friend.indexOf(" ");
+            if (firstSpace == -1) firstSpace = friend.length();
+            ans+= friend.substring(0,firstSpace);
+        }
+
+        return ans;
+    }
 
     public void setInappMirrorIfAvailable(Context context) {
         if (!MainPrefs.getFirstTimeSongPostedToServer(context)) return;
         inAppSongMirror = InAapSongTable.getDataFromServerId(id,context);
       }
+
+    public List<String> getFriends() {
+        return friends;
+    }
 
     public long getServerId() {
         return id;

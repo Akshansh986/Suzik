@@ -35,7 +35,7 @@ public class JsonHelperTimeline {
 
     private static final String P_R_FLAG_DISLPAY = "displayFlag";
     private static final String P_R_FLAG_BAD_SONG = "badSongFlag";
-
+    private static final String P_R_FRIENDS = "whoPlayed";
 
 
     //private static final String P_R_NUMBER = "num";
@@ -67,11 +67,26 @@ public class JsonHelperTimeline {
                     o.isNull(P_R_ARTIST) ? null : o.getString(P_R_ARTIST),
                     o.isNull(P_R_ALBUM) ? null : o.getString(P_R_ALBUM), o.isNull(P_R_DURATION) ? 0 : o.getLong(P_R_DURATION));
 
-            Flag flag = new Flag(o.getLong(P_R_ID),o.getInt(P_R_FLAG_DISLPAY) == 1, o.getInt(P_R_FLAG_BAD_SONG) == 1, context);
+            Flag flag = new Flag(o.getLong(P_R_ID), o.getInt(P_R_FLAG_DISLPAY) == 1, o.getInt(P_R_FLAG_BAD_SONG) == 1, context);
+
+            JSONArray friendsJson;
+            if (o.isNull(P_R_FRIENDS)) friendsJson = new JSONArray();
+            else
+                friendsJson = o.getJSONArray(P_R_FRIENDS);
+
+//            friendsJson = new JSONArray();
+
+            if (friendsJson == null) friendsJson = new JSONArray();
+            List<String> friends = new ArrayList<String>();
+
+            int len = friendsJson.length();
+            for (int j = 0; j < len; j++) {
+                friends.add((String) friendsJson.get(j));
+            }
 
             LOGD(TAG, song.toString());
             result.add(new TimelineItem(song, o.getLong(P_R_ID), o.isNull(P_R_ALBUM_URL) ? null : o.getString(P_R_ALBUM_URL),
-                    o.getString(P_R_SONG_URL),flag, context));
+                    o.getString(P_R_SONG_URL), flag, friends, context));
         }
 
         return result;
@@ -93,7 +108,7 @@ public class JsonHelperTimeline {
         public static final int RESPONSE_FAILED = 0;
 
 
-       public  static JSONObject toJson(long id)
+        public static JSONObject toJson(long id)
                 throws JSONException {
             JSONObject root = new JSONObject();
             JSONArray uaArray = new JSONArray();
@@ -104,7 +119,6 @@ public class JsonHelperTimeline {
             LOGD(TAG, root.toString());
             return root;
         }
-
 
 
         public static boolean isSuccessfull(JSONObject response)
@@ -118,24 +132,8 @@ public class JsonHelperTimeline {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /*
-	public static List<Long> parseNextIds(JSONObject response) throws JSONException {
+    public static List<Long> parseNextIds(JSONObject response) throws JSONException {
 
 		List<Long> result = new ArrayList<Long>();
 
@@ -167,6 +165,9 @@ public class JsonHelperTimeline {
         private static final String P_R_ALBUM = "album";
         private static final String P_R_DURATION = "duration";
 
+        private static final String P_R_FRIENDS = "whoPlayed";
+
+
         public static JSONObject getCredentials() throws JSONException {
             JSONObject root = new JSONObject();
             ServerUtils.addEssentialParamToJson(root, P_MODULE, P_CMD);
@@ -190,10 +191,25 @@ public class JsonHelperTimeline {
                         o.isNull(P_R_ARTIST) ? null : o.getString(P_R_ARTIST),
                         o.isNull(P_R_ALBUM) ? null : o.getString(P_R_ALBUM), o.getLong(P_R_DURATION));
 
-                Flag flag = new Flag(o.getLong(P_R_ID),false, false, context);
+                Flag flag = new Flag(o.getLong(P_R_ID), false, false, context);
 
-                result.add(new TimelineItem(song, o.getLong(P_R_SERVER_ID), o.isNull(P_R_ALUBMART_LINK) ? null : o.getString(P_R_ALUBMART_LINK),
-                        o.getString(P_R_SONG_LINK),flag,context));
+
+                JSONArray friendsJson;
+                if (o.isNull(P_R_FRIENDS)) friendsJson = new JSONArray();
+                else
+                    friendsJson = o.getJSONArray(P_R_FRIENDS);
+
+                if (friendsJson == null) friendsJson = new JSONArray();
+                List<String> friends = new ArrayList<String>();
+
+                int len = friendsJson.length();
+                for (int j = 0; j < len; j++) {
+                    friends.add((String) friendsJson.get(j));
+                }
+
+                LOGD(TAG, song.toString());
+                result.add(new TimelineItem(song, o.getLong(P_R_ID), o.isNull(P_R_ALBUM_URL) ? null : o.getString(P_R_ALBUM_URL),
+                        o.getString(P_R_SONG_URL), flag, friends, context));
             }
 
             LOGD(TAG, "size " + result.size());
