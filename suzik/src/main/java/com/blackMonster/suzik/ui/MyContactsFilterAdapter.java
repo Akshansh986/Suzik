@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blackMonster.suzik.R;
@@ -152,12 +155,38 @@ public class MyContactsFilterAdapter extends BaseAdapter implements StickyListHe
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.my_contacts_filter_row, parent, false);
             holder.text = (TextView) convertView.findViewById(R.id.name);
+            holder.checkBox=(CheckBox )convertView.findViewById(R.id.status);
+            holder.relativeLayout=(RelativeLayout)convertView.findViewById(R.id.contact_row);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         holder.text.setText(contactsFilterList.get(position).getContactName());
+        holder.checkBox.setChecked(contactsFilterList.get(position).getFilterStatus());
+
+
+
+
+        if (contactsFilterList.get(position).isLocked()) {
+            holder.text.setTextColor(R.color.locked);
+            convertView.findViewById(R.id.contact_row).setBackgroundResource(R.color.lockedbg);
+            convertView.findViewById(R.id.lockicon).setVisibility(View.VISIBLE);
+            ((ImageView) convertView.findViewById(R.id.lockicon)).setImageResource(R.drawable.lockicon);
+           holder.checkBox.setClickable(false);
+            holder.relativeLayout.setClickable(false);
+            convertView.setHasTransientState(true);
+
+        } else {
+            convertView.findViewById(R.id.lockicon).setVisibility(View.GONE);
+
+            if (convertView.hasTransientState()) {
+                convertView.setHasTransientState(false);
+            }
+          holder.checkBox.setOnClickListener(new MyClickListener(context, this, contactsFilterList.get(position)));
+          holder.relativeLayout.setOnClickListener(new MyClickListener(context, this, contactsFilterList.get(position)));
+
+        }
 
         return convertView;
     }
@@ -223,6 +252,8 @@ public class MyContactsFilterAdapter extends BaseAdapter implements StickyListHe
 
     class ViewHolder {
         TextView text;
+        CheckBox checkBox;
+        RelativeLayout relativeLayout;
     }
 
 
