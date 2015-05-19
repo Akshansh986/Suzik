@@ -94,7 +94,7 @@ public class BroadcastPlaystateChage extends MusicBroadcastManager {
 				UserActivityManager.add(
 						new UserActivity(song,null, PlayingSong.getSong(context)
 								.getId(),UserActivity.getOutappPlayAction(PlayingSong.getSong(context).isStreaming()),
-								System.currentTimeMillis()), context);
+								System.currentTimeMillis(),null), context);
 
 			} else
 				TablePausedSongs.insert(

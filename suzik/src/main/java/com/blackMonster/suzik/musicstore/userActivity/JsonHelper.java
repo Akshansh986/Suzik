@@ -24,6 +24,7 @@ class JsonHelper {
 		private static final String P_SERVER_ID = "songId";
 		private static final String P_ACTION = "action";
 		private static final String P_COMPLETED_TS = "ts";
+		private static final String P_DISCOVERY_SOURCE = "whoPlayed";
 
 		private static final String P_MODULE = "storeTimelineData";
 
@@ -58,6 +59,7 @@ class JsonHelper {
 			obj.put(P_SERVER_ID, activity.second);
 			obj.put(P_ACTION, activity.first.getActionString());
 			obj.put(P_COMPLETED_TS, activity.first.completedTS());
+            obj.put(P_DISCOVERY_SOURCE, new JSONArray(activity.first.getFriends()));
 			return obj;
 		}
 

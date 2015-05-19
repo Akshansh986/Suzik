@@ -24,12 +24,15 @@ import android.widget.RemoteViews;
 
 import com.blackMonster.suzik.R;
 import com.blackMonster.suzik.musicstore.Timeline.Playable;
+import com.blackMonster.suzik.musicstore.Timeline.TimelineItem;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 import com.blackMonster.suzik.musicstore.userActivity.UserActivityManager;
 import com.blackMonster.suzik.sync.music.MusicSyncManager;
 import com.blackMonster.suzik.ui.Screens.MainSliderActivity;
 import com.blackMonster.suzik.util.NetworkUtils;
+
+import java.util.List;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 import static com.blackMonster.suzik.util.LogUtils.LOGE;
@@ -578,10 +581,15 @@ public class MusicPlayerService extends Service
                 id = CurrentSong.getId();
             }
 
+            List<String> discoveryFrom;
+            if (CurrentSong instanceof TimelineItem) {
+                discoveryFrom = ((TimelineItem) CurrentSong).getFriends();
+            } else  discoveryFrom = null;
+
 
             UserActivityManager.add(new UserActivity(song, null, id,
                     UserActivity.getInappPlayAction(CurrentSong.isOffline(),CurrentSong.isCached()),
-                    System.currentTimeMillis()), this);
+                    System.currentTimeMillis(),discoveryFrom), this);
 
 
         }

@@ -110,7 +110,7 @@ public class AddedSongsResponseHandler extends Syncer {
                 QueueAddedSongs.remove(currQd.getId(), this);
 
                 if (MainPrefs.isFirstTimeMusicSyncDone(this)) {
-                    UserActivityManager.add(new UserActivity(currQd.getSong(), null, id, UserActivity.ACTION_OUT_APP_DOWNLOAD, System.currentTimeMillis()), this);
+                    UserActivityManager.add(new UserActivity(currQd.getSong(), null, id, UserActivity.ACTION_OUT_APP_DOWNLOAD, System.currentTimeMillis(), null), this);
                 }
 
             }

@@ -10,6 +10,7 @@ import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
@@ -26,7 +27,8 @@ public class QueueUserActivity {
 	private static final String C_ARTIST = "artist";
 	private	static final String C_ALBUM = "album";
 	private static final String C_DURATION = "duration";
-	
+	private static final String C_FRIENDS = "friends";
+
 
 	private static final String TABLE = "TableUserActivityQueue";
 
@@ -35,7 +37,7 @@ public class QueueUserActivity {
 				.format("create table %s"
 						+ "(%s INTEGER PRIMARY KEY AUTOINCREMENT,%s INTEGER, %s INTEGER, %s INTEGER, %s text, %s text, %s text, %s INTEGER)",
 						TABLE, C_ID, C_SONG_ID, C_ACTION,
-						C_COMPLETED_TS, C_TITLE, C_ARTIST, C_ALBUM, C_DURATION);
+						C_COMPLETED_TS, C_TITLE, C_ARTIST, C_ALBUM, C_DURATION, C_FRIENDS);
 		db.execSQL(sql);
 	}
 
@@ -60,7 +62,8 @@ public class QueueUserActivity {
 						.getColumnIndex(C_ID)), cursor.getLong(cursor
 						.getColumnIndex(C_SONG_ID)), cursor.getInt(cursor
 						.getColumnIndex(C_ACTION)), cursor.getLong(cursor
-						.getColumnIndex(C_COMPLETED_TS))));
+						.getColumnIndex(C_COMPLETED_TS)),
+						fromCommaSeperatedNumbers(cursor.getString(cursor.getColumnIndex(C_FRIENDS)))));
 				cursor.moveToNext();
 			}
 			cursor.close();
@@ -94,9 +97,28 @@ public class QueueUserActivity {
 		values.put(C_ARTIST, data.song().getArtist());
 		values.put(C_ALBUM, data.song().getAlbum());
 		values.put(C_DURATION, data.song().getDuration());
+		values.put(C_FRIENDS, toCommaSeperatedNumbers(data.getFriends()));
 
 		return db.insert(TABLE, null, values) > -1;
 
+	}
+
+	private static String toCommaSeperatedNumbers(List<String> numbers) {
+		if (numbers == null) return "";
+		String ans = "";
+		for (String number : numbers) {
+			ans = ans + "," + number;
+		}
+
+		if (ans.length() > 0) ans = ans.substring(1);
+		return  ans;
+
+	}
+
+	private static List<String> fromCommaSeperatedNumbers(String str){
+		if (str == null || str.equals("")) return new ArrayList<>();
+		String[] a =str.split(",");
+		return new ArrayList( Arrays.asList(a));
 	}
 
 	static boolean remove(long id, Context context) {

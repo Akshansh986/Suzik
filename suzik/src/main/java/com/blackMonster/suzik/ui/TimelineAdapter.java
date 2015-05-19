@@ -384,7 +384,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
                 long localId = insertInAppSongTable(item, songLocation, albumartLocation);
                 updateUi(item);
 
-                UserActivityManager.add(new UserActivity(item.getSong(), null, localId, UserActivity.ACTION_IN_APP_DOWNLOAD, System.currentTimeMillis()), context);
+                UserActivityManager.add(new UserActivity(item.getSong(), null, localId, UserActivity.ACTION_IN_APP_DOWNLOAD, System.currentTimeMillis(), item.getFriends()), context);
                 try {
                     InappSongServerHelper.addToServer(item.getServerId(), "dummy fp ");
                 } catch (JSONException e) {

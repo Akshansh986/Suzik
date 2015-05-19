@@ -1,5 +1,8 @@
 package com.blackMonster.suzik.musicstore.module;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserActivity {
     //Make sure to read every function of this class, if your are planning to add new ACTION  to this class.
 
@@ -27,6 +30,7 @@ public class UserActivity {
     private Long id;
     private long songId, completedTS;
     private int action;
+    List<String> friends;
 
 
     /**
@@ -39,13 +43,20 @@ public class UserActivity {
 
 
     public UserActivity(Song song, Long id, long songId, int action,
-                        long completedTS) {
+                        long completedTS, List<String> friends) {
         super();
         this.song = song;
         this.id = id;
         this.songId = songId;
         this.action = action;
         this.completedTS = completedTS;
+
+        if (friends == null) this.friends = new ArrayList<>();
+        else this.friends = friends;
+    }
+
+    public List<String> getFriends() {
+        return friends;
     }
 
     public boolean isOnlinePlayedSong(){
