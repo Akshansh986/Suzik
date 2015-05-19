@@ -5,6 +5,7 @@ import android.content.Context;
 import com.blackMonster.suzik.musicstore.Flag.Flag;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.util.ServerUtils;
+import com.blackMonster.suzik.util.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,7 +82,9 @@ public class JsonHelperTimeline {
 
             int len = friendsJson.length();
             for (int j = 0; j < len; j++) {
-                friends.add((String) friendsJson.get(j));
+                String tmp = (String) friendsJson.get(j);
+                if (Utils.getContactName(context,tmp) != null)  //TODO Jugad due to nik, remove it.
+                friends.add(tmp);
             }
 
             LOGD(TAG, song.toString());

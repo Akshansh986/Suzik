@@ -1,6 +1,5 @@
 package com.blackMonster.suzik.sync;
 
-import static com.blackMonster.suzik.util.LogUtils.*;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -17,6 +16,9 @@ import com.blackMonster.suzik.sync.music.AddedSongsResponseHandler;
 import com.blackMonster.suzik.sync.music.SongsSyncer;
 import com.blackMonster.suzik.util.NetworkUtils;
 import com.crashlytics.android.Crashlytics;
+
+import static com.blackMonster.suzik.util.LogUtils.LOGD;
+import static com.blackMonster.suzik.util.LogUtils.LOGE;
 
 /**
  * Steps to use syncer
@@ -85,7 +87,7 @@ public abstract class Syncer extends IntentService {
 
 		} catch (Exception e1) {
 			e1.printStackTrace();
-			Crashlytics.logException(e1);
+			if (!AppConfig.DEBUG) Crashlytics.logException(e1);
 			onFailure();
 		}
 

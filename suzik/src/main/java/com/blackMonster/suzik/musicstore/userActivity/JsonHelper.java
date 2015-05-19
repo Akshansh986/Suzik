@@ -4,6 +4,7 @@ import android.util.Pair;
 
 import com.blackMonster.suzik.musicstore.module.UserActivity;
 import com.blackMonster.suzik.util.ServerUtils;
+import com.blackMonster.suzik.util.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,7 +60,15 @@ class JsonHelper {
 			obj.put(P_SERVER_ID, activity.second);
 			obj.put(P_ACTION, activity.first.getActionString());
 			obj.put(P_COMPLETED_TS, activity.first.completedTS());
-            obj.put(P_DISCOVERY_SOURCE, new JSONArray(activity.first.getFriends()));
+
+			List<String> discoverySource = activity.first.getFriends();
+			JSONArray jsonArray = new JSONArray();
+
+			for (String number : discoverySource) {
+				jsonArray.put(Utils.formatPhoneNumberForJson(number));
+			}
+            obj.put(P_DISCOVERY_SOURCE, jsonArray);
+
 			return obj;
 		}
 

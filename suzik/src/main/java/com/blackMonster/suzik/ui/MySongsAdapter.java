@@ -19,8 +19,6 @@ import com.blackMonster.suzik.sync.music.AllSongsTable;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
 import com.blackMonster.suzik.util.Utils;
 
-import java.util.Random;
-
 import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 
@@ -37,7 +35,6 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
     LayoutInflater inflater;
     LazyImageLoader lazyImageLoader;
 
-    int rand;
     public MySongsAdapter(Cursor androidC, Cursor inappCursor, Context context) {
         this.androidCurosr = androidC;
         this.inappCursor = inappCursor;
@@ -47,21 +44,8 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
         setCount();
 
         lazyImageLoader = new LazyImageLoader(context);
-        rand = randInt(0,50);
     }
 
-    public static int randInt(int min, int max) {
-
-        // NOTE: Usually this should be a field rather than a method
-        // variable so that it is not re-seeded every call.
-        Random rand = new Random();
-
-        // nextInt is normally exclusive of the top value,
-        // so add 1 to make it inclusive
-        int randomNum = rand.nextInt((max - min) + 1) + min;
-
-        return randomNum;
-    }
 
     private void setCount() {
         if (inappCursor != null) inappCount = inappCursor.getCount();
@@ -198,9 +182,6 @@ public class MySongsAdapter extends BaseAdapter implements Playlist {
     public Playable getPlayable(int position) {
     LOGD(TAG,"getPlayable  " + position);
 
-        int dpos= position + rand;
-        if (dpos > getCount()) dpos = dpos - getCount();
-        position = dpos;
         String title, artist, album, albumartPath, songPath, songUrl, albumartUrl;
         int pos;
         long duration,id,serverId;
