@@ -35,7 +35,7 @@ public class QueueUserActivity {
 	public static void createTable(SQLiteDatabase db) {
 		String sql = String
 				.format("create table %s"
-						+ "(%s INTEGER PRIMARY KEY AUTOINCREMENT,%s INTEGER, %s INTEGER, %s INTEGER, %s text, %s text, %s text, %s INTEGER)",
+						+ "(%s INTEGER PRIMARY KEY AUTOINCREMENT,%s INTEGER, %s INTEGER, %s INTEGER, %s text, %s text, %s text, %s INTEGER, %s text)",
 						TABLE, C_ID, C_SONG_ID, C_ACTION,
 						C_COMPLETED_TS, C_TITLE, C_ARTIST, C_ALBUM, C_DURATION, C_FRIENDS);
 		db.execSQL(sql);
@@ -98,6 +98,8 @@ public class QueueUserActivity {
 		values.put(C_ALBUM, data.song().getAlbum());
 		values.put(C_DURATION, data.song().getDuration());
 		values.put(C_FRIENDS, toCommaSeperatedNumbers(data.getFriends()));
+
+		LOGD(TAG,toCommaSeperatedNumbers(data.getFriends()));
 
 		return db.insert(TABLE, null, values) > -1;
 

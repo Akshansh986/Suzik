@@ -128,6 +128,15 @@ public class UserActivity {
 
     }
 
-
-
+    @Override
+    public String toString() {
+        return "UserActivity{" +
+                "song=" + song +
+                ", id=" + id +
+                ", songId=" + songId +
+                ", completedTS=" + completedTS +
+                ", action=" + action +
+                ", friends=" + friends +
+                '}';
+    }
 }
