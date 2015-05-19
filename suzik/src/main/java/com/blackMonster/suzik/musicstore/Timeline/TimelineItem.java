@@ -6,6 +6,7 @@ import com.blackMonster.suzik.MainPrefs;
 import com.blackMonster.suzik.musicstore.Flag.Flag;
 import com.blackMonster.suzik.musicstore.module.Song;
 import com.blackMonster.suzik.sync.music.InAapSongTable;
+import com.blackMonster.suzik.util.Utils;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class TimelineItem implements Playable{
     protected List<String> friends;
 
     private InAapSongTable.InAppSongData inAppSongMirror=null;
-
+    private Context context;
     private Flag flag;
 
     public TimelineItem(Song song, long id, String albumArtUrl, String songUrl,Flag flag, List<String> friends, Context context) {
@@ -27,17 +28,22 @@ public class TimelineItem implements Playable{
         this.songPath = songUrl;
         this.flag = flag;
         this.friends = friends;
+        this.context = context;
         setInappMirrorIfAvailable(context);
 	}
 
-    public String getFormattedFriends() {
+    public String getFormattedFriendsName() {
         String ans="";
 
-        for (String friend : friends) {
-            int firstSpace = friend.indexOf(" ");
-            if (firstSpace == -1) firstSpace = friend.length();
-            ans+= friend.substring(0,firstSpace);
+        for (String number : friends) {
+            String name = Utils.getContactName(context,number);
+            if (name == null) continue;
+            int firstSpace = name.indexOf(" ");
+            if (firstSpace == -1) firstSpace = name.length();
+            ans = ans + ", " + name.substring(0,firstSpace);
         }
+
+        if (ans.length()>0) ans = ans.substring(2);
 
         return ans;
     }

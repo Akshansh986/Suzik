@@ -37,7 +37,7 @@ import static com.blackMonster.suzik.util.LogUtils.LOGD;
 
 public class MainSliderActivity extends ActionBarActivity implements View.OnClickListener, ViewPager.OnPageChangeListener, SlidingUpPanelLayout.PanelSlideListener {
     public static final String TAG = "MainSliderActivity";
-    private static final int NUM_PAGES = 3;
+    private static final int NUM_PAGES = 2;
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
 
@@ -71,8 +71,8 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
 
 
         //TODO jugad
-        mPager.setCurrentItem(1);
-        onPageSelected(1);
+        mPager.setCurrentItem(0);
+        onPageSelected(0);
         registerReceivers();
 
         hadleError(UIcontroller.getInstance(this).getErrorState());
@@ -129,11 +129,10 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
         @Override
         public Fragment getItem(int position) {
             switch (position) {
+
                 case 0:
-                    return new FriendsListFragment();
-                case 1:
                     return new TimelineFragement();
-                case 2:
+                case 1:
                     return new MySongListFragement();
 
                 default:
@@ -149,11 +148,10 @@ public class MainSliderActivity extends ActionBarActivity implements View.OnClic
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
+
                 case 0:
-                    return "My friends";
-                case 1:
                     return getResources().getString(R.string.title_timeline);
-                case 2:
+                case 1:
                     return getResources().getString(R.string.title_allSongs);
 
 

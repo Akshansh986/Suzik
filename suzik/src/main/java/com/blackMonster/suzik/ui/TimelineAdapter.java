@@ -130,6 +130,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
             viewHolder.albumArtView.setImageResource(R.drawable.album_art);
             viewHolder.frameLayout =(FrameLayout) convertView.findViewById(R.id.FrameLayout);
             viewHolder.friends = (TextView) convertView.findViewById(R.id.friends);
+            viewHolder.friends.setSelected(true);
             convertView.setTag(viewHolder);
 
         } else {
@@ -154,7 +155,7 @@ public class TimelineAdapter extends BaseAdapter implements Playlist {
             viewHolder.artist.setText(artist);
         }
 
-        viewHolder.friends.setText(item.getFormattedFriends());
+        viewHolder.friends.setText(item.getFormattedFriendsName());
 
         return convertView;
     }
