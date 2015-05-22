@@ -27,6 +27,7 @@ public class DuplicateBroadcastFilter {
 		LOGD("DuplicateBroadcastfilter", "isDuplicate");
 		boolean result = false, found = false;
 
+		BroadcastInfo tmpBroadcast=null;
 		for (BroadcastInfo broadcast : broadcastList) {
 			LOGD("DuplicateBroadcastfilter", broadcast.action + "  " + broadcast.song.getTitle() + "  " + broadcast.playing);
 			if (broadcast.action.equals(currAction)) {
@@ -36,12 +37,17 @@ public class DuplicateBroadcastFilter {
 					result = true;
 				else
 					result = false;
-				updateBroadcast(broadcast, new BroadcastInfo(currSong, currAction, currTime, currPlaying));
 				found = true;
+				tmpBroadcast = broadcast;
 				break;
 			}
 
 		}
+
+		if (tmpBroadcast !=null)
+			updateBroadcast(tmpBroadcast, new BroadcastInfo(currSong, currAction, currTime, currPlaying));
+
+
 		if (found == false) {
 			broadcastList
 					.add(new BroadcastInfo(currSong, currAction, currTime, currPlaying));
