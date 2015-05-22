@@ -370,7 +370,7 @@ public class PlayerNotification {
 
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                LOGD(TAG, "loading complete " + imageUri + "  " + Utils.formatStringForUIL(currentNotificationSong.getAlbumArtPath()));
+//                LOGD(TAG, "loading complete " + imageUri + "  " + Utils.formatStringForUIL(currentNotificationSong.getAlbumArtPath()));
                     setImage(imageUri,loadedImage);
 
             }
