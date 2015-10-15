@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Suzik β</string>
+    <string name="app_name">Conversation starter</string>
     <string name="action_settings">Settings</string>
     <string name="loading">loading...</string>
-    <string name="emptpy_timeline">Oops! seems like you don\'t have any friend on suzik.</string>
+    <string name="emptpy_timeline">Oops! seems like you don\'t have any friend on Conversation starter.</string>
     <string name="loggingIn_error">Something went wrong, try again!</string>
     <string name="logging_in">Logging in...</string>
     <string name="device_offline">Please connect to internet!</string>
@@ -16,7 +16,7 @@
     <string name="title_player">Player</string>
     <string name="player_data_not_set">File can\'t be played</string>
     <string name="player_unknown_error">Unknown error</string>
-    <string name="sms_send">Suzik will send a one time SMS to verify your number. SMS charges may apply.</string>
+    <string name="sms_send">Conversation starter will send a one time SMS to verify your number. SMS charges may apply.</string>
     <string name="continue_dialog">continue</string>
     <string name="failed_sms_verification">SMS verification failed, retry..</string>
     <string name="verification_sms">Your one time verification code is : </string>

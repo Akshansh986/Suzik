@@ -27,7 +27,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="42dp"
             android:textSize="35sp"
-            android:text="Social Music "
+            android:text="Conversation starter "
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <Button
